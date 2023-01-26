@@ -6,3 +6,6 @@ npm install
 
 # Run program:
 npm start
+
+# Stop program:
+ctrl + c
