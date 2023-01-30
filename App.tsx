@@ -1,5 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from'@react-navigation/native';
+import { createBottomTabNavigator } from'@react-navigation/bottom-tabs';
+import Homepage from './components/Homepage';
+import Settings from './components/Settings';
 
 export default function App() {
 
@@ -8,8 +12,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Homepage" component={App}/> {/*REPLACE*/}
-        <Tab.Screen name="Settings" component={App}/> {/*REPLACE*/}
+        <Tab.Screen name="Homepage" component={Homepage}/> {/*REPLACE*/}
+        <Tab.Screen name="Settings" component={Settings}/> {/*REPLACE*/}
       </Tab.Navigator>
     </NavigationContainer>
   );
