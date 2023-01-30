@@ -5,7 +5,7 @@ import Settings from './components/Settings';
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+const App = () => {
   return (
   <NavigationContainer>
     <Tab.Navigator>
@@ -15,3 +15,4 @@ export default function App() {
     </NavigationContainer>  
 );}
 
+export default App
