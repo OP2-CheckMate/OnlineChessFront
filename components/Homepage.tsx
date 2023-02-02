@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const Homepage= ({ //navigation
- }) => {
+const Homepage= ({ navigation }) => {
   const [playerCount, setPlayerCount] = useState(1);
 
   return (
@@ -17,7 +16,7 @@ const Homepage= ({ //navigation
       </View>
       <Button
         title="Start Game"
-        //onPress={() => navigation.navigate('Game')}
+        onPress={() => navigation.navigate('Queue')}
       />
     </View>
   );
