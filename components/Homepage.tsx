@@ -16,7 +16,7 @@ const Homepage= ({ navigation }) => {
       </View>
       <Button
         title="Start Game"
-        onPress={() => navigation.navigate('Queue')}
+        onPress={() => navigation.navigate('QueuingScreen')}
       />
     </View>
   );
