@@ -1,18 +1,20 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Homepage from './components/Homepage';
-import Settings from './components/Settings';
+import { createNativeStackNavigator } from'@react-navigation/native-stack';
+import HomepageTabNav from './components/HomepageTabNav';
+import QueuingScreen from './components/QueuingScreen';
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator()
 
 const App = () => {
   return (
-  <NavigationContainer>
-    <Tab.Navigator>
-      <Tab.Screen name="Home"component={Homepage} />
-      <Tab.Screen name="Settings"component={Settings} />
-    </Tab.Navigator>
-    </NavigationContainer>  
-);}
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Homepage" component={HomepageTabNav}></Stack.Screen>
+        <Stack.Screen name="Queue" component={QueuingScreen}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+
+  );
+}
 
 export default App
