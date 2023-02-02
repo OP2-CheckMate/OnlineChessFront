@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
 const Homepage = ({ navigation } : any) => {
 
@@ -7,6 +7,7 @@ const Homepage = ({ navigation } : any) => {
   return (
     <>
       <View style={styles.container}>
+        <Image source={require('..images/ChessGameFrontpagePic.png')} />
         <Text style={styles.title}>Welcome to Chess Game!</Text>
       </View>
       <View style={styles.buttonContainer}>
