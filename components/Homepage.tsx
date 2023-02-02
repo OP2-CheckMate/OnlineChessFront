@@ -7,7 +7,7 @@ const Homepage = ({ navigation } : any) => {
   return (
     <>
       <View style={styles.container}>
-        <Image source={require('..images/ChessGameFrontpagePic.png')} />
+        <Image source={require('./images/ChessGameFrontpagePic.png')} />
         <Text style={styles.title}>Welcome to Chess Game!</Text>
       </View>
       <View style={styles.buttonContainer}>
