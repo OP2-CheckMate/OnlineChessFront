@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
-const Homepage= ({ //navigation
- }) => {
-  const [playerCount, setPlayerCount] = useState(1);
+const Homepage = ({ navigation } : any) => {
+
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Chess Game!</Text>
-      <View style={styles.playerCountContainer}>
-        <Text style={styles.playerCountText}>Players: {playerCount}</Text>
+    <>
+      <View style={styles.container}>
+        <Image source={require('..images/ChessGameFrontpagePic.png')} />
+        <Text style={styles.title}>Welcome to Chess Game!</Text>
+      </View>
+      <View style={styles.buttonContainer}>
         <Button
-          title="+"
-          onPress={() => setPlayerCount(playerCount + 1)}
+          title="Start Game"
+          onPress={() => navigation.navigate('QueuingScreen')}
         />
       </View>
-      <Button
-        title="Start Game"
-        //onPress={() => navigation.navigate('Game')}
-      />
-    </View>
+    </>
   );
 };
 
@@ -29,20 +26,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  playerCountContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  playerCountText: {
-    fontSize: 18,
-    marginRight: 10,
-  },
+
 });
 
 export default Homepage;
