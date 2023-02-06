@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+
+import { View, Text, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 
 const Homepage = ({ navigation } : any) => {
 
@@ -7,14 +7,17 @@ const Homepage = ({ navigation } : any) => {
   return (
     <>
       <View style={styles.container}>
-        <Image source={require('./images/ChessGameFrontpagePic.png')} />
+        <ImageBackground source={require('./images/ChessGameFrontpagePic.png')} resizeMode="cover" style={styles.image}>
         <Text style={styles.title}>Welcome to Chess Game!</Text>
+        </ImageBackground>
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Start Game"
-          onPress={() => navigation.navigate('QueuingScreen')}
-        />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('QueuingScreen')}
+        style={styles.appButtonContainer}
+      >
+      <Text style={styles.appButtonText}>Start Game</Text>
+      </TouchableOpacity>
       </View>
     </>
   );
@@ -22,21 +25,45 @@ const Homepage = ({ navigation } : any) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgb(1, 27, 10)'
+    
+    
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "rgb(1, 27, 10)",
+    borderRadius: 50,
+    borderColor: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    
+  },
+  appButtonText: {
+    fontSize: 30,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
-
+  image: {
+    flex: 1,
+    width: '100%'
+    
+  }
 });
 
 export default Homepage;
