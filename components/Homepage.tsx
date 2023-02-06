@@ -21,6 +21,12 @@ const Homepage = ({ navigation }: any) => {
             >
               <Text style={styles.appButtonText}>Start Game</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Game')}
+              style={styles.appButtonContainer}
+            >
+              <Text style={styles.appButtonText}>Board</Text>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </View>
