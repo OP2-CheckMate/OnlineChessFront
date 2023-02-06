@@ -1,21 +1,21 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Board from './components/Board';
-import HomepageTabNav from './components/HomepageTabNav';
+import Homepage from './components/Homepage';
 import QueuingScreen from './components/QueuingScreen';
+import Settings from './components/Settings';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Homepage" component={HomepageTabNav}></Stack.Screen>
-        <Stack.Screen name="QueuingScreen" component={Board}></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+	return (
+		<NavigationContainer>
+			<Stack.Navigator>
+				<Stack.Screen name="Homepage" component={Homepage} />
+				<Stack.Screen name="QueuingScreen" component={QueuingScreen} />
+				<Stack.Screen name="Settings" component={Settings} />
+			</Stack.Navigator>
+		</NavigationContainer>
+	);
+};
 
-  );
-}
-
-export default App
+export default App;

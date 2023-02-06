@@ -13,6 +13,7 @@ const Settings = () => {
 						backgroundColor="rgba(0, 0, 0, 0.4)"
 						color="white"
 						size={25}
+						//GAMEPLAY SETTINGS VALINNAT MODAALI AUKEE
 						onPress={() => {}}
 					>
 						Gameplay
@@ -25,6 +26,7 @@ const Settings = () => {
 						backgroundColor="rgba(0, 0, 0, 0.4)"
 						color="white"
 						size={25}
+						//THEME SETTINGS VALINNAT MODAALI AUKEE
 						onPress={() => {}}
 					>
 						Theme
@@ -37,6 +39,7 @@ const Settings = () => {
 						backgroundColor="rgba(0, 0, 0, 0.4)"
 						color="white"
 						size={25}
+						//PROFILE SETTINGS VALINNAT MODAALI AUKEE
 						onPress={() => {}}
 					>
 						Profile
