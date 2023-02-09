@@ -4,10 +4,23 @@ import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text }
 const QueuingScreen = () => {
 	const [ name, setName ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
+	const [ id, setId ] = useState("");
 
 	const findGame = () => {
-		//Fetch opponent & start game
+			//setLoading(true);
+			fetch("http://localhost/api/queuing/findgame")
+			.then(response => response.json())
+			.then(data => {
+				console.log(data)
+				setId(data.id);
+				
+				//setLoading(false)
+			})
+			.catch(err => console.error(err));
+		
+	
 		console.log('Search opponent');
+		console.log('Id: ' + id)
 	};
 
 	return (

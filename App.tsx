@@ -6,7 +6,6 @@ import Settings from './components/Settings';
 import Game from './components/Game';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-
 const Stack = createNativeStackNavigator();
 
 const App = () => {
