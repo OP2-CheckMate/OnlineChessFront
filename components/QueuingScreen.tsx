@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text } from 'react-native';
+import {HOST_NAME} from '@env'
 
 const QueuingScreen = () => {
 	const [ name, setName ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
 	const [ id, setId ] = useState("");
+	const host = HOST_NAME
 
 	const findGame = () => {
 			//setLoading(true);
-			fetch("http://localhost/api/queuing/findgame")
+			console.log(host)
+			fetch("http://"+host+":8080/api/queuing/findgame")
 			.then(response => response.json())
 			.then(data => {
 				console.log(data)
