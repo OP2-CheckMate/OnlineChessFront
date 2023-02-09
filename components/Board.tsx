@@ -24,8 +24,8 @@ const Row = ({ row }: RowProps) => {
 
 const Square = ({ row, col }: SquareProps) => {
   const offset = row % 2 === 0 ? 1 : 0;
-  const backgroundColor = (col + offset) % 2 === 0 ? WHITE : BLACK;
-  const color = (col + offset) % 2 === 0 ? BLACK : WHITE;
+  const backgroundColor = (col + offset) % 2 === 0 ? BLACK : WHITE;
+  const color = (col + offset) % 2 === 0 ? WHITE : BLACK;
 
   return (
     <View style={{ flex: 1, backgroundColor: backgroundColor, padding: 5 }}>
