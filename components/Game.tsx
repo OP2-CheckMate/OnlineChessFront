@@ -31,11 +31,12 @@ interface PieceProps {
     y: number
   };
   movable: boolean;
-  turn(): void;
+  turn(color: string): void; //added variable
   chess: Chess;
+  color: string; //added color
 }
 
-const Piece = ({ id, position, movable, turn, chess }: PieceProps) => {
+const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(position.x);
@@ -56,7 +57,7 @@ const Piece = ({ id, position, movable, turn, chess }: PieceProps) => {
     onEnd: () => {
       translateX.value = withSpring(position.x);
       translateY.value = withSpring(position.y);
-      turn();
+      turn(color);
     }
   })
 
@@ -82,7 +83,8 @@ export default function Game() {
   const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
 
-  const turn = () => {
+  const turn = (color: string) => { //color variable
+    console.log(color) //print color
     if (player === "w") {
       setPlayer("b")
       console.log('player on w')
@@ -106,6 +108,7 @@ export default function Game() {
                 movable={player === piece.color}
                 chess={chess}
                 turn={turn}
+                color={piece.color}
               />
             );
           }
