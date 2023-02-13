@@ -7,7 +7,7 @@ const QueuingScreen = ({ navigation }: any) => {
 	const [ lobbyId, setlobbyId ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
 	const [ isJoinDisabled, setIsJoinDisabled ] = useState(true);
-	const [ id, setId ] = useState("");
+	const [ id, setId ] = useState('');
 
 	const createGame = () => {
 		// Set a name for player
@@ -19,6 +19,7 @@ const QueuingScreen = ({ navigation }: any) => {
 		// get lobby info
 		.then(response => response.json())
 		.then(data => {
+			console.log(data)
 			navigation.navigate('LobbyCode', {lobby: data})
 		})
 		.catch(err => console.error(err));
@@ -34,13 +35,12 @@ const QueuingScreen = ({ navigation }: any) => {
 				name: name
 			}),
 		})
-		// get player's ID
 		.then(response => response.json())
 		.then(data => {
 			console.log(data)
-			setId(data.id);
+			navigation.navigate('LobbyCode', {lobby: data})
 		})
-		.then(() => navigation.navigate('Lobby'))
+		//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
 		.catch(err => console.error(err));
 	}
 
