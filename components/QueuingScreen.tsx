@@ -6,12 +6,9 @@ const QueuingScreen = () => {
 	const [ name, setName ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
 	const [ id, setId ] = useState("");
-	const host = HOST_NAME
 
 	const findGame = () => {
-			//setLoading(true);
-			console.log(host)
-			fetch("http://"+host+":8080/api/queuing/findgame")
+			fetch("http://"+HOST_NAME+":8080/api/queuing/findgame")
 			.then(response => response.json())
 			.then(data => {
 				console.log(data)
