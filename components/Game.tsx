@@ -1,8 +1,8 @@
-import { SetStateAction, useCallback, useState } from "react";
+import { useState } from "react";
 import Board from "./Board";
 import { Chess } from "chess.js";
 import { Image, View, StyleSheet, Dimensions } from "react-native";
-import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 type Player = "b" | "w";
@@ -31,20 +31,22 @@ interface PieceProps {
     y: number
   };
   movable: boolean;
-  turn(color: Player): void; //added variable
+  turn(color: Player): void;
   chess: Chess;
-  color: Player; //added color
+  color: Player;
 }
 
+/* 
+  TODO: Add chess.js logic to moves and
+        make pieces go in squares
+*/
 const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
-  // const movePiece = useCallback(() => {
-  //   turn(player);
-  // }, [chess, turn])
 
+  // Move piece with drag and drop
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: () => {
       offsetX.value = translateX.value;
@@ -54,7 +56,7 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
       translateX.value = translationX + offsetX.value;
       translateY.value = translationY + offsetY.value;
     },
-    onEnd: () => {
+    onEnd: () => { // Returns pieces to start location after release
       translateX.value = withSpring(position.x);
       translateY.value = withSpring(position.y);
       turn(color);
@@ -83,7 +85,8 @@ export default function Game() {
   const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
 
-  const turn = (color: Player) => { //color variable
+  // Change active player
+  const turn = (color: Player) => {
     console.log(color) //print color
     setPlayer(color === "w" ? "b" : "w");
     setBoard(chess.board())
