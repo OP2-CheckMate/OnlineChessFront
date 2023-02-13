@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text } from 'react-native';
 import {HOST_NAME} from '@env'
 
-const QueuingScreen = () => {
+const QueuingScreen = ({ navigation }: any) => {
 	const [ name, setName ] = useState('');
 	const [ lobbyId, setlobbyId ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
+	const [ isJoinDisabled, setIsJoinDisabled ] = useState(true);
 	const [ id, setId ] = useState("");
 
 	const createGame = () => {
@@ -20,8 +21,7 @@ const QueuingScreen = () => {
 			.then(data => {
 				console.log(data)
 				setId(data.id);
-				
-				//setLoading(false)
+
 			})
 			.catch(err => console.error(err));
 		
@@ -29,7 +29,21 @@ const QueuingScreen = () => {
 	};
 	
 	const joinGame = () => {
-		
+		// Post name and lobbyId to server
+		fetch("http://"+HOST_NAME+":8080/api/queuing/joinlobby",{
+			method: "POST",
+			headers: { "Content-type": "application/json" },
+			body: JSON.stringify({
+				lobbyId: lobbyId,
+				name: name}),
+		})
+		// get player's ID
+		.then(response => response.json())
+		.then(data => {
+			console.log(data)
+			setId(data.id);
+		})
+		.catch(err => console.error(err));
 
 	}
 
@@ -73,24 +87,25 @@ const QueuingScreen = () => {
 						>
 							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Create Game</Text>
 						</Pressable>
+						
 						<TextInput
+						// Enter Lobby-ID
 						style={styles.input}
 						onChangeText={(text) => {
 							setlobbyId(text);
-							if (text !== '') {
-								setIsDisabled(false);
+							if (text !== '' && name !== '') {
+								setIsJoinDisabled(false);
 							} else {
-								setIsDisabled(true);
+								setIsJoinDisabled(true);
 							}
 						}}
 						value={lobbyId}
 						placeholder="Enter Lobby-Id"
-						autoCapitalize="words"
 						autoComplete="off"
-						autoFocus={true}
 						placeholderTextColor="rgb(110,93,53)"
 					/>
 						<Pressable
+							// Join Game Button
 							style={({ pressed }) => {
 								if (isDisabled) {
 									return [ styles.disabledBtn ];
@@ -101,9 +116,9 @@ const QueuingScreen = () => {
 								}
 							}}
 							onPress={joinGame}
-							disabled={isDisabled}
+							disabled={isJoinDisabled}
 						>
-							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Join Game</Text>
+							<Text style={isJoinDisabled ? styles.disabledbtnText : styles.btnText}>Join Game</Text>
 						</Pressable>
 						
 					</View>
