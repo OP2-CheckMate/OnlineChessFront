@@ -23,8 +23,9 @@ const QueuingScreen = ({ navigation }: any) => {
 				setId(data.id);
 
 			})
+			.then(() => navigation.navigate('Lobby'))
 			.catch(err => console.error(err));
-		
+			
 
 	};
 	
@@ -35,7 +36,8 @@ const QueuingScreen = ({ navigation }: any) => {
 			headers: { "Content-type": "application/json" },
 			body: JSON.stringify({
 				lobbyId: lobbyId,
-				name: name}),
+				name: name
+			}),
 		})
 		// get player's ID
 		.then(response => response.json())
@@ -43,7 +45,9 @@ const QueuingScreen = ({ navigation }: any) => {
 			console.log(data)
 			setId(data.id);
 		})
+		.then(() => navigation.navigate('Lobby'))
 		.catch(err => console.error(err));
+		
 
 	}
 
