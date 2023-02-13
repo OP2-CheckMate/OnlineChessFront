@@ -31,9 +31,9 @@ interface PieceProps {
     y: number
   };
   movable: boolean;
-  turn(color: string): void; //added variable
+  turn(color: Player): void; //added variable
   chess: Chess;
-  color: string; //added color
+  color: Player; //added color
 }
 
 const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
@@ -83,15 +83,9 @@ export default function Game() {
   const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
 
-  const turn = (color: string) => { //color variable
+  const turn = (color: Player) => { //color variable
     console.log(color) //print color
-    if (player === "w") {
-      setPlayer("b")
-      console.log('player on w')
-    } else {
-      setPlayer("w")
-      console.log('player ei ole w')
-    }
+    setPlayer(color === "w" ? "b" : "w");
     setBoard(chess.board())
   }
 
