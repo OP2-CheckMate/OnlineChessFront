@@ -10,7 +10,7 @@ const QueuingScreen = () => {
 
 	const createGame = () => {
 			// Set a name for player
-			fetch("http://"+HOST_NAME+":8080/api/queuing/lobby",{
+			fetch("http://"+HOST_NAME+":8080/api/queuing/createlobby",{
 				method: "POST",
 				headers: { "Content-type": "application/json" },
 				body: JSON.stringify({name: name}),
@@ -29,6 +29,7 @@ const QueuingScreen = () => {
 	};
 	
 	const joinGame = () => {
+		
 
 	}
 
