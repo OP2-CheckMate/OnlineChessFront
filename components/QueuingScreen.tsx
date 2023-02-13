@@ -4,12 +4,13 @@ import {HOST_NAME} from '@env'
 
 const QueuingScreen = () => {
 	const [ name, setName ] = useState('');
+	const [ lobbyId, setlobbyId ] = useState('');
 	const [ isDisabled, setIsDisabled ] = useState(true);
 	const [ id, setId ] = useState("");
 
-	const findGame = () => {
+	const createGame = () => {
 			// Set a name for player
-			fetch("http://"+HOST_NAME+":8080/api/queuing/findgame",{
+			fetch("http://"+HOST_NAME+":8080/api/queuing/lobby",{
 				method: "POST",
 				headers: { "Content-type": "application/json" },
 				body: JSON.stringify({name: name}),
@@ -26,6 +27,10 @@ const QueuingScreen = () => {
 		
 
 	};
+	
+	const joinGame = () => {
+
+	}
 
 	return (
 		<View style={styles.container}>
@@ -62,11 +67,44 @@ const QueuingScreen = () => {
 										: styles.btnInnerContainer;
 								}
 							}}
-							onPress={findGame}
+							onPress={createGame}
 							disabled={isDisabled}
 						>
-							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Find Game</Text>
+							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Create Game</Text>
 						</Pressable>
+						<TextInput
+						style={styles.input}
+						onChangeText={(text) => {
+							setlobbyId(text);
+							if (text !== '') {
+								setIsDisabled(false);
+							} else {
+								setIsDisabled(true);
+							}
+						}}
+						value={lobbyId}
+						placeholder="Enter Lobby-Id"
+						autoCapitalize="words"
+						autoComplete="off"
+						autoFocus={true}
+						placeholderTextColor="rgb(110,93,53)"
+					/>
+						<Pressable
+							style={({ pressed }) => {
+								if (isDisabled) {
+									return [ styles.disabledBtn ];
+								} else {
+									return pressed
+										? [ styles.btnInnerContainer, styles.pressed ]
+										: styles.btnInnerContainer;
+								}
+							}}
+							onPress={joinGame}
+							disabled={isDisabled}
+						>
+							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Join Game</Text>
+						</Pressable>
+						
 					</View>
 				</View>
 			</ImageBackground>
