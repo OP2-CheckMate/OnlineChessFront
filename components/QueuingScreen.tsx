@@ -31,14 +31,14 @@ const QueuingScreen = ({ navigation }: any) => {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
 			body: JSON.stringify({
-				lobbyId: lobbyId,
+				lobbyId: parseInt(lobbyId),
 				name: name
 			}),
 		})
 		.then(response => response.json())
 		.then(data => {
 			console.log(data)
-			navigation.navigate('LobbyCode', {lobby: data})
+			navigation.navigate('LobbyCode', {lobby: data}) //TODO: REDIRECT TO BOARD
 		})
 		//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
 		.catch(err => console.error(err));

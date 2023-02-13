@@ -2,11 +2,10 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import {Lobby} from '../types/types'
 
+//After creating a lobby the player sees lobby id which can be shared to
+//another player to join the lobby
 const LobbyCodeScreen = ({ route, navigation }: any) => {
-
     const { lobby } = route.params
-
-
     return(
         <View style={{flex: 1}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
