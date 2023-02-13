@@ -15,6 +15,7 @@ const Settings = () => {
 						size={25}
 						//GAMEPLAY SETTINGS VALINNAT MODAALI AUKEE
 						onPress={() => {}}
+						//TEST
 					>
 						Gameplay
 					</FontAwesome.Button>
