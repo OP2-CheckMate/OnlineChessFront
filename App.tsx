@@ -5,6 +5,7 @@ import QueuingScreen from './components/QueuingScreen';
 import Settings from './components/Settings';
 import Game from './components/Game';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import LobbyCodeScreen from './components/LobbyCodeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const App = () => {
           <Stack.Screen name="QueuingScreen" component={QueuingScreen} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Game" component={Game} />
+          <Stack.Screen name="LobbyCode" component={LobbyCodeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
