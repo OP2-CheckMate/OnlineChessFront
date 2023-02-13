@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { SetStateAction, useCallback, useState } from "react";
 import Board from "./Board";
 import { Chess } from "chess.js";
 import { Image, View, StyleSheet, Dimensions } from "react-native";
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 type Player = "b" | "w";
@@ -30,13 +30,19 @@ interface PieceProps {
     x: number,
     y: number
   };
+  movable: boolean;
+  turn(): void;
+  chess: Chess;
 }
 
-const Piece = ({ id, position }: PieceProps) => {
+const Piece = ({ id, position, movable, turn, chess }: PieceProps) => {
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
+  // const movePiece = useCallback(() => {
+  //   turn(player);
+  // }, [chess, turn])
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: () => {
@@ -46,6 +52,11 @@ const Piece = ({ id, position }: PieceProps) => {
     onActive: ({ translationX, translationY }) => {
       translateX.value = translationX + offsetX.value;
       translateY.value = translationY + offsetY.value;
+    },
+    onEnd: () => {
+      translateX.value = withSpring(position.x);
+      translateY.value = withSpring(position.y);
+      turn();
     }
   })
 
@@ -57,7 +68,7 @@ const Piece = ({ id, position }: PieceProps) => {
   }));
 
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent}>
+    <PanGestureHandler onGestureEvent={onGestureEvent} enabled={movable}>
       <Animated.View style={piece}>
         <Image source={PIECES[id]} style={styles.piece} />
       </Animated.View>
@@ -65,10 +76,22 @@ const Piece = ({ id, position }: PieceProps) => {
   )
 }
 
+
 export default function Game() {
   const chess = new Chess();
-  const [player, setPlayer] = useState("w");
+  const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
+
+  const turn = () => {
+    if (player === "w") {
+      setPlayer("b")
+      console.log('player on w')
+    } else {
+      setPlayer("w")
+      console.log('player ei ole w')
+    }
+    setBoard(chess.board())
+  }
 
   return (
     <View style={styles.container}>
@@ -80,6 +103,9 @@ export default function Game() {
               <Piece
                 id={`${piece.color}${piece.type}` as const}
                 position={{ x: x * (width / 8), y: y * (width / 8) }}
+                movable={player === piece.color}
+                chess={chess}
+                turn={turn}
               />
             );
           }
