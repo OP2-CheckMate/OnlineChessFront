@@ -10,22 +10,18 @@ const QueuingScreen = ({ navigation }: any) => {
 	const [ id, setId ] = useState("");
 
 	const createGame = () => {
-			// Set a name for player
-			fetch("http://"+HOST_NAME+":8080/api/queuing/createlobby",{
-				method: "POST",
-				headers: { "Content-type": "application/json" },
-				body: JSON.stringify({name: name}),
-			})
-			// get player's ID
-			.then(response => response.json())
-			.then(data => {
-				console.log(data)
-				setId(data.id);
-
-			})
-			.catch(err => console.error(err));
-		
-
+		// Set a name for player
+		fetch("http://"+HOST_NAME+":8080/api/queuing/createlobby",{
+			method: "POST",
+			headers: { "Content-type": "application/json" },
+			body: JSON.stringify({name: name}),
+		})
+		// get lobby info
+		.then(response => response.json())
+		.then(data => {
+			navigation.navigate('LobbyCode', {lobby: data})
+		})
+		.catch(err => console.error(err));
 	};
 	
 	const joinGame = () => {
