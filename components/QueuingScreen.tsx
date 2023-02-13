@@ -8,7 +8,13 @@ const QueuingScreen = () => {
 	const [ id, setId ] = useState("");
 
 	const findGame = () => {
-			fetch("http://"+HOST_NAME+":8080/api/queuing/findgame")
+			// Set a name for player
+			fetch("http://"+HOST_NAME+":8080/api/queuing/findgame",{
+				method: "POST",
+				headers: { "Content-type": "application/json" },
+				body: JSON.stringify({name: name}),
+			})
+			// get player's ID
 			.then(response => response.json())
 			.then(data => {
 				console.log(data)
@@ -18,9 +24,7 @@ const QueuingScreen = () => {
 			})
 			.catch(err => console.error(err));
 		
-	
-		console.log('Search opponent');
-		console.log('Id: ' + id)
+
 	};
 
 	return (
