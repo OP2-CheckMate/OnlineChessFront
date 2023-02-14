@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text } from 'react-native';
-import {HOST_NAME} from '@env'
+import { HOST_NAME } from '@env';
+import CustomButton from './CustomButton';
 
 const QueuingScreen = ({ navigation }: any) => {
 	const [ name, setName ] = useState('');
@@ -11,38 +12,38 @@ const QueuingScreen = ({ navigation }: any) => {
 
 	const createGame = () => {
 		// Set a name for player
-		fetch("http://"+HOST_NAME+":8080/api/queuing/createlobby",{
-			method: "POST",
-			headers: { "Content-type": "application/json" },
-			body: JSON.stringify({name: name}),
+		fetch('http://' + HOST_NAME + ':8080/api/queuing/createlobby', {
+			method: 'POST',
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify({ name: name })
 		})
-		// get lobby info
-		.then(response => response.json())
-		.then(data => {
-			console.log(data)
-			navigation.navigate('LobbyCode', {lobby: data})
-		})
-		.catch(err => console.error(err));
+			// get lobby info
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				navigation.navigate('LobbyCode', { lobby: data });
+			})
+			.catch((err) => console.error(err));
 	};
-	
+
 	const joinGame = () => {
 		// Post name and lobbyId to server
-		fetch("http://"+HOST_NAME+":8080/api/queuing/joinlobby",{
-			method: "POST",
-			headers: { "Content-type": "application/json" },
+		fetch('http://' + HOST_NAME + ':8080/api/queuing/joinlobby', {
+			method: 'POST',
+			headers: { 'Content-type': 'application/json' },
 			body: JSON.stringify({
 				lobbyId: parseInt(lobbyId),
 				name: name
-			}),
+			})
 		})
-		.then(response => response.json())
-		.then(data => {
-			console.log(data)
-			navigation.navigate('LobbyCode', {lobby: data}) //TODO: REDIRECT TO BOARD
-		})
-		//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
-		.catch(err => console.error(err));
-	}
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				navigation.navigate('LobbyCode', { lobby: data }); //TODO: REDIRECT TO BOARD
+			})
+			//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
+			.catch((err) => console.error(err));
+	};
 
 	return (
 		<View style={styles.container}>
@@ -66,26 +67,8 @@ const QueuingScreen = ({ navigation }: any) => {
 						placeholderTextColor="rgb(110,93,53)"
 					/>
 					{/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
-					<View style={styles.btnOuterContainer}>
-						<Pressable
-							//if the button is disabled, the color will be grey
-							//when pressed, the button will be a little bit lighter, otherwise go with the default style
-							style={({ pressed }) => {
-								if (isDisabled) {
-									return [ styles.disabledBtn ];
-								} else {
-									return pressed
-										? [ styles.btnInnerContainer, styles.pressed ]
-										: styles.btnInnerContainer;
-								}
-							}}
-							onPress={createGame}
-							disabled={isDisabled}
-						>
-							<Text style={isDisabled ? styles.disabledbtnText : styles.btnText}>Create Game</Text>
-						</Pressable>
-						
-						<TextInput
+					<CustomButton title="Create Game" onPress={createGame} disabled={isDisabled} />
+					<TextInput
 						// Enter Lobby-ID
 						style={styles.input}
 						onChangeText={(text) => {
@@ -101,24 +84,7 @@ const QueuingScreen = ({ navigation }: any) => {
 						autoComplete="off"
 						placeholderTextColor="rgb(110,93,53)"
 					/>
-						<Pressable
-							// Join Game Button
-							style={({ pressed }) => {
-								if (isDisabled) {
-									return [ styles.disabledBtn ];
-								} else {
-									return pressed
-										? [ styles.btnInnerContainer, styles.pressed ]
-										: styles.btnInnerContainer;
-								}
-							}}
-							onPress={joinGame}
-							disabled={isJoinDisabled}
-						>
-							<Text style={isJoinDisabled ? styles.disabledbtnText : styles.btnText}>Join Game</Text>
-						</Pressable>
-						
-					</View>
+					<CustomButton title="Join Game" onPress={joinGame} disabled={isJoinDisabled} />
 				</View>
 			</ImageBackground>
 		</View>
@@ -130,8 +96,7 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	image: {
-		flex: 1,
-		justifyContent: 'center'
+		flex: 1
 	},
 	input: {
 		height: 40,
@@ -147,42 +112,8 @@ const styles = StyleSheet.create({
 		fontSize: 20
 	},
 	innerView: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	btnOuterContainer: {
-		borderRadius: 8,
-		margin: 4,
-		overflow: 'hidden',
-		elevation: 4,
-		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 10 },
-		shadowOpacity: 0.25,
-		shadowRadius: 4
-	},
-	btnInnerContainer: {
-		backgroundColor: '#72063c',
-		paddingVertical: 12,
-		paddingHorizontal: 14
-	},
-	btnText: {
-		color: 'white',
-		fontWeight: 'bold',
-		fontSize: 16
-	},
-	pressed: {
-		opacity: 0.75
-	},
-	disabledBtn: {
-		backgroundColor: '#9e9e9e',
-		paddingVertical: 12,
-		paddingHorizontal: 14
-	},
-	disabledbtnText: {
-		color: 'rgb(124, 123, 123)',
-		fontWeight: 'bold',
-		fontSize: 16
+		alignItems: 'center',
+		marginTop: 170
 	}
 });
 
