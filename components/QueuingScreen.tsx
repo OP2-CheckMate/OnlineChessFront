@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text } from 'react-native';
 import { HOST_NAME } from '@env';
-import CustomButton from './CustomButton';
+import CustomButton from '../util/CustomButton';
 
 const QueuingScreen = ({ navigation }: any) => {
 	const [ name, setName ] = useState('');

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Board from "./Board";
+import Board from "../util/Board";
 import { Chess } from "chess.js";
 import { Image, View, StyleSheet, Dimensions } from "react-native";
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
