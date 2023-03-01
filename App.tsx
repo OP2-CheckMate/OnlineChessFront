@@ -6,11 +6,14 @@ import Settings from './components/Settings';
 import Game from './components/Game';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LobbyCodeScreen from './components/LobbyCodeScreen';
+import { StatusBar } from 'expo-status-bar';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
+    <>
+    <StatusBar style='dark'></StatusBar>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
@@ -22,6 +25,7 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
+    </>
   );
 };
 

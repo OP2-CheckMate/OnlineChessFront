@@ -43,39 +43,48 @@ const ThemeModal = ({ isVisible, closeModal }: ModalProps) => {
 					<View style={styles.centeredView}>
 						<View style={styles.modalView}>
 							<Text style={styles.modalText}>Select Theme</Text>
-							<RadioForm>
-								{Themes.map((theme) => (
-									<View style={styles.themeWrapper} key={theme.value}>
-										<RadioButton>
-											<RadioButtonInput
-												obj={theme}
-												index={theme.value}
-												isSelected={selectedTheme === theme.value}
-												onPress={() => {
-													onThemeChange(theme.value);
-												}}
-												buttonInnerColor={'rgb(30, 92, 46)'}
-												buttonOuterColor={
-													selectedTheme === theme.value ? 'rgb(30, 92, 46)' : '#000'
-												}
-												buttonSize={30}
-												buttonOuterSize={40}
-												buttonStyle={{}}
-											/>
-											<RadioButtonLabel
-												obj={theme}
-												index={theme.value}
-												onPress={() => {
-													onThemeChange(theme.value);
-												}}
-												labelStyle={{ fontSize: 20, color: '#02421d' }}
-												labelWrapStyle={{}}
-											/>
-											<Square color1={theme.col1} color2={theme.col2} />
+							<View style={styles.themeWrapper}>
+								<RadioForm>
+									{Themes.map((theme) => (
+										<RadioButton key={theme.value}>
+											<View style={styles.themeOption}>
+												<Pressable
+													onPress={() => {
+														onThemeChange(theme.value);
+													}}
+													style={styles.themeOption}
+												>
+													<RadioButtonInput
+														obj={theme}
+														index={theme.value}
+														isSelected={selectedTheme === theme.value}
+														onPress={() => {
+															onThemeChange(theme.value);
+														}}
+														buttonInnerColor={'rgb(30, 92, 46)'}
+														buttonOuterColor={
+															selectedTheme === theme.value ? 'rgb(30, 92, 46)' : '#000'
+														}
+														buttonSize={30}
+														buttonOuterSize={40}
+														buttonStyle={{}}
+													/>
+													<RadioButtonLabel
+														obj={theme}
+														index={theme.value}
+														onPress={() => {
+															onThemeChange(theme.value);
+														}}
+														labelStyle={{ fontSize: 20, color: '#02421d' }}
+														labelWrapStyle={{}}
+													/>
+													<Square color1={theme.col1} color2={theme.col2} />
+												</Pressable>
+											</View>
 										</RadioButton>
-									</View>
-								))}
-							</RadioForm>
+									))}
+								</RadioForm>
+							</View>
 						</View>
 					</View>
 				</TouchableOpacity>
@@ -101,10 +110,12 @@ const styles = StyleSheet.create({
 		marginTop: 22
 	},
 	modalView: {
+		height: '50%',
+		width: '70%',
 		margin: 20,
+		padding: 20,
 		backgroundColor: 'white',
 		borderRadius: 20,
-		padding: 35,
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -129,20 +140,26 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	modalText: {
-		marginBottom: 15,
+		marginVertical: 15,
 		textAlign: 'center'
 	},
 	colorBox: {
-		height: 40,
-		width: 40,
+		height: 41,
+		width: 41,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		border: 1,
-		borderColor: 'black',
-		borderWidth: 0.5
+		borderWidth: 0.5,
+		borderColor: 'rgb(134, 142, 136)'
 	},
 	themeWrapper: {
-		/* justifyContent: 'center' */
+		width: '100%',
+		justifyContent: 'center'
+	},
+	themeOption: {
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingVertical: 2
 	}
 });
 
