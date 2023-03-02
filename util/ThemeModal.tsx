@@ -1,6 +1,7 @@
 import { View, Text, Modal, Pressable, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ModalProps {
 	isVisible: boolean;
@@ -28,11 +29,28 @@ const Square = ({ color1, color2 }: SquareProps) => {
 	);
 };
 
+const storeTheme = async (value: string) => {
+	try {
+		await AsyncStorage.setItem('theme', value);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const getTheme = async () => {
+	try {
+		await AsyncStorage.getItem('theme');
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 const ThemeModal = ({ isVisible, closeModal }: ModalProps) => {
 	const [ selectedTheme, setSelectedTheme ] = useState(0);
 
 	const onThemeChange = (value: number) => {
 		setSelectedTheme(value);
+		storeTheme(value.toString());
 		console.log('pressed btn with value: ' + value);
 	};
 
