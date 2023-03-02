@@ -12,6 +12,7 @@ const QueuingScreen = ({ navigation }: any) => {
 
 	const createGame = () => {
 		// Set a name for player
+		console.log(HOST_NAME)
 		fetch('http://' + HOST_NAME + ':8080/api/queuing/createlobby', {
 			method: 'POST',
 			headers: { 'Content-type': 'application/json' },
@@ -21,7 +22,7 @@ const QueuingScreen = ({ navigation }: any) => {
 			.then((response) => response.json())
 			.then((data) => {
 				console.log(data);
-				navigation.navigate('LobbyCode', { lobby: data });
+				navigation.navigate('LobbyCode', { lobby: data, playerName: name });
 			})
 			.catch((err) => console.error(err));
 	};

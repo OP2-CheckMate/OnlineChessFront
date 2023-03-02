@@ -4,6 +4,7 @@ import { Chess } from "chess.js";
 import { Image, View, StyleSheet, Dimensions } from "react-native";
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import { Lobby } from "../types/types";
 
 type Player = "b" | "w";
 type Type = "q" | "r" | "n" | "b" | "k" | "p";
@@ -80,10 +81,12 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
 }
 
 
-export default function Game() {
+export default function Game({ route, navigation }: any) {
   const chess = new Chess();
   const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
+  const lobby: Lobby = route.params.lobby
+  const playerName: string = route.params.playerName
 
   // Change active player
   const turn = (color: Player) => {
