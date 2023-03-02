@@ -1,7 +1,8 @@
 import { View, Text, Modal, Pressable, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Themes } from './BoardThemes';
 
 interface ModalProps {
 	isVisible: boolean;
@@ -12,12 +13,7 @@ interface SquareProps {
 	color2: string;
 }
 
-const Themes = [
-	{ label: 'Default', value: 0, col1: 'rgb(176, 157, 144)', col2: 'rgb(74, 67, 62)' },
-	{ label: 'Fin', value: 1, col1: 'white', col2: 'darkblue' },
-	{ label: 'Swe', value: 2, col1: 'yellow', col2: 'darkblue' }
-];
-
+/* the colorbox shown on themes */
 const Square = ({ color1, color2 }: SquareProps) => {
 	return (
 		<View style={styles.colorBox}>
@@ -29,34 +25,44 @@ const Square = ({ color1, color2 }: SquareProps) => {
 	);
 };
 
-const storeTheme = async (value: string) => {
-	try {
-		await AsyncStorage.setItem('theme', value);
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const getTheme = async () => {
-	try {
-		await AsyncStorage.getItem('theme');
-	} catch (error) {
-		console.log(error);
-	}
-};
-
 const ThemeModal = ({ isVisible, closeModal }: ModalProps) => {
-	const [ selectedTheme, setSelectedTheme ] = useState(0);
+	const [ selectedTheme, setSelectedTheme ] = useState('');
 
+	useEffect(() => {
+		getTheme();
+	}, []);
+	/* stores the theme in asyncStorage, so player doesn't have to select theme every time they start the app */
+	const storeTheme = async (value: string) => {
+		try {
+			await AsyncStorage.setItem('theme', value);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	/* gets the current selected theme from asyncStorage, and sets it as the selected theme state */
+	const getTheme = async () => {
+		try {
+			let value = await AsyncStorage.getItem('theme');
+			if (value !== null) {
+				setSelectedTheme(value);
+			} else {
+				setSelectedTheme('0');
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	/* whenever the player selects a theme, the theme is stored in asyncStorage, and the theme is updated */
 	const onThemeChange = (value: number) => {
-		setSelectedTheme(value);
 		storeTheme(value.toString());
-		console.log('pressed btn with value: ' + value);
+		getTheme();
 	};
 
 	return (
 		<View style={styles.centeredView}>
 			<Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={closeModal}>
+				{/* we wrap everything in a touchable opacity, so that the modal 
+				closes when the user clicks outside the modal */}
 				<TouchableOpacity style={{ flex: 1 }} onPress={closeModal}>
 					<View style={styles.centeredView}>
 						<View style={styles.modalView}>
@@ -75,13 +81,17 @@ const ThemeModal = ({ isVisible, closeModal }: ModalProps) => {
 													<RadioButtonInput
 														obj={theme}
 														index={theme.value}
-														isSelected={selectedTheme === theme.value}
+														isSelected={parseInt(selectedTheme) === theme.value}
 														onPress={() => {
 															onThemeChange(theme.value);
 														}}
 														buttonInnerColor={'rgb(30, 92, 46)'}
 														buttonOuterColor={
-															selectedTheme === theme.value ? 'rgb(30, 92, 46)' : '#000'
+															parseInt(selectedTheme) === theme.value ? (
+																'rgb(30, 92, 46)'
+															) : (
+																'#000'
+															)
 														}
 														buttonSize={30}
 														buttonOuterSize={40}

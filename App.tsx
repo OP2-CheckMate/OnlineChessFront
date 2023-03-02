@@ -14,26 +14,18 @@ const Stack = createNativeStackNavigator();
 
 const storeTheme = async (value: string) => {
   try {
-    await AsyncStorage.setItem("theme", value);
+    await AsyncStorage.setItem('theme', value);
   } catch (error) {
     console.log(error);
   }
 }
 
-const getTheme = async () => {
-	try {
-		await AsyncStorage.getItem('theme');
-	} catch (error) {
-		console.log(error);
-	}
-};
-
 const App = () => {
   /* Get saved theme for board when app starts */
   useEffect (() => {
-    let theme = getTheme();
+    let theme = AsyncStorage.getItem('theme');
     if (theme === null) {
-      storeTheme("0");
+      storeTheme('0');
     }
   }, [])
 
