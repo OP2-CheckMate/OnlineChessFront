@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import Board from "../util/Board";
 import { Chess } from "chess.js";
-import { Image, View, StyleSheet, Dimensions } from "react-native";
+import { Image, View, StyleSheet, Dimensions, Alert } from "react-native";
 import Animated, {
   useAnimatedGestureHandler, useAnimatedStyle,
   useSharedValue, withSpring
@@ -132,11 +132,18 @@ export default function Game({ route, navigation }: any) {
   // const lobby: Lobby = route.params.lobby
   // const playerName: string = route.params.playerName
 
-  // Change active player
+  // Change active player and check if game is over
   const turn = () => {
     setPlayer(game.turn());
     setBoard(game.board());
-  }
+    if (game.isGameOver()) {
+      game.isCheckmate() ? (
+        Alert.alert(player === 'b' ? 'The winner is White!' : 'The winner is Black!')
+      ) : (
+        Alert.alert('Draw!')
+      )
+    };
+  };
 
   return (
     <View style={styles.container}>
@@ -146,6 +153,7 @@ export default function Game({ route, navigation }: any) {
           if (piece !== null) {
             return (
               <Piece
+                key={`${y}-${x}`}
                 id={`${piece.color}${piece.type}` as const}
                 position={{ x: x * (width / 8), y: y * (width / 8) }}
                 movable={player === piece.color}
