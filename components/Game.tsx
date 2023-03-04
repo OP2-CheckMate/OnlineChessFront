@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Board from "../util/Board";
 import { Chess } from "chess.js";
 import { Image, View, StyleSheet, Dimensions } from "react-native";
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, {
+  useAnimatedGestureHandler, useAnimatedStyle,
+  useSharedValue, withSpring
+} from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { Lobby } from "../types/types";
 
@@ -71,26 +74,22 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
   /*
     Move piece in chess.js engine and on board if valid and change turn
     If move is illegal piece springs back to starting position
-    TODO: FOR SOME REASON TRYING TO MOVE A PIECE SECOND TIME RESETS THE BOARD AND DOES NOT WORK
   */
-  const movePiece = (from: any, to: string) => {
-    console.log('from:', from)
-    console.log('to:', to)
-    console.log('valid  moves', chess.moves({ verbose: true }))
-    console.log('board', chess.board())
+  const movePiece = useCallback((from: string, to: string) => {
     const move = chess.moves({ verbose: true }).find((m) => m.from === from && m.to === to);
-    // console.log(move)
+    console.log(chess);
     if (move) {
       chess.move({ from: from, to: to });
       turn(color);
       const position = translateSquareToPosition(to);
-      translateX.value = position.x;
-      translateY.value = position.y;
+      offsetX.value = position.x;
+      offsetY.value = position.y;
+      console.log('board', chess.ascii())
     } else {
       translateX.value = withSpring(offsetX.value);
       translateY.value = withSpring(offsetY.value);
     }
-  }
+  }, [chess, offsetX, offsetY, translateX, translateY, turn]);
 
   // Move pieces with drag and drop
   const onGestureEvent = useAnimatedGestureHandler({
@@ -105,7 +104,7 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
     onEnd: () => {
       const from = translatePositionToSquare({ x: offsetX.value, y: offsetY.value });
       const to = translatePositionToSquare({ x: translateX.value, y: translateY.value });
-      movePiece(from, to);
+      movePiece(from, to)
     }
   })
 
@@ -127,16 +126,16 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
 
 
 export default function Game({ route, navigation }: any) {
-  const chess = new Chess();
+  const [game, setGame] = useState(new Chess());
   const [player, setPlayer] = useState<Player>("w");
-  const [board, setBoard] = useState(chess.board());
+  const [board, setBoard] = useState(game.board());
   // const lobby: Lobby = route.params.lobby
   // const playerName: string = route.params.playerName
 
   // Change active player
-  const turn = (color: Player) => {
-    setPlayer(color === "w" ? "b" : "w");
-    setBoard(chess.board())
+  const turn = () => {
+    setPlayer(game.turn());
+    setBoard(game.board());
   }
 
   return (
@@ -150,7 +149,7 @@ export default function Game({ route, navigation }: any) {
                 id={`${piece.color}${piece.type}` as const}
                 position={{ x: x * (width / 8), y: y * (width / 8) }}
                 movable={player === piece.color}
-                chess={chess}
+                chess={game}
                 turn={turn}
                 color={piece.color}
               />
