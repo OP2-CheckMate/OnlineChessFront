@@ -25,29 +25,74 @@ export const PIECES: Pieces = {
   wp: require("../assets/pieces/wp.png"),
 };
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 interface PieceProps {
   id: Piece;
-  position: {
-    x: number,
-    y: number
-  };
+  position: Position;
   movable: boolean;
   turn(color: Player): void;
   chess: Chess;
   color: Player;
 }
 
-/* 
-  TODO: Add chess.js logic to moves and
-        make pieces go in squares
-*/
 const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
 
-  // Move piece with drag and drop
+  /* 
+    Translates the position of piece to Standard Algebraic Notation (SAN) for chess.js
+    Example: Black rook x:0, y:0 => a8
+  */
+  const translatePositionToSquare = ({ x, y }: Position) => {
+    const col = String.fromCharCode(97 + Math.round(x / (width / 8)));
+    const row = 8 - Math.round(y / (width / 8));
+    return `${col}${row}`;
+  }
+
+  /* 
+    Translates piece from SAN to x,y position to get the new position on the board
+    Example: Black rook moves to a6 => x:0, y:264
+  */
+  const translateSquareToPosition = (square: string): Position => {
+    const [col, row] = square.split('');
+    const position = {
+      x: (col.charCodeAt(0) - 'a'.charCodeAt(0)) * width / 8,
+      y: 7 * (width / 8) - (+row - 1) * width / 8
+    }
+    return position;
+  }
+
+  /*
+    Move piece in chess.js engine and on board if valid and change turn
+    If move is illegal piece springs back to starting position
+    TODO: FOR SOME REASON TRYING TO MOVE A PIECE SECOND TIME RESETS THE BOARD AND DOES NOT WORK
+  */
+  const movePiece = (from: any, to: string) => {
+    console.log('from:', from)
+    console.log('to:', to)
+    console.log('valid  moves', chess.moves({ verbose: true }))
+    console.log('board', chess.board())
+    const move = chess.moves({ verbose: true }).find((m) => m.from === from && m.to === to);
+    // console.log(move)
+    if (move) {
+      chess.move({ from: from, to: to });
+      turn(color);
+      const position = translateSquareToPosition(to);
+      translateX.value = position.x;
+      translateY.value = position.y;
+    } else {
+      translateX.value = withSpring(offsetX.value);
+      translateY.value = withSpring(offsetY.value);
+    }
+  }
+
+  // Move pieces with drag and drop
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: () => {
       offsetX.value = translateX.value;
@@ -57,10 +102,10 @@ const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
       translateX.value = translationX + offsetX.value;
       translateY.value = translationY + offsetY.value;
     },
-    onEnd: () => { // Returns pieces to start location after release
-      translateX.value = withSpring(position.x);
-      translateY.value = withSpring(position.y);
-      turn(color);
+    onEnd: () => {
+      const from = translatePositionToSquare({ x: offsetX.value, y: offsetY.value });
+      const to = translatePositionToSquare({ x: translateX.value, y: translateY.value });
+      movePiece(from, to);
     }
   })
 
@@ -85,12 +130,11 @@ export default function Game({ route, navigation }: any) {
   const chess = new Chess();
   const [player, setPlayer] = useState<Player>("w");
   const [board, setBoard] = useState(chess.board());
-  const lobby: Lobby = route.params.lobby
-  const playerName: string = route.params.playerName
+  // const lobby: Lobby = route.params.lobby
+  // const playerName: string = route.params.playerName
 
   // Change active player
   const turn = (color: Player) => {
-    console.log(color) //print color
     setPlayer(color === "w" ? "b" : "w");
     setBoard(chess.board())
   }
