@@ -35,7 +35,7 @@ interface PieceProps {
   id: Piece;
   position: Position;
   movable: boolean;
-  turn(color: PlayerColor): void;
+  turn(color: PlayerColor, from: string, to: string): void;
   chess: Chess;
   color: PlayerColor;
 }
@@ -75,14 +75,12 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
   */
   const movePiece = useCallback((from: string, to: string) => {
     const move = chess.moves({ verbose: true }).find((m) => m.from === from && m.to === to);
-    console.log(chess);
     if (move) {
       chess.move({ from: from, to: to });
-      turn(color);
+      turn(color, from, to);
       const position = translateSquareToPosition(to);
       offsetX.value = position.x;
       offsetY.value = position.y;
-      console.log('board', chess.ascii())
     } else {
       translateX.value = withSpring(offsetX.value);
       translateY.value = withSpring(offsetY.value);
