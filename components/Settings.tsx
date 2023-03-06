@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, ImageBackground, StyleSheet, Button } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import ThemeModal from '../util/ThemeModal';
+import ThemeSettingsModal from '../util/ThemeSettingsModal';
+import ProfileSettingsModal from '../util/ProfileSettingsModal';
 
 const Settings = () => {
 	const [ themeModalVisible, setThemeModalVisible ] = useState(false);
+	const [ profileModalVisible, setProfileModalVisible ] = useState(false);
 
 	return (
 		<View style={styles.container}>
@@ -46,13 +48,20 @@ const Settings = () => {
 							color="white"
 							size={25}
 							//PROFILE SETTINGS VALINNAT MODAALI AUKEE
-							onPress={() => {}}
+							onPress={() => {
+								setProfileModalVisible(true);
+							}}
 						>
 							Profile
 						</FontAwesome.Button>
 					</View>
-					{/* show ThemeModal if ThemeModalVisible is true */}
-					<ThemeModal isVisible={themeModalVisible} closeModal={() => setThemeModalVisible(false)} />
+					{/* show ThemeSettingsModal if themeModalVisible is true */}
+					<ThemeSettingsModal isVisible={themeModalVisible} closeModal={() => setThemeModalVisible(false)} />
+					{/* show ProfileSettingsModal if profileModalVisible is true */}
+					<ProfileSettingsModal
+						isVisible={profileModalVisible}
+						closeModal={() => setProfileModalVisible(false)}
+					/>
 				</View>
 			</ImageBackground>
 		</View>
