@@ -8,6 +8,7 @@ const Homepage = ({ navigation }: any) => {
     <>
       <View style={styles.container}>
         <ImageBackground source={require('./images/ChessGameFrontpagePic2.jpg')} resizeMode="cover" style={styles.image}>
+          <View style={{flex: 2}}></View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate('Settings')}
@@ -22,12 +23,13 @@ const Homepage = ({ navigation }: any) => {
               <Text style={styles.appButtonText}>Start Game</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Game')}
+              onPress={() => navigation.navigate('Game', {lobby: {lobbyId: 0, player1: 'p1'}, playerName: 'p1'})}
               style={styles.appButtonContainer}
             >
               <Text style={styles.appButtonText}>Board</Text>
             </TouchableOpacity>
           </View>
+          <View style={{flex: 1}}></View>
         </ImageBackground>
       </View>
 
@@ -45,12 +47,13 @@ const styles = StyleSheet.create({
 
   appButtonContainer: {
     elevation: 8,
-    backgroundColor: "rgb(1, 27, 10)",
+    backgroundColor: "#8A7C4A",
     borderRadius: 10,
-    borderColor: "white",
+    borderColor: "rgb(1, 27, 10)",
+    borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    width: '45%'
+    width: '55%'
 
   },
   appButtonText: {
@@ -62,9 +65,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent:'space-evenly',
     marginBottom: 50
   },
 
