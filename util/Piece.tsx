@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Chess } from "chess.js";
 import { Image, StyleSheet, Dimensions, } from "react-native";
 import Animated, {
+  runOnJS,
   useAnimatedGestureHandler, useAnimatedStyle,
   useSharedValue, withSpring
 } from "react-native-reanimated";
@@ -87,6 +88,14 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
     }
   }, [chess, offsetX, offsetY, translateX, translateY, turn]);
 
+
+  //RUNJS
+  const wrapper = (from: Position, to: Position) => {
+    const fromPos = translatePositionToSquare(from);
+    const toPos = translatePositionToSquare(to)
+    movePiece(fromPos, toPos)
+  };
+
   // Move pieces with drag and drop
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: () => {
@@ -98,9 +107,10 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
       translateY.value = translationY + offsetY.value;
     },
     onEnd: () => {
-      const from = translatePositionToSquare({ x: offsetX.value, y: offsetY.value });
-      const to = translatePositionToSquare({ x: translateX.value, y: translateY.value });
-      movePiece(from, to)
+      runOnJS(wrapper)({ x: offsetX.value, y: offsetY.value },{ x: translateX.value, y: translateY.value });
+      //const from = translatePositionToSquare({ x: offsetX.value, y: offsetY.value });
+      //const to = runOnJS(wrapper)();
+      //movePiece(from, to)
     }
   })
 
