@@ -6,9 +6,11 @@ import { Lobby } from "../types/types";
 import { Player, PlayerColor } from "../types/types";
 import { Piece } from "../util/Piece";
 import { HOST_NAME } from '@env';
+import CheckmateModal from "../util/GameOverModal";
 
 
 export default function Game({ route, navigation }: any) {
+  const [modalVisible, setModalVisible] = useState(false);
   const [game, setGame] = useState(new Chess());
   const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board());
@@ -64,11 +66,10 @@ export default function Game({ route, navigation }: any) {
 
   const checkGameOverStatus = (match: any, ownMove: boolean) => {
     if (match.isGameOver()) {
-      match.isCheckmate() ? (
-        Alert.alert(ownMove ? 'You Win! :)' : 'You Lost! >:D')
-      ) : (
-        Alert.alert('Draw!')
-      )
+      if (match.isCheckmate() === true) {
+        () => setModalVisible(!modalVisible)
+      }
+       
     };
   }
 
@@ -97,6 +98,7 @@ export default function Game({ route, navigation }: any) {
         title="Refresh"
         onPress={fetchMoves}
       />
+      <CheckmateModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} name={playerName} />
     </View>
   )
 }
