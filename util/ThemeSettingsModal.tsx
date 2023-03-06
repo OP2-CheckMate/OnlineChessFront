@@ -25,7 +25,7 @@ const Square = ({ color1, color2 }: SquareProps) => {
 	);
 };
 
-const ThemeModal = ({ isVisible, closeModal }: ModalProps) => {
+const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 	const [ selectedTheme, setSelectedTheme ] = useState('');
 
 	useEffect(() => {
@@ -191,4 +191,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default ThemeModal;
+export default ThemeSettingsModal;
