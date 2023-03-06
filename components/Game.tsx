@@ -10,31 +10,41 @@ import { HOST_NAME } from '@env';
 
 export default function Game({ route, navigation }: any) {
   const [game, setGame] = useState(new Chess());
-  const [playerColor, setPlayerColor] = useState<PlayerColor>("w");
+  const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board());
   const lobby: Lobby = route.params.lobby
   const playerName: string = route.params.playerName;
 
+  //Gets player color based on assignment player1 or player2
+  const getPlayerColor = () => {
+    if(lobby.player1.name === playerName) return 'w'
+    else return 'b'
+  }
+  const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor());
+
+  //Refreshes moves made by the opponent and if changes are made update board
   const fetchMoves = () => {
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => {
+        if (data.recentMove.from !== recentMove.from && data.recentMove.to !== recentMove.to){
+          //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
+          game.move({from: data.recentMove.from, to: data.recentMove.to})
+          setBoard(game.board())
+          checkGameOverStatus(game, false)
+        }
+      })
       .catch(err => console.log(err))
   }
+
   // Change active player and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
-    console.log('lobbyId:', lobby)
-    console.log('playerName:', playerName)
-    setPlayerColor(game.turn());
     setBoard(game.board());
     let gameOver = game.isGameOver();
-    console.log('gameOver', gameOver);
-
+    const movedPiece = {from: from, to: to}
+    setRecentMove(movedPiece)
     const data = {
-      recentMove: {
-        from: from,
-        to: to
-      },
+      recentMove: movedPiece,
       gameOver: gameOver
     };
 
@@ -46,17 +56,21 @@ export default function Game({ route, navigation }: any) {
       body: JSON.stringify(data)
     })
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => console.log(/*data*/))//Probably can be removed unless we validate return status
       .catch(err => console.log(err))
 
-    if (game.isGameOver()) {
-      game.isCheckmate() ? (
-        Alert.alert(playerColor === 'b' ? 'The winner is White' : `The winner is ${playerName}!`)
+    checkGameOverStatus(game, true)
+  };
+
+  const checkGameOverStatus = (match: any, ownMove: boolean) => {
+    if (match.isGameOver()) {
+      match.isCheckmate() ? (
+        Alert.alert(ownMove ? 'You Win! :)' : 'You Lost! >:D')
       ) : (
         Alert.alert('Draw!')
       )
     };
-  };
+  }
 
   return (
     <View style={styles.container}>

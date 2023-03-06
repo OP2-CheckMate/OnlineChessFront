@@ -40,7 +40,7 @@ const QueuingScreen = ({ navigation }: any) => {
 			.then((response) => response.json())
 			.then((data) => {
 				console.log(data);
-				navigation.navigate('LobbyCode', { lobby: data }); //TODO: REDIRECT TO BOARD
+				navigation.navigate('LobbyCode', { lobby: data, playerName: data.player2.name }); //TODO: REDIRECT TO BOARD
 			})
 			//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
 			.catch((err) => console.error(err));
