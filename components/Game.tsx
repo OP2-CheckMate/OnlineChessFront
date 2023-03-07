@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Board from "../util/Board";
 import { Chess } from "chess.js";
-import { View, StyleSheet, Dimensions, Alert, Button } from "react-native";
+import { View, StyleSheet, Dimensions, Button } from "react-native";
 import { Lobby } from "../types/types";
 import { Player, PlayerColor } from "../types/types";
 import { Piece } from "../util/Piece";
 import { HOST_NAME } from '@env';
 import CheckmateModal from "../util/GameOverModal";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function Game({ route, navigation }: any) {
@@ -16,6 +17,12 @@ export default function Game({ route, navigation }: any) {
   const [board, setBoard] = useState(game.board());
   const lobby: Lobby = route.params.lobby
   const playerName: string = route.params.playerName;
+  /* Hook to change header options in Game screen, used to navigate to settings page */
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () =>{ return <Ionicons name="settings" size={30} color="black" onPress={()=>{navigation.navigate('Settings')}} />
+      }})
+    }, [navigation]);
 
   //Gets player color based on assignment player1 or player2
   const getPlayerColor = () => {
