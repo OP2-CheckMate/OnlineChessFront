@@ -26,6 +26,7 @@ const QueuingScreen = ({ navigation }: any) => {
 		[ name ]
 	);
 
+	//Creates a new game on backend, requires playername
 	const createGame = () => {
 		// Set a name for player
 		console.log(HOST_NAME);
@@ -34,15 +35,15 @@ const QueuingScreen = ({ navigation }: any) => {
 			headers: { 'Content-type': 'application/json' },
 			body: JSON.stringify({ name: name })
 		})
-			// get lobby info
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-				navigation.navigate('LobbyCode', { lobby: data, playerName: name });
-			})
-			.catch((err) => console.error(err));
+		.then((response) => response.json())
+		.then((data) => {
+			console.log(data);
+			navigation.navigate('LobbyCode', { lobby: data, playerName: name });
+		})
+		.catch((err) => console.error(err));
 	};
 
+	//Joins existing lobby/game using lobbycode
 	const joinGame = () => {
 		// Post name and lobbyId to server
 		fetch('http://' + HOST_NAME + ':8080/api/queuing/joinlobby', {

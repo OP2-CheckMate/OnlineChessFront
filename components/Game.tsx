@@ -83,7 +83,7 @@ export default function Game({ route, navigation }: any) {
   return (
     <View style={styles.container}>
       <View style={{transform:[{scaleX: playerColor==='b' ? -1: 1}, {scaleY: playerColor==='b' ? -1: 1}]}}>
-      <Board />
+      <Board playerColor={playerColor} />
       {board.map((row, y) =>
         row.map((piece, x) => {
           if (piece !== null) {
