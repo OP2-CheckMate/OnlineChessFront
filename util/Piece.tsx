@@ -39,13 +39,16 @@ interface PieceProps {
   turn(color: PlayerColor, from: string, to: string): void;
   chess: Chess;
   color: PlayerColor;
+  playerColor?: PlayerColor
 }
 
-export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps) => {
+export const Piece = ({ id, position, movable, turn, chess, color, playerColor }: PieceProps) => {
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
+  const rotateX = 0
+  const rotateY = 0
 
   /* 
     Translates the position of piece to Standard Algebraic Notation (SAN) for chess.js
@@ -89,6 +92,15 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
   }, [chess, offsetX, offsetY, translateX, translateY, turn]);
 
 
+  const getTranslateValue = (translation: number, offset: number) => {
+    if (color === 'b') {
+      return offset-translation
+    }
+    else {
+      return translation + offset
+    }
+  }
+
   //RUNJS
   const wrapper = (from: Position, to: Position) => {
     const fromPos = translatePositionToSquare(from);
@@ -103,8 +115,16 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
       offsetY.value = translateY.value;
     },
     onActive: ({ translationX, translationY }) => {
-      translateX.value = translationX + offsetX.value;
-      translateY.value = translationY + offsetY.value;
+      //ENABLED WHEN BLACK PLAYS
+      if (color == 'b') {
+        translateX.value = offsetX.value - translationX; //getTranslateValue(translationX, offsetX.value)
+        translateY.value = offsetY.value - translationY;//getTranslateValue(translationY, offsetY.value)
+      } else {
+        translateX.value = translationX + offsetX.value;
+        translateY.value = translationY + offsetY.value;
+      }
+
+
     },
     onEnd: () => {
       runOnJS(wrapper)({ x: offsetX.value, y: offsetY.value },{ x: translateX.value, y: translateY.value });
@@ -114,11 +134,12 @@ export const Piece = ({ id, position, movable, turn, chess, color }: PieceProps)
     }
   })
 
+  //TRANSFORM ROTATION ONLY WHEN BLACK PLAYS
   const piece = useAnimatedStyle(() => ({
     position: "absolute",
     width: (width / 8),
     height: (width / 8),
-    transform: [{ translateX: translateX.value }, { translateY: translateY.value },],
+    transform: [{ translateX: translateX.value }, { translateY: translateY.value }, {rotateX: playerColor==='b'? '180deg': '0deg'}, {rotateY: playerColor==='b'? '180deg': '0deg'}],
   }));
 
   return (
