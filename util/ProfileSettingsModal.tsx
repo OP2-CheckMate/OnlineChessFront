@@ -104,7 +104,9 @@ const styles = StyleSheet.create({
 	modalText: {
 		marginVertical: 15,
 		textAlign: 'center',
-		color: 'white'
+		color: 'white',
+		fontWeight: 'bold',
+		fontSize: 16
 	},
 	themeWrapper: {
 		width: '100%',
@@ -118,7 +120,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 		color: 'darkgreen',
 		backgroundColor: 'white',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		fontSize: 16
 	}
 });
 

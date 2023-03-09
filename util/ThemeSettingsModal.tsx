@@ -85,10 +85,10 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 														onPress={() => {
 															onThemeChange(theme.value);
 														}}
-														buttonInnerColor={'rgb(30, 92, 46)'}
+														buttonInnerColor={'rgb(19, 58, 28)'}
 														buttonOuterColor={
 															parseInt(selectedTheme) === theme.value ? (
-																'rgb(30, 92, 46)'
+																'rgb(19, 58, 28)'
 															) : (
 																'#000'
 															)
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
 		width: '70%',
 		margin: 20,
 		padding: 20,
-		backgroundColor: 'white',
+		backgroundColor: 'rgba(255, 255, 255, 0.92),',
 		borderRadius: 20,
 		alignItems: 'center',
 		shadowColor: '#000',
@@ -169,7 +169,9 @@ const styles = StyleSheet.create({
 	},
 	modalText: {
 		marginVertical: 15,
-		textAlign: 'center'
+		textAlign: 'center',
+		fontWeight: 'bold',
+		fontSize: 16
 	},
 	colorBox: {
 		height: 41,
