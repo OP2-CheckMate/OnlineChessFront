@@ -14,11 +14,15 @@ interface SquareProps extends RowProps {
 export default function Board() {
 	const [ colorOne, setColorOne ] = useState('');
 	const [ colorTwo, setColorTwo ] = useState('');
+	/* forces a rerender when the user navigates to the screen (stack navigation doesn't rerender by default) */
 	const isFocused = useIsFocused();
 
-	useEffect(() => {
-		getTheme();
-	}, []);
+	useEffect(
+		() => {
+			getTheme();
+		},
+		[ AsyncStorage.getItem('theme') ]
+	);
 
 	const getTheme = async () => {
 		try {
@@ -26,6 +30,9 @@ export default function Board() {
 			if (value !== null) {
 				setColorOne(Themes[parseInt(value)].col1);
 				setColorTwo(Themes[parseInt(value)].col2);
+			} else {
+				setColorOne(Themes[0].col1);
+				setColorTwo(Themes[0].col2);
 			}
 		} catch (error) {
 			console.log(error);
