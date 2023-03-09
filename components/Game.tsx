@@ -79,9 +79,10 @@ export default function Game({ route, navigation }: any) {
        
     };
   }
-
+//CHange scale x, y based on color, BLACK -> -1
   return (
     <View style={styles.container}>
+      <View style={{transform:[{scaleX: playerColor==='b' ? -1: 1}, {scaleY: playerColor==='b' ? -1: 1}]}}>
       <Board />
       {board.map((row, y) =>
         row.map((piece, x) => {
@@ -95,17 +96,19 @@ export default function Game({ route, navigation }: any) {
                 chess={game}
                 turn={turn}
                 color={piece.color}
+                playerColor={playerColor}
               />
             );
           }
           return null;
         })
-      )}
-      <Button
+        )}
+      </View>
+        <Button
         title="Refresh"
         onPress={fetchMoves}
-      />
-      <CheckmateModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} name={playerName} />
+        />
+        <CheckmateModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} name={playerName} />
     </View>
   )
 }
