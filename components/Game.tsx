@@ -6,17 +6,20 @@ import { Lobby } from "../types/types";
 import { Player, PlayerColor } from "../types/types";
 import { Piece } from "../util/Piece";
 import { HOST_NAME } from '@env';
-import CheckmateModal from "../util/GameOverModal";
+import { CheckmateModal, StalemateModal, DrawModal } from "../util/GameOverModal";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function Game({ route, navigation }: any) {
-  const [modalVisible, setModalVisible] = useState(false);
   const [game, setGame] = useState(new Chess());
   const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board());
   const lobby: Lobby = route.params.lobby
   const playerName: string = route.params.playerName;
+  const [winner, setWinner] = useState("")
+  const [cModalVisible, setCModalVisible] = useState(false);
+  const [sModalVisible, setSModalVisible] = useState(false);
+  const [dModalVisible, setDModalVisible] = useState(false);
   /* Hook to change header options in Game screen, used to navigate to settings page */
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,7 +43,7 @@ export default function Game({ route, navigation }: any) {
           //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
           game.move({from: data.recentMove.from, to: data.recentMove.to})
           setBoard(game.board())
-          checkGameOverStatus(game, false)
+          checkGameOverStatus(game)
         }
       })
       .catch(err => console.log(err))
@@ -68,15 +71,36 @@ export default function Game({ route, navigation }: any) {
       .then(data => console.log(/*data*/))//Probably can be removed unless we validate return status
       .catch(err => console.log(err))
 
-    checkGameOverStatus(game, true)
+    checkGameOverStatus(game)
   };
 
-  const checkGameOverStatus = (match: any, ownMove: boolean) => {
-    if (match.isGameOver()) {
-      if (match.isCheckmate() === true) {
-        () => setModalVisible(!modalVisible)
+  //Checks which player won based on current turn
+  const checkWinner = (turn: any) => {
+    if (turn === "b") {
+      setWinner(lobby.player1.name);
+    } else {
+      if (lobby.player2?.name != undefined) {
+        setWinner(lobby.player2.name)
+      } else {
+
+        //Lobby returns lobby.player2.name string | undefined, if player2 wins player1´s modal won´t show player2 name.
+
+        setWinner("player2 name undefined");
       }
-       
+    }
+  }
+
+  //Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
+  const checkGameOverStatus = (match: any) => {
+    if (match.isGameOver()) {
+      checkWinner(match.turn())
+      if (match.isCheckmate() === true) {
+        setCModalVisible(!cModalVisible)
+      } else if (match.isStalemate() === true) {
+        setSModalVisible(!sModalVisible)
+      } else if (match.isDraw() === true) {
+        setDModalVisible(!dModalVisible)
+      }
     };
   }
 //CHange scale x, y based on color, BLACK -> -1
@@ -108,7 +132,9 @@ export default function Game({ route, navigation }: any) {
         title="Refresh"
         onPress={fetchMoves}
         />
-        <CheckmateModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} name={playerName} />
+        <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} />
+        <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} />
+        <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} />
     </View>
   )
 }

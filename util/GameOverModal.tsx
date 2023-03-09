@@ -4,14 +4,19 @@ import CustomButton from './CustomButton';
 
 
 
-interface ModalProps {
+interface CheckmateModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
   name: string;
 }
 
+interface ModalProps {
+  modalVisible: boolean;
+  toggleModal: () => void;
+}
 
-const CheckmateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, name }) => {
+
+const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleModal, name }) => {
   return (
     <Modal
       animationType="slide"
