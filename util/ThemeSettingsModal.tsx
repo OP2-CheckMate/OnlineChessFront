@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,7 +31,7 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 	useEffect(() => {
 		getTheme();
 	}, []);
-	/* stores the theme in asyncStorage, so player doesn't have to select theme every time they start the app */
+	/* stores the theme in asyncStorage, so player doesn't have to select theme everytime they start the app */
 	const storeTheme = async (value: string) => {
 		try {
 			await AsyncStorage.setItem('theme', value);
@@ -39,7 +39,7 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 			console.log(error);
 		}
 	};
-	/* gets the current selected theme from asyncStorage, and sets it as the selected theme state */
+	/* gets the current selected theme from asyncStorage, and sets it as the selectedTheme state */
 	const getTheme = async () => {
 		try {
 			let value = await AsyncStorage.getItem('theme');
