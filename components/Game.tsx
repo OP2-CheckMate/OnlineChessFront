@@ -20,14 +20,15 @@ export default function Game({ route, navigation }: any) {
   const [cModalVisible, setCModalVisible] = useState(false);
   const [sModalVisible, setSModalVisible] = useState(false);
   const [dModalVisible, setDModalVisible] = useState(false);
-  /* Hook to change header options in Game screen, used to navigate to settings page */
+  /* Hook to change header options in Game screen, used to navigate to settings page. 
+  Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () =>{ return <Ionicons name="settings" size={30} color="black" onPress={()=>{navigation.navigate('Settings')}} />
       }})
     }, [navigation]);
 
-  //Gets player color based on assignment player1 or player2
+  //Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = () => {
     if(lobby.player1.name === playerName) return 'w'
     else return 'b'
@@ -59,7 +60,6 @@ export default function Game({ route, navigation }: any) {
       recentMove: movedPiece,
       gameOver: gameOver
     };
-
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`, {
       method: 'POST',
       headers: {
@@ -97,7 +97,7 @@ export default function Game({ route, navigation }: any) {
       }
     };
   }
-//CHange scale x, y based on color, BLACK -> -1
+//CHange scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
   return (
     <View style={styles.container}>
       <View style={{transform:[{scaleX: playerColor==='b' ? -1: 1}, {scaleY: playerColor==='b' ? -1: 1}]}}>
@@ -126,6 +126,7 @@ export default function Game({ route, navigation }: any) {
         title="Refresh"
         onPress={fetchMoves}
         />
+        {/* one of the following modals will be displayed based on how the game ended */}
         <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate("Homepage")} />
         <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate("Homepage")} />
         <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate("Homepage")} />
