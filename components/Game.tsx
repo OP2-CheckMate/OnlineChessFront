@@ -8,13 +8,13 @@ import { Piece } from "../util/Piece";
 import { HOST_NAME } from '@env';
 import { CheckmateModal, StalemateModal, DrawModal } from "../util/GameOverModal";
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+ 
 
 export default function Game({ route, navigation }: any) {
   const [game, setGame] = useState(new Chess());
   const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board());
-  const lobby: Lobby = route.params.lobby
+  const [lobby, setLobby] = useState<Lobby>(route.params.lobby)
   const playerName: string = route.params.playerName;
   const [winner, setWinner] = useState("")
   const [cModalVisible, setCModalVisible] = useState(false);
@@ -68,7 +68,8 @@ export default function Game({ route, navigation }: any) {
       body: JSON.stringify(data)
     })
       .then(res => res.json())
-      .then(data => console.log(/*data*/))//Probably can be removed unless we validate return status
+      .then(data => {
+        setLobby(data)})//Probably can be removed unless we validate return status
       .catch(err => console.log(err))
 
     checkGameOverStatus(game)
@@ -79,14 +80,7 @@ export default function Game({ route, navigation }: any) {
     if (turn === "b") {
       setWinner(lobby.player1.name);
     } else {
-      if (lobby.player2?.name != undefined) {
-        setWinner(lobby.player2.name)
-      } else {
-
-        //Lobby returns lobby.player2.name string | undefined, if player2 wins player1´s modal won´t show player2 name.
-
-        setWinner("player2 name undefined");
-      }
+      setWinner(lobby.player2!.name)
     }
   }
 
