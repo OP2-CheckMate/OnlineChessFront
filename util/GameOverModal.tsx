@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, Button } from 'react-native';
 import CustomButton from './CustomButton';
+import { Dimensions } from 'react-native';
 
 
 interface CheckmateModalProps {
@@ -13,8 +14,10 @@ interface CheckmateModalProps {
 interface ModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
-  navigation?: () => void;
+  navigation: () => void;
 }
+
+const height: any = Dimensions.get('window');
 
 const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleModal, name, navigation }) => {
   return (
@@ -25,8 +28,13 @@ const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleMod
       onRequestClose={toggleModal}
     >
       <View style={styles.modalView}>
-        <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
-        <Text style={{fontSize: 20, marginBottom: 50}}>Player {name} won</Text>
+        <Text 
+          style={{fontSize: 32, marginBottom: 35, textAlign: 'center'}}
+          numberOfLines={1} adjustsFontSizeToFit
+          >Game Over!</Text>
+        <Text style={{fontSize: 25, marginBottom: 50, textAlign: 'center'}}
+          numberOfLines={1} adjustsFontSizeToFit
+          >{name} won!</Text>
         <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
       </View>
     </Modal>
@@ -42,9 +50,14 @@ const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation
       onRequestClose={toggleModal}
     >
       <View style={styles.modalView}>
-        <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
-        <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in draw</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
+      <Text 
+        style={{fontSize: 32, marginBottom: 35, textAlign: 'center'}}
+        numberOfLines={1} adjustsFontSizeToFit
+        >Game Over!</Text>
+        <Text style={{fontSize: 25, marginBottom: 50, textAlign: 'center'}}
+          numberOfLines={2} adjustsFontSizeToFit
+          >Match ended in draw!</Text>
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
       </View>
     </Modal>
   );
@@ -59,17 +72,25 @@ const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navig
       onRequestClose={toggleModal}
     >
       <View style={styles.modalView}>
-        <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
-        <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in stalemate</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
+      <Text 
+        style={{fontSize: 32, marginBottom: 35, textAlign: 'center'}}
+        numberOfLines={1} adjustsFontSizeToFit
+        >Game Over!</Text>
+        <Text style={{fontSize: 25, marginBottom: 50, textAlign: 'center'}}
+          numberOfLines={2} adjustsFontSizeToFit
+          >Match ended in stalemate!</Text>
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
       </View>
     </Modal>
   );
 };
 
-export {CheckmateModal, DrawModal, StalemateModal, CheckmateModalProps, ModalProps};
 
-export const styles = StyleSheet.create({
+
+
+export {CheckmateModal, DrawModal, StalemateModal};
+
+const styles = StyleSheet.create({
 
   modalView: {
     marginTop: "35%",
@@ -87,6 +108,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 7,
     elevation: 5,
     width: "75%",
-    height: "40%",
+    
   },
 });
+
