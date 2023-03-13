@@ -3,46 +3,49 @@ import Board from "../util/Board";
 import { Chess } from "chess.js";
 import { View, StyleSheet, Dimensions, Button } from "react-native";
 import { Lobby } from "../types/types";
-import { Player, PlayerColor } from "../types/types";
+import { PlayerColor } from "../types/types";
 import { Piece } from "../util/Piece";
 import { HOST_NAME } from '@env';
 import { CheckmateModal, StalemateModal, DrawModal } from "../util/GameOverModal";
 import Ionicons from '@expo/vector-icons/Ionicons';
- 
+
 
 export default function Game({ route, navigation }: any) {
+  const playerName: string = route.params.playerName;
   const [game, setGame] = useState(new Chess());
   const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board());
   const [lobby, setLobby] = useState<Lobby>(route.params.lobby)
-  const playerName: string = route.params.playerName;
   const [winner, setWinner] = useState("")
   const [cModalVisible, setCModalVisible] = useState(false);
   const [sModalVisible, setSModalVisible] = useState(false);
   const [dModalVisible, setDModalVisible] = useState(false);
+
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () =>{ return <Ionicons name="settings" size={30} color="black" onPress={()=>{navigation.navigate('Settings')}} />
-      }})
-    }, [navigation]);
+      headerRight: () => {
+        return <Ionicons name="settings" size={30} color="black" onPress={() => { navigation.navigate('Settings') }} />
+      }
+    })
+  }, [navigation]);
 
-  //Gets player color based on assignment player1 or player2. w=White, b=Black.
-  const getPlayerColor = () => {
-    if(lobby.player1.name === playerName) return 'w'
+  // Gets player color based on assignment player1 or player2. w=White, b=Black.
+  const getPlayerColor = (): PlayerColor => {
+    if (lobby.player1.name === playerName) return 'w'
     else return 'b'
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor());
 
-  //Refreshes moves made by the opponent and if changes are made update board
+  // Refreshes moves made by the opponent and if changes are made update board
   const fetchMoves = () => {
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
       .then(res => res.json())
       .then(data => {
-        if (data.recentMove.from !== recentMove.from && data.recentMove.to !== recentMove.to){
+        if (data.recentMove.from !== recentMove.from && data.recentMove.to !== recentMove.to) {
           //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
-          game.move({from: data.recentMove.from, to: data.recentMove.to})
+          game.move({ from: data.recentMove.from, to: data.recentMove.to })
           setBoard(game.board())
           checkGameOverStatus(game)
         }
@@ -50,11 +53,11 @@ export default function Game({ route, navigation }: any) {
       .catch(err => console.log(err))
   }
 
-  // Change active player and check if game is over
+  // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
     setBoard(game.board());
     let gameOver = game.isGameOver();
-    const movedPiece = {from: from, to: to}
+    const movedPiece = { from: from, to: to }
     setRecentMove(movedPiece)
     const data = {
       recentMove: movedPiece,
@@ -68,23 +71,17 @@ export default function Game({ route, navigation }: any) {
       body: JSON.stringify(data)
     })
       .then(res => res.json())
-      .then(data => {
-        setLobby(data)})//Probably can be removed unless we validate return status
+      .then(data => setLobby(data))
       .catch(err => console.log(err))
-
     checkGameOverStatus(game)
   };
 
-  //Checks which player won based on current turn
+  // Checks which player won based on current turn
   const checkWinner = (turn: any) => {
-    if (turn === "b") {
-      setWinner(lobby.player1.name);
-    } else {
-      setWinner(lobby.player2!.name)
-    }
+    turn === "b" ? setWinner(lobby.player1.name) : setWinner(lobby.player2!.name);
   }
 
-  //Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
+  // Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
   const checkGameOverStatus = (match: any) => {
     if (match.isGameOver()) {
       checkWinner(match.turn())
@@ -97,40 +94,39 @@ export default function Game({ route, navigation }: any) {
       }
     };
   }
-//CHange scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
+
+  // Change scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
   return (
     <View style={styles.container}>
-      <View style={{transform:[{scaleX: playerColor==='b' ? -1: 1}, {scaleY: playerColor==='b' ? -1: 1}]}}>
-      <Board playerColor={playerColor} />
-      {board.map((row, y) =>
-        row.map((piece, x) => {
-          if (piece !== null) {
-            return (
-              <Piece
-                key={`${y}-${x}`}
-                id={`${piece.color}${piece.type}` as const}
-                position={{ x: x * (width / 8), y: y * (width / 8) }}
-                movable={playerColor === piece.color}
-                chess={game}
-                turn={turn}
-                color={piece.color}
-                playerColor={playerColor}
-              />
-            );
-          }
-          return null;
-        })
+      <View style={{ transform: [{ scaleX: playerColor === 'b' ? -1 : 1 }, { scaleY: playerColor === 'b' ? -1 : 1 }] }}>
+        <Board playerColor={playerColor} />
+        {board.map((row, y) =>
+          row.map((piece, x) => {
+            {/* Go through all rows and place pieces to squares */ }
+            if (piece !== null) {
+              return (
+                <Piece
+                  key={`${y}-${x}`}
+                  id={`${piece.color}${piece.type}` as const}
+                  position={{ x: x * (width / 8), y: y * (width / 8) }}
+                  movable={playerColor === piece.color}
+                  chess={game}
+                  turn={turn}
+                  color={piece.color}
+                  playerColor={playerColor}
+                />
+              );
+            }
+            return null;
+          })
         )}
       </View>
-        <Button
-        title="Refresh"
-        onPress={fetchMoves}
-        />
-        {/* one of the following modals will be displayed based on how the game ended */}
-        <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate("Homepage")} />
-        <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate("Homepage")} />
-        <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate("Homepage")} />
+      <Button title="Refresh" onPress={fetchMoves} />
 
+      {/* one of the following modals will be displayed based on how the game ended */}
+      <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate("Homepage")} />
+      <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate("Homepage")} />
+      <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate("Homepage")} />
     </View>
   )
 }
