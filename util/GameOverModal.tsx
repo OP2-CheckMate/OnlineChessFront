@@ -67,9 +67,9 @@ const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal }) => 
   );
 };
 
-export {CheckmateModal, DrawModal, StalemateModal};
+export {CheckmateModal, DrawModal, StalemateModal, CheckmateModalProps, ModalProps};
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 
   modalView: {
     marginTop: "35%",
