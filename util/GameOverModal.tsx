@@ -13,7 +13,7 @@ interface CheckmateModalProps {
 interface ModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
-  navigation: () => void;
+  navigation?: () => void;
 }
 
 const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleModal, name, navigation }) => {
@@ -44,7 +44,7 @@ const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation
       <View style={styles.modalView}>
         <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
         <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in draw</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
       </View>
     </Modal>
   );
@@ -61,18 +61,15 @@ const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navig
       <View style={styles.modalView}>
         <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
         <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in stalemate</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
       </View>
     </Modal>
   );
 };
 
+export {CheckmateModal, DrawModal, StalemateModal, CheckmateModalProps, ModalProps};
 
-
-
-export {CheckmateModal, DrawModal, StalemateModal};
-
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 
   modalView: {
     marginTop: "35%",

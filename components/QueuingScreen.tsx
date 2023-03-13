@@ -3,6 +3,8 @@ import { View, StyleSheet, ImageBackground, Button, TextInput, Pressable, Text }
 import { HOST_NAME } from '@env';
 import CustomButton from '../util/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BadLobbyCodeModal from '../util/BadLobbyCodeModal';
+import { Lobby } from '../types/types';
 
 const QueuingScreen = ({ navigation }: any) => {
 	const [ name, setName ] = useState('');
@@ -10,6 +12,7 @@ const QueuingScreen = ({ navigation }: any) => {
 	const [ isDisabled, setIsDisabled ] = useState(true);
 	const [ isJoinDisabled, setIsJoinDisabled ] = useState(true);
 	const [ id, setId ] = useState('');
+	const [modalVisible, setModalVisible] = useState(false)
 	/* gets player name from asyncStorage, and sets it in "name" state */
 	useEffect(() => {
 		getPlayerName();
@@ -43,6 +46,10 @@ const QueuingScreen = ({ navigation }: any) => {
 		.catch((err) => console.error(err));
 	};
 
+	const badLobbyCode = () => {
+		setModalVisible(true)
+	}
+
 	//Joins existing lobby/game using lobbycode
 	const joinGame = () => {
 		// Post name and lobbyId to server
@@ -54,15 +61,25 @@ const QueuingScreen = ({ navigation }: any) => {
 				name: name
 			})
 		})
-			.then((response) => response.json())
+			.then((response) => {
+				if (response.status === 200){
+					response.json()
+				}else{
+					throw new Error('code ' + response.status)
+				}
+			})
 			.then((data) => {
 				console.log(data);
-				navigation.navigate('LobbyCode', { lobby: data, playerName: data.player2.name }); //TODO: REDIRECT TO BOARD
+				const lobby: Lobby = data!
+				navigation.navigate('LobbyCode', { lobby: data, playerName:  lobby.player2!.name }); //TODO: REDIRECT TO BOARD
 			})
 			//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
-			.catch((err) => console.error(err));
+			.catch((err) => {
+				if (err.message === 'code 400') badLobbyCode()
+				console.log(err)
+			});
 	};
-
+ 
 	/* stores the player name in asyncStorage, so player does not need to set name everytime app starts */
 	const storePlayerName = async (value: string) => {
 		try {
@@ -123,6 +140,7 @@ const QueuingScreen = ({ navigation }: any) => {
 					<CustomButton title="Join Game" onPress={joinGame} disabled={isJoinDisabled} />
 				</View>
 			</ImageBackground>
+			<BadLobbyCodeModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)}></BadLobbyCodeModal>
 		</View>
 	);
 };
