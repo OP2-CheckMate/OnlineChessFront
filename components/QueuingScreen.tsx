@@ -61,23 +61,20 @@ const QueuingScreen = ({ navigation }: any) => {
 				name: name
 			})
 		})
-			.then((response) => {
-				if (response.status === 200){
-					response.json()
-				}else{
-					throw new Error('code ' + response.status)
-				}
-			})
-			.then((data) => {
-				console.log(data);
-				const lobby: Lobby = data!
-				navigation.navigate('LobbyCode', { lobby: data, playerName:  lobby.player2!.name }); //TODO: REDIRECT TO BOARD
-			})
-			//.then(navigation.navigate('LobbyCode', {lobbyId: lobbyId, "player2": {}}))
-			.catch((err) => {
-				if (err.message === 'code 400') badLobbyCode()
-				console.log(err)
-			});
+		.then((response) => {
+			if (response.status !== 200){
+				throw new Error('code ' + response.status)
+			}
+			return response.json()
+		})
+		.then((data) => {
+			const lobby: Lobby = data!
+			navigation.navigate('LobbyCode', { lobby: data, playerName:  lobby.player2!.name }); //TODO: REDIRECT TO BOARD
+		})
+		.catch((err) => {
+			if (err.message === 'code 400') badLobbyCode()
+			console.log(err)
+		});
 	};
  
 	/* stores the player name in asyncStorage, so player does not need to set name everytime app starts */
