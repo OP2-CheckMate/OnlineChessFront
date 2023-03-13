@@ -126,9 +126,10 @@ export default function Game({ route, navigation }: any) {
         title="Refresh"
         onPress={fetchMoves}
         />
-        <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} />
-        <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} />
-        <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} />
+        <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate("Homepage")} />
+        <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate("Homepage")} />
+        <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate("Homepage")} />
+
     </View>
   )
 }

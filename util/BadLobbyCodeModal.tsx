@@ -1,10 +1,9 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet} from 'react-native';
+import { Modal, View, Text} from 'react-native';
 import CustomButton from './CustomButton';
 import { ModalProps, styles } from './GameOverModal';
 
 export default function BadLobbyCodeModal({ modalVisible, toggleModal }: ModalProps) {
-
     return(
         <Modal
             animationType="slide"

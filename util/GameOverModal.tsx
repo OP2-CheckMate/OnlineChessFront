@@ -3,20 +3,20 @@ import { Modal, View, Text, StyleSheet, Button } from 'react-native';
 import CustomButton from './CustomButton';
 
 
-
 interface CheckmateModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
   name: string;
+  navigation: () => void;
 }
 
 interface ModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
+  navigation?: () => void;
 }
 
-
-const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleModal, name }) => {
+const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleModal, name, navigation }) => {
   return (
     <Modal
       animationType="slide"
@@ -27,13 +27,13 @@ const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleMod
       <View style={styles.modalView}>
         <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
         <Text style={{fontSize: 20, marginBottom: 50}}>Player {name} won</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={() => toggleModal()} /> 
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation} /> 
       </View>
     </Modal>
   );
 };
 
-const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal }) => {
+const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation }) => {
   return (
     <Modal
       animationType="slide"
@@ -44,13 +44,13 @@ const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal }) => {
       <View style={styles.modalView}>
         <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
         <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in draw</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={() => toggleModal()} /> 
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
       </View>
     </Modal>
   );
 };
 
-const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal }) => {
+const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation }) => {
   return (
     <Modal
       animationType="slide"
@@ -61,7 +61,7 @@ const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal }) => 
       <View style={styles.modalView}>
         <Text style={{fontSize: 32, marginBottom: 35}}>Game Over!</Text>
         <Text style={{fontSize: 20, marginBottom: 50}}>Match ended in stalemate</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={() => toggleModal()} /> 
+        <CustomButton style={{alignSelf: 'baseline'}} title="Go home" onPress={navigation!} /> 
       </View>
     </Modal>
   );
@@ -90,4 +90,3 @@ export const styles = StyleSheet.create({
     height: "40%",
   },
 });
-
