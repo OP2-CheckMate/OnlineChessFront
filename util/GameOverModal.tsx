@@ -88,7 +88,7 @@ const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navig
 
 
 
-export {CheckmateModal, DrawModal, StalemateModal};
+export {CheckmateModal, DrawModal, StalemateModal, ModalProps, styles};
 
 const styles = StyleSheet.create({
 
