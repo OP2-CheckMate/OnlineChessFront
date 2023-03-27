@@ -43,12 +43,10 @@ export default function Game({ route, navigation }) {
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
       .then(res => res.json())
       .then(data => {
-        if (data.recentMove.from !== recentMove.from && data.recentMove.to !== recentMove.to) {
           //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
           game.move({ from: data.recentMove.from, to: data.recentMove.to })
           setBoard(game.board())
           checkGameOverStatus(game)
-        }
       })
       .catch(err => console.log(err))
   }

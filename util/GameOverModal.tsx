@@ -11,10 +11,15 @@ interface CheckmateModalProps {
   navigation: () => void;
 }
 
-interface ModalProps {
+interface NavigationModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
   navigation: () => void;
+}
+
+interface ModalProps {
+  modalVisible: boolean;
+  toggleModal: () => void;
 }
 
 const height: any = Dimensions.get('window')
@@ -41,7 +46,7 @@ const CheckmateModal: React.FC<CheckmateModalProps> = ({ modalVisible, toggleMod
   )
 }
 
-const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation }) => {
+const DrawModal: React.FC<NavigationModalProps> = ({ modalVisible, toggleModal, navigation }) => {
   return (
     <Modal
       animationType="slide"
@@ -63,7 +68,7 @@ const DrawModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation
   )
 }
 
-const StalemateModal: React.FC<ModalProps> = ({ modalVisible, toggleModal, navigation }) => {
+const StalemateModal: React.FC<NavigationModalProps> = ({ modalVisible, toggleModal, navigation }) => {
   return (
     <Modal
       animationType="slide"
