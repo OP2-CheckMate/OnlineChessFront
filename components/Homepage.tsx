@@ -1,5 +1,5 @@
-
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import React from 'react'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 
 const Homepage = ({ navigation }: any) => {
 
@@ -8,7 +8,7 @@ const Homepage = ({ navigation }: any) => {
       <View style={styles.container}>
         <ImageBackground source={require('./images/ChessGameFrontpagePic2.jpg')} resizeMode="cover" style={styles.image}>
           <View style={styles.buttonContainer}>
-          <TouchableOpacity
+            <TouchableOpacity
               onPress={() => navigation.navigate('QueuingScreen')}
               style={styles.appButton}
             >
@@ -21,19 +21,19 @@ const Homepage = ({ navigation }: any) => {
               <Text style={styles.appButtonText}>Settings</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Game', {lobby: {lobbyId: 0, player1: 'p1'}, playerName: 'p1'})}
+              onPress={() => navigation.navigate('Game', { lobby: { lobbyId: 0, player1: 'p1' }, playerName: 'p1' })}
               style={styles.appButton}
             >
               <Text style={styles.appButtonText}>Board</Text>
             </TouchableOpacity>
           </View>
-          
+
         </ImageBackground>
       </View>
 
     </>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
 
   appButton: {
-    backgroundColor: "rgba(138,124,74, 0.88)",
+    backgroundColor: 'rgba(138,124,74, 0.88)',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -54,22 +54,22 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(170, 170, 170, 0.5)',
     shadowColor: 'white',
     shadowOpacity: 1,
-    shadowOffset: {width: 2, height: 2},
+    shadowOffset: { width: 2, height: 2 },
     shadowRadius: 10,
     elevation: 40,
 
   },
   appButtonText: {
     fontSize: 24,
-    color: "white",
-    fontWeight: "bold",
-    alignSelf: "center",
-    textTransform: "uppercase",
+    color: 'white',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    textTransform: 'uppercase',
   },
   buttonContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     marginTop: 200,
   },
 
@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
     width: '100%'
 
   }
-});
+})
 
-export default Homepage;
+export default Homepage

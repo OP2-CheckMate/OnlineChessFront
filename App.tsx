@@ -1,43 +1,44 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Homepage from './components/Homepage';
-import QueuingScreen from './components/QueuingScreen';
-import Settings from './components/Settings';
-import Game from './components/Game';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import LobbyCodeScreen from './components/LobbyCodeScreen';
-import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Homepage from './components/Homepage'
+import QueuingScreen from './components/QueuingScreen'
+import Settings from './components/Settings'
+import Game from './components/Game'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import LobbyCodeScreen from './components/LobbyCodeScreen'
+import { StatusBar } from 'expo-status-bar'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useEffect } from 'react'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const storeTheme = async (value: string) => {
   try {
-    await AsyncStorage.setItem('theme', value);
+    await AsyncStorage.setItem('theme', value)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
 const App = () => {
   /* Get saved theme for board when app starts */
-  useEffect (() => {
-    let theme = AsyncStorage.getItem('theme');
+  useEffect(() => {
+    const theme = AsyncStorage.getItem('theme')
     if (theme === null) {
-      storeTheme('0');
+      storeTheme('0')
     }
   }, [])
 
   /* Helper function to check what is stored in AsyncStorage, will be deleted later */
   AsyncStorage.getAllKeys((err, keys: any) => {
     AsyncStorage.multiGet(keys, (error, stores: any) => {
-      stores.map((result:any, i:any, store:any) => {
-        console.log({ [store[i][0]]: store[i][1] });
-        return true;
-      });
-    });
-  });
+      stores.map((result: any, i: any, store: any) => {
+        console.log({ [store[i][0]]: store[i][1] })
+        return true
+      })
+    })
+  })
 
   return (
     <>
@@ -54,7 +55,7 @@ const App = () => {
         </NavigationContainer>
       </GestureHandlerRootView>
     </>
-  );
-};
+  )
+}
 
-export default App;
+export default App

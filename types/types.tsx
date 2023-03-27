@@ -3,7 +3,7 @@ export interface Player {
   name: string;
 }
 
-export type PlayerColor = "b" | "w";
+export type PlayerColor = 'b' | 'w';
 
 export interface Lobby {
   lobbyId: number;
