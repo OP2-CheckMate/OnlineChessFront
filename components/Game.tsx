@@ -24,6 +24,7 @@ export default function Game({ route, navigation }: Props) {
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
+  const [recentMove, setRecentMove] = useState<any>({})
 
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
@@ -56,7 +57,7 @@ export default function Game({ route, navigation }: Props) {
   }
 
   socket.on('pieceMoved', (data: Lobby) => {
-    if (data.recentMove?.from !== data.recentMove?.from && data.recentMove?.to !== data.recentMove?.to) {
+    if (data.recentMove?.from !== recentMove.from && data.recentMove?.to !== recentMove.to) {
       //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
       game.move({ from: data.recentMove!.from, to: data.recentMove!.to })
       setBoard(game.board())
@@ -73,7 +74,7 @@ export default function Game({ route, navigation }: Props) {
       recentMove: movedPiece,
       gameOver: gameOver
     }
-
+    setRecentMove(movedPiece)
     socket.emit('movePiece', lobby.lobbyId, data)
     checkGameOverStatus(game)
   }
