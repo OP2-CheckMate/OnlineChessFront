@@ -4,12 +4,15 @@ import { HOST_NAME } from '@env'
 import CustomButton from '../util/CustomButton'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BadLobbyCodeModal from '../util/BadLobbyCodeModal'
-import { Lobby } from '../types/types'
-import { io } from 'socket.io-client'
+import { Lobby, QueuingScreenNavigationProp } from '../types/types'
 import { useSocketSetup } from '../socket/useSocketSetup'
 import socket from '../socket/socket'
 
-const QueuingScreen = ({ navigation }:any) => {
+type Props = {
+  navigation: QueuingScreenNavigationProp;
+}
+
+const QueuingScreen = ({ navigation }: Props) => {
   const [name, setName] = useState('')
   const [lobbyId, setlobbyId] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
@@ -24,16 +27,13 @@ const QueuingScreen = ({ navigation }:any) => {
     getPlayerName()
   }, [])
   /* whenever name is changed´, check if it is empty or not, and set isDisabled accordingly */
-  useEffect(
-    () => {
-      if (name.length > 0) {
-        setIsDisabled(false)
-      } else {
-        setIsDisabled(true)
-      }
-    },
-    [name]
-  )
+  useEffect(() => {
+    if (name.length > 0) {
+      setIsDisabled(false)
+    } else {
+      setIsDisabled(true)
+    }
+  }, [name])
 
   //Creates a new game on backend, requires playername
   const createGame = () => {

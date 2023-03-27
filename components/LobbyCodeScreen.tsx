@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import { View, Text, ImageBackground, StyleSheet } from 'react-native'
-import socket from '../socket/socket'
-import { Lobby } from '../types/types'
+import { Lobby, LobbyCodeNavigationProp, LobbyCodeRouteProp } from '../types/types'
 import CustomButton from '../util/CustomButton'
+import socket from '../socket/socket'
 import { Snackbar } from "@react-native-material/core";
 
+type Props = {
+  navigation: LobbyCodeNavigationProp;
+  route: LobbyCodeRouteProp;
+}
 //After creating a lobby the player sees lobby id which can be shared to
 //another player to join the lobby
-const LobbyCodeScreen = ({ route, navigation }: any) => {
+const LobbyCodeScreen = ({ route, navigation }: Props) => {
   const { lobby, playerName} = route.params
   const [player2Name, setPlayer2Name] = useState<string>('TBD')
   const [snackIsVisible, setSnackIsVisible] = useState(false);
@@ -30,7 +34,6 @@ const LobbyCodeScreen = ({ route, navigation }: any) => {
           <View style={styles.center}>
             <Text style={{ fontSize: 20 }}>{lobby.player1.name} VS. {lobby.player2 ? lobby.player2.name : player2Name}</Text>
           </View>
-
         </View>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <CustomButton title="Open Board" onPress={() => navigation.navigate('Game', { lobby, playerName})}></CustomButton>

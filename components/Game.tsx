@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button } from 'react-native'
-import { Lobby } from '../types/types'
+import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
 import { HOST_NAME } from '@env'
@@ -10,13 +10,16 @@ import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
 
+type Props = {
+  navigation: GameNavigationProp,
+  route: GameRouteProp
+}
 
-export default function Game({ route, navigation }:any) {
-  const playerName: string = route.params.playerName
+export default function Game({ route, navigation }: Props) {
+  const playerName = route.params.playerName
   const [game, setGame] = useState(new Chess())
-  const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board())
-  const [lobby, setLobby] = useState<Lobby>(route.params.lobby)
+  const [lobby, setLobby] = useState(route.params.lobby)
   const [winner, setWinner] = useState('')
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
@@ -35,8 +38,7 @@ export default function Game({ route, navigation }:any) {
 
   // Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = (): PlayerColor => {
-    if (lobby.player1.name === playerName) return 'w'
-    else return 'b'
+    return lobby.player1.name === playerName ? 'w' : 'b'
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
@@ -45,18 +47,16 @@ export default function Game({ route, navigation }:any) {
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
       .then(res => res.json())
       .then(data => {
-        if (data.recentMove.from !== recentMove.from && data.recentMove.to !== recentMove.to) {
-          //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
-          game.move({ from: data.recentMove.from, to: data.recentMove.to })
-          setBoard(game.board())
-          checkGameOverStatus(game)
-        }
+        //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
+        game.move({ from: data.recentMove.from, to: data.recentMove.to })
+        setBoard(game.board())
+        checkGameOverStatus(game)
       })
       .catch(err => console.log(err))
   }
 
   socket.on('pieceMoved', (data: Lobby) => {
-    if (data.recentMove?.from !== recentMove.from && data.recentMove?.to !== recentMove.to) {
+    if (data.recentMove?.from !== data.recentMove?.from && data.recentMove?.to !== data.recentMove?.to) {
       //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
       game.move({ from: data.recentMove!.from, to: data.recentMove!.to })
       setBoard(game.board())
@@ -69,7 +69,6 @@ export default function Game({ route, navigation }:any) {
     setBoard(game.board())
     const gameOver = game.isGameOver()
     const movedPiece = { from: from, to: to }
-    setRecentMove(movedPiece)
     const data = {
       recentMove: movedPiece,
       gameOver: gameOver
@@ -80,19 +79,19 @@ export default function Game({ route, navigation }:any) {
   }
 
   // Checks which player won based on current turn
-  const checkWinner = (turn: any) => {
+  const checkWinner = (turn: PlayerColor) => {
     turn === 'b' ? setWinner(lobby.player1.name) : setWinner(lobby.player2!.name)
   }
 
   // Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
-  const checkGameOverStatus = (match: any) => {
+  const checkGameOverStatus = (match: Chess) => {
     if (match.isGameOver()) {
       checkWinner(match.turn())
-      if (match.isCheckmate() === true) {
+      if (match.isCheckmate()) {
         setCModalVisible(!cModalVisible)
-      } else if (match.isStalemate() === true) {
+      } else if (match.isStalemate()) {
         setSModalVisible(!sModalVisible)
-      } else if (match.isDraw() === true) {
+      } else if (match.isDraw()) {
         setDModalVisible(!dModalVisible)
       }
     }
@@ -127,9 +126,22 @@ export default function Game({ route, navigation }:any) {
       {/* <Button title="Refresh" onPress={fetchMoves} /> */}
 
       {/* one of the following modals will be displayed based on how the game ended */}
-      <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate('Homepage')} />
-      <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate('Homepage')} />
-      <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate('Homepage')} />
+      <CheckmateModal
+        modalVisible={cModalVisible}
+        toggleModal={() => setCModalVisible(!cModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+        name={winner}
+      />
+      <StalemateModal
+        modalVisible={sModalVisible}
+        toggleModal={() => setSModalVisible(!sModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+      />
+      <DrawModal
+        modalVisible={dModalVisible}
+        toggleModal={() => setDModalVisible(!dModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+      />
     </View>
   )
 }

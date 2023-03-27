@@ -5,12 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Themes } from './BoardThemes'
 
 interface ModalProps {
-	isVisible: boolean;
-	closeModal: () => void;
+  isVisible: boolean;
+  closeModal: () => void;
 }
 interface SquareProps {
-	color1: string;
-	color2: string;
+  color1: string;
+  color2: string;
 }
 
 /* the colorbox shown on themes */
@@ -26,7 +26,7 @@ const Square = ({ color1, color2 }: SquareProps) => {
 }
 
 const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
-  const [ selectedTheme, setSelectedTheme ] = useState('')
+  const [selectedTheme, setSelectedTheme] = useState('')
 
   useEffect(() => {
     getTheme()

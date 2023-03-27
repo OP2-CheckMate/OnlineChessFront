@@ -1,18 +1,18 @@
-import { View, Text, Modal, Pressable, Alert, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface ModalProps {
-	isVisible: boolean;
-	closeModal: () => void;
+  isVisible: boolean;
+  closeModal: () => void;
 }
 interface SquareProps {
-	color1: string;
-	color2: string;
+  color1: string;
+  color2: string;
 }
 
 const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
-  const [ playerName, setPlayerName ] = useState('')
+  const [playerName, setPlayerName] = useState('')
   useEffect(() => {
     getPlayerName()
   }, [])
