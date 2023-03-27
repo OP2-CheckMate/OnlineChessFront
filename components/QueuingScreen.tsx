@@ -22,16 +22,13 @@ const QueuingScreen = ({ navigation }: Props) => {
     getPlayerName()
   }, [])
   /* whenever name is changed´, check if it is empty or not, and set isDisabled accordingly */
-  useEffect(
-    () => {
-      if (name.length > 0) {
-        setIsDisabled(false)
-      } else {
-        setIsDisabled(true)
-      }
-    },
-    [name]
-  )
+  useEffect(() => {
+    if (name.length > 0) {
+      setIsDisabled(false)
+    } else {
+      setIsDisabled(true)
+    }
+  }, [name])
 
   //Creates a new game on backend, requires playername
   const createGame = () => {

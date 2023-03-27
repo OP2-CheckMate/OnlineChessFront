@@ -7,36 +7,31 @@ type Props = {
 }
 
 const Homepage = ({ navigation }: Props) => {
-
   return (
-    <>
-      <View style={styles.container}>
-        <ImageBackground source={require('./images/ChessGameFrontpagePic2.jpg')} resizeMode="cover" style={styles.image}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('QueuingScreen')}
-              style={styles.appButton}
-            >
-              <Text style={styles.appButtonText}>Start Game</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Settings')}
-              style={styles.appButton}
-            >
-              <Text style={styles.appButtonText}>Settings</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Game', { lobby: { lobbyId: 0, player1: 'p1' }, playerName: 'p1' })}
-              style={styles.appButton}
-            >
-              <Text style={styles.appButtonText}>Board</Text>
-            </TouchableOpacity>
-          </View>
-
-        </ImageBackground>
-      </View>
-
-    </>
+    <View style={styles.container}>
+      <ImageBackground source={require('./images/ChessGameFrontpagePic2.jpg')} resizeMode="cover" style={styles.image}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('QueuingScreen')}
+            style={styles.appButton}
+          >
+            <Text style={styles.appButtonText}>Start Game</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Settings')}
+            style={styles.appButton}
+          >
+            <Text style={styles.appButtonText}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Game', { lobby: { lobbyId: 0, player1: { name: 'p1' } }, playerName: 'p1' })}
+            style={styles.appButton}
+          >
+            <Text style={styles.appButtonText}>Board</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </View>
   )
 }
 
@@ -47,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-
   appButton: {
     backgroundColor: 'rgba(138,124,74, 0.88)',
     borderRadius: 10,
@@ -77,11 +71,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 200,
   },
-
   image: {
     flex: 1,
     width: '100%'
-
   }
 })
 

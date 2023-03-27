@@ -44,4 +44,4 @@ export type GameNavigationProp = NativeStackNavigationProp<StackParamList, 'Game
 export type GameRouteProp = RouteProp<StackParamList, 'Game'>
 
 export type LobbyCodeNavigationProp = NativeStackNavigationProp<StackParamList, 'LobbyCode'>
-export type LObbyCodeRouteProp = RouteProp<StackParamList, 'LobbyCode'>
+export type LobbyCodeRouteProp = RouteProp<StackParamList, 'LobbyCode'>

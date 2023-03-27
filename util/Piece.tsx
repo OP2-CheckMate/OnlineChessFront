@@ -95,8 +95,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor }
   const getTranslateValue = (translation: number, offset: number) => {
     if (color === 'b') {
       return offset - translation
-    }
-    else {
+    } else {
       return translation + offset
     }
   }
@@ -116,7 +115,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor }
     },
     onActive: ({ translationX, translationY }) => {
       //ENABLED WHEN BLACK PLAYS
-      if (color == 'b') {
+      if (color === 'b') {
         translateX.value = offsetX.value - translationX //getTranslateValue(translationX, offsetX.value)
         translateY.value = offsetY.value - translationY//getTranslateValue(translationY, offsetY.value)
       } else {
@@ -139,7 +138,12 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor }
     position: 'absolute',
     width: (width / 8),
     height: (width / 8),
-    transform: [{ translateX: translateX.value }, { translateY: translateY.value }, { rotateX: playerColor === 'b' ? '180deg' : '0deg' }, { rotateY: playerColor === 'b' ? '180deg' : '0deg' }],
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+      { rotateX: playerColor === 'b' ? '180deg' : '0deg' },
+      { rotateY: playerColor === 'b' ? '180deg' : '0deg' }
+    ],
   }))
 
   return (

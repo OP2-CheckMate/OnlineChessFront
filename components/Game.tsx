@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button } from 'react-native'
-import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
+import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
 import { HOST_NAME } from '@env'
@@ -15,11 +15,10 @@ type Props = {
 }
 
 export default function Game({ route, navigation }: Props) {
-  const playerName: string = route.params.playerName
+  const playerName = route.params.playerName
   const [game, setGame] = useState(new Chess())
-  const [recentMove, setRecentMove] = useState<any>({})
   const [board, setBoard] = useState(game.board())
-  const [lobby, setLobby] = useState<Lobby>(route.params.lobby)
+  const [lobby, setLobby] = useState(route.params.lobby)
   const [winner, setWinner] = useState('')
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
@@ -37,8 +36,7 @@ export default function Game({ route, navigation }: Props) {
 
   // Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = (): PlayerColor => {
-    if (lobby.player1.name === playerName) return 'w'
-    else return 'b'
+    return lobby.player1.name === playerName ? 'w' : 'b'
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
@@ -47,10 +45,10 @@ export default function Game({ route, navigation }: Props) {
     fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
       .then(res => res.json())
       .then(data => {
-          //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
-          game.move({ from: data.recentMove.from, to: data.recentMove.to })
-          setBoard(game.board())
-          checkGameOverStatus(game)
+        //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
+        game.move({ from: data.recentMove.from, to: data.recentMove.to })
+        setBoard(game.board())
+        checkGameOverStatus(game)
       })
       .catch(err => console.log(err))
   }
@@ -60,7 +58,6 @@ export default function Game({ route, navigation }: Props) {
     setBoard(game.board())
     const gameOver = game.isGameOver()
     const movedPiece = { from: from, to: to }
-    setRecentMove(movedPiece)
     const data = {
       recentMove: movedPiece,
       gameOver: gameOver
@@ -87,11 +84,11 @@ export default function Game({ route, navigation }: Props) {
   const checkGameOverStatus = (match: Chess) => {
     if (match.isGameOver()) {
       checkWinner(match.turn())
-      if (match.isCheckmate() === true) {
+      if (match.isCheckmate()) {
         setCModalVisible(!cModalVisible)
-      } else if (match.isStalemate() === true) {
+      } else if (match.isStalemate()) {
         setSModalVisible(!sModalVisible)
-      } else if (match.isDraw() === true) {
+      } else if (match.isDraw()) {
         setDModalVisible(!dModalVisible)
       }
     }
@@ -126,9 +123,22 @@ export default function Game({ route, navigation }: Props) {
       <Button title="Refresh" onPress={fetchMoves} />
 
       {/* one of the following modals will be displayed based on how the game ended */}
-      <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate('Homepage')} />
-      <StalemateModal modalVisible={sModalVisible} toggleModal={() => setSModalVisible(!sModalVisible)} navigation={() => navigation.navigate('Homepage')} />
-      <DrawModal modalVisible={dModalVisible} toggleModal={() => setDModalVisible(!dModalVisible)} navigation={() => navigation.navigate('Homepage')} />
+      <CheckmateModal
+        modalVisible={cModalVisible}
+        toggleModal={() => setCModalVisible(!cModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+        name={winner}
+      />
+      <StalemateModal
+        modalVisible={sModalVisible}
+        toggleModal={() => setSModalVisible(!sModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+      />
+      <DrawModal
+        modalVisible={dModalVisible}
+        toggleModal={() => setDModalVisible(!dModalVisible)}
+        navigation={() => navigation.navigate('Homepage')}
+      />
     </View>
   )
 }
