@@ -2,15 +2,19 @@ import React, { useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button } from 'react-native'
-import { Lobby } from '../types/types'
+import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
 import { HOST_NAME } from '@env'
 import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
+type Props = {
+  navigation: GameNavigationProp,
+  route: GameRouteProp
+}
 
-export default function Game({ route, navigation }) {
+export default function Game({ route, navigation }: Props) {
   const playerName: string = route.params.playerName
   const [game, setGame] = useState(new Chess())
   const [recentMove, setRecentMove] = useState<any>({})
@@ -77,12 +81,12 @@ export default function Game({ route, navigation }) {
   }
 
   // Checks which player won based on current turn
-  const checkWinner = (turn: any) => {
+  const checkWinner = (turn: PlayerColor) => {
     turn === 'b' ? setWinner(lobby.player1.name) : setWinner(lobby.player2!.name)
   }
 
   // Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
-  const checkGameOverStatus = (match: any) => {
+  const checkGameOverStatus = (match: Chess) => {
     if (match.isGameOver()) {
       checkWinner(match.turn())
       if (match.isCheckmate() === true) {

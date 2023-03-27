@@ -1,3 +1,6 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RouteProp } from '@react-navigation/native'
+
 export interface Player {
   id?: number;
   name: string;
@@ -11,3 +14,34 @@ export interface Lobby {
   player2?: Player;
   recentMove?: string;
 }
+
+// If you need to pass props in navigation or route add them here
+type StackParamList = {
+  Homepage: undefined;
+  QueuingScreen: undefined;
+  Settings: undefined;
+  Game: {
+    playerName: string;
+    lobby: Lobby;
+  };
+  LobbyCode: {
+    lobby: Lobby;
+    playerName: string;
+  };
+}
+
+// Props for navigation and route for all screens, not all used tho
+export type HomepageNavigationProp = NativeStackNavigationProp<StackParamList, 'Homepage'>
+export type HomepageRouteProp = RouteProp<StackParamList, 'Homepage'>
+
+export type QueuingScreenNavigationProp = NativeStackNavigationProp<StackParamList, 'QueuingScreen'>
+export type QueuingScreenRouteProp = RouteProp<StackParamList, 'QueuingScreen'>
+
+export type SettingsNavigationProp = NativeStackNavigationProp<StackParamList, 'Settings'>
+export type SettingsRouteProp = RouteProp<StackParamList, 'Settings'>
+
+export type GameNavigationProp = NativeStackNavigationProp<StackParamList, 'Game'>
+export type GameRouteProp = RouteProp<StackParamList, 'Game'>
+
+export type LobbyCodeNavigationProp = NativeStackNavigationProp<StackParamList, 'LobbyCode'>
+export type LObbyCodeRouteProp = RouteProp<StackParamList, 'LobbyCode'>

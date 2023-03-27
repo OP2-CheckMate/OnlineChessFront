@@ -1,7 +1,12 @@
 import React from 'react'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
+import { HomepageNavigationProp } from '../types/types'
 
-const Homepage = ({ navigation }: any) => {
+type Props = {
+  navigation: HomepageNavigationProp
+}
+
+const Homepage = ({ navigation }: Props) => {
 
   return (
     <>

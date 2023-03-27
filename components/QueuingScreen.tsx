@@ -4,9 +4,13 @@ import { HOST_NAME } from '@env'
 import CustomButton from '../util/CustomButton'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BadLobbyCodeModal from '../util/BadLobbyCodeModal'
-import { Lobby } from '../types/types'
+import { Lobby, QueuingScreenNavigationProp } from '../types/types'
 
-const QueuingScreen = ({ navigation }) => {
+type Props = {
+  navigation: QueuingScreenNavigationProp;
+}
+
+const QueuingScreen = ({ navigation }: Props) => {
   const [name, setName] = useState('')
   const [lobbyId, setlobbyId] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)

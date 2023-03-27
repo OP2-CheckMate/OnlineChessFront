@@ -1,11 +1,15 @@
 import React from 'react'
 import { View, Text, ImageBackground, StyleSheet } from 'react-native'
-import { Lobby } from '../types/types'
+import { LobbyCodeNavigationProp, LObbyCodeRouteProp } from '../types/types'
 import CustomButton from '../util/CustomButton'
 
+type Props = {
+  navigation: LobbyCodeNavigationProp;
+  route: LObbyCodeRouteProp;
+}
 //After creating a lobby the player sees lobby id which can be shared to
 //another player to join the lobby
-const LobbyCodeScreen = ({ route, navigation }: any) => {
+const LobbyCodeScreen = ({ route, navigation }: Props) => {
   const { lobby, playerName } = route.params
   console.log(lobby)
   return (
