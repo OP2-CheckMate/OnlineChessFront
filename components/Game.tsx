@@ -8,9 +8,10 @@ import { Piece } from '../util/Piece'
 import { HOST_NAME } from '@env'
 import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import socket from '../socket/socket'
 
 
-export default function Game({ route, navigation }) {
+export default function Game({ route, navigation }:any) {
   const playerName: string = route.params.playerName
   const [game, setGame] = useState(new Chess())
   const [recentMove, setRecentMove] = useState<any>({})
@@ -20,6 +21,7 @@ export default function Game({ route, navigation }) {
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
+
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
@@ -53,6 +55,15 @@ export default function Game({ route, navigation }) {
       .catch(err => console.log(err))
   }
 
+  socket.on('pieceMoved', (data: Lobby) => {
+    if (data.recentMove?.from !== recentMove.from && data.recentMove?.to !== recentMove.to) {
+      //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
+      game.move({ from: data.recentMove!.from, to: data.recentMove!.to })
+      setBoard(game.board())
+      checkGameOverStatus(game)
+    }
+  })
+
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
     setBoard(game.board())
@@ -63,16 +74,8 @@ export default function Game({ route, navigation }) {
       recentMove: movedPiece,
       gameOver: gameOver
     }
-    fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(data => setLobby(data))
-      .catch(err => console.log(err))
+
+    socket.emit('movePiece', lobby.lobbyId, data)
     checkGameOverStatus(game)
   }
 
@@ -121,7 +124,7 @@ export default function Game({ route, navigation }) {
           })
         )}
       </View>
-      <Button title="Refresh" onPress={fetchMoves} />
+      {/* <Button title="Refresh" onPress={fetchMoves} /> */}
 
       {/* one of the following modals will be displayed based on how the game ended */}
       <CheckmateModal modalVisible={cModalVisible} toggleModal={() => setCModalVisible(!cModalVisible)} name={winner} navigation={() => navigation.navigate('Homepage')} />

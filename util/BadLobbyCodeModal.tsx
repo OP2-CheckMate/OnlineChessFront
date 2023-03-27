@@ -1,7 +1,12 @@
 import React from 'react'
 import { Modal, View, Text} from 'react-native'
 import CustomButton from './CustomButton'
-import { ModalProps, styles } from './GameOverModal'
+import { styles } from './GameOverModal'
+
+interface ModalProps {
+  modalVisible: boolean;
+  toggleModal: () => void;
+}
 
 export default function BadLobbyCodeModal({ modalVisible, toggleModal }: ModalProps) {
   return(
