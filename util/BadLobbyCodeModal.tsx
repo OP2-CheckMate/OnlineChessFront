@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, View, Text} from 'react-native'
+import { Modal, View, Text } from 'react-native'
 import CustomButton from './CustomButton'
 import { styles } from './GameOverModal'
 
@@ -9,7 +9,7 @@ interface ModalProps {
 }
 
 export default function BadLobbyCodeModal({ modalVisible, toggleModal }: ModalProps) {
-  return(
+  return (
     <Modal
       animationType="slide"
       transparent={true}
@@ -18,7 +18,7 @@ export default function BadLobbyCodeModal({ modalVisible, toggleModal }: ModalPr
     >
       <View style={styles.modalView}>
         <Text>Lobby does not exist</Text>
-        <CustomButton style={{alignSelf: 'baseline'}} title="OK" onPress={() => toggleModal()} />
+        <CustomButton style={{ alignSelf: 'baseline' }} title="OK" onPress={() => toggleModal()} />
       </View>
     </Modal>
   )
