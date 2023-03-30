@@ -14,6 +14,7 @@ const CustomButton: FC<Props> = ({ onPress, title, style, disabled, joinDisabled
   return (
     <View style={styles.btnOuterContainer}>
       <Pressable
+        testID='custom-button-pressable'
         //if the button is disabled, the color will be grey
         //when pressed, the button will be a little bit lighter, otherwise go with the default style
         style={({ pressed }) => {
