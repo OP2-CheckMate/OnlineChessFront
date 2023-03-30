@@ -9,6 +9,7 @@ import { HOST_NAME } from '@env'
 import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
+import { Snackbar } from '@react-native-material/core'
 
 type Props = {
   navigation: GameNavigationProp,
@@ -62,8 +63,17 @@ export default function Game({ route, navigation }: Props) {
       game.move({ from: data.recentMove!.from, to: data.recentMove!.to })
       setBoard(game.board())
       checkGameOverStatus(game)
+      updateCheckStatus(game)
     }
   })
+
+  // Check for check
+  const [inCheck, setInCheck] = useState(false);
+  const updateCheckStatus = (match: Chess) => {
+    setInCheck(match.inCheck());
+    console.log(match.turn())
+    console.log(match.inCheck())
+  };
 
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
@@ -77,6 +87,7 @@ export default function Game({ route, navigation }: Props) {
     setRecentMove(movedPiece)
     socket.emit('movePiece', lobby.lobbyId, data)
     checkGameOverStatus(game)
+    updateCheckStatus(game);
   }
 
   // Checks which player won based on current turn
@@ -98,8 +109,10 @@ export default function Game({ route, navigation }: Props) {
     }
   }
 
+
   // Change scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
   return (
+    <>
     <View style={styles.container}>
       <View style={{ transform: [{ scaleX: playerColor === 'b' ? -1 : 1 }, { scaleY: playerColor === 'b' ? -1 : 1 }] }}>
         <Board playerColor={playerColor} />
@@ -144,6 +157,14 @@ export default function Game({ route, navigation }: Props) {
         navigation={() => navigation.navigate('Homepage')}
       />
     </View>
+    <View style={styles.container}>
+    {inCheck?
+      <Snackbar
+      message={`CHECK`}
+      style={{position: "absolute", start: 30, end: 30, bottom: 100, }}
+      />: <></>}
+    </View>
+    </>
   )
 }
 
