@@ -9,6 +9,7 @@ import { HOST_NAME } from '@env'
 import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
+import { useEffect } from 'react'
 
 type Props = {
   navigation: GameNavigationProp,
@@ -25,6 +26,7 @@ export default function Game({ route, navigation }: Props) {
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
   const [recentMove, setRecentMove] = useState<any>({})
+  const [move, setMove] = useState<any>(null)
 
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
@@ -55,7 +57,7 @@ export default function Game({ route, navigation }: Props) {
       })
       .catch(err => console.log(err))
   }
-
+/*
   socket.on('pieceMoved', (data: Lobby) => {
     if (data.recentMove?.from !== recentMove.from && data.recentMove?.to !== recentMove.to) {
       //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
@@ -64,9 +66,25 @@ export default function Game({ route, navigation }: Props) {
       checkGameOverStatus(game)
     }
   })
+*/
+  socket.on('gameUpdate', (data: any) => {
+    setMove(data)
+  })
+
+  useEffect(() => {
+    if (move !== null) {
+      game.move(move)
+      setBoard(game.board())
+      checkGameOverStatus(game)
+    }
+  }, [move])
+
 
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
+    setMove({from, to})
+    //socket.emit('updateGame', lobby.lobbyId, {from, to})
+    /*
     setBoard(game.board())
     const gameOver = game.isGameOver()
     const movedPiece = { from: from, to: to }
@@ -77,6 +95,7 @@ export default function Game({ route, navigation }: Props) {
     setRecentMove(movedPiece)
     socket.emit('movePiece', lobby.lobbyId, data)
     checkGameOverStatus(game)
+    */
   }
 
   // Checks which player won based on current turn
