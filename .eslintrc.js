@@ -40,6 +40,8 @@ module.exports = {
     ],
     'eqeqeq': 'warn',
     'linebreak-style': 0,
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
     'quotes': [
       'error',
       'single'

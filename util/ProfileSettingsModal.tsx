@@ -6,10 +6,6 @@ interface ModalProps {
   isVisible: boolean;
   closeModal: () => void;
 }
-interface SquareProps {
-  color1: string;
-  color2: string;
-}
 
 const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
   const [playerName, setPlayerName] = useState('')
