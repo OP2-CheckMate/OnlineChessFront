@@ -1,11 +1,10 @@
 import React, { useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
-import { Chess } from 'chess.js'
+import { Chess, Move } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button } from 'react-native'
 import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
-import { HOST_NAME } from '@env'
 import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
@@ -17,17 +16,14 @@ type Props = {
 }
 
 export default function Game({ route, navigation }: Props) {
-  const playerName = route.params.playerName
   const [game, setGame] = useState(new Chess())
   const [board, setBoard] = useState(game.board())
-  const [lobby, setLobby] = useState(route.params.lobby)
+  const {lobby, playerName} = route.params
   const [winner, setWinner] = useState('')
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
-  const [recentMove, setRecentMove] = useState<any>({})
-  const [move, setMove] = useState<any>(null)
-
+  const [move, setMove] = useState<Move | null>(null) //null only before game starts
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
@@ -45,57 +41,24 @@ export default function Game({ route, navigation }: Props) {
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
-  // Refreshes moves made by the opponent and if changes are made update board
-  const fetchMoves = () => {
-    fetch(`http://${HOST_NAME}:8080/api/games/lobby/${lobby.lobbyId}`)
-      .then(res => res.json())
-      .then(data => {
-        //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
-        game.move({ from: data.recentMove.from, to: data.recentMove.to })
-        setBoard(game.board())
-        checkGameOverStatus(game)
-      })
-      .catch(err => console.log(err))
-  }
-/*
-  socket.on('pieceMoved', (data: Lobby) => {
-    if (data.recentMove?.from !== recentMove.from && data.recentMove?.to !== recentMove.to) {
-      //OPPONENT MADE A MOVE AND NEEDS TO BE REFRESHED
-      game.move({ from: data.recentMove!.from, to: data.recentMove!.to })
-      setBoard(game.board())
-      checkGameOverStatus(game)
-    }
+  //State of the game was updated (opponent moved a piece)
+  socket.on('gameUpdate', (movedPiece: Move) => {
+    setMove(movedPiece)
   })
-*/
-  socket.on('gameUpdate', (data: any) => {
-    setMove(data)
-  })
-
   useEffect(() => {
     if (move !== null) {
+      console.log('opponent moved: ', move)
       game.move(move)
       setBoard(game.board())
       checkGameOverStatus(game)
     }
   }, [move])
 
-
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
-    setMove({from, to})
-    //socket.emit('updateGame', lobby.lobbyId, {from, to})
-    /*
     setBoard(game.board())
-    const gameOver = game.isGameOver()
-    const movedPiece = { from: from, to: to }
-    const data = {
-      recentMove: movedPiece,
-      gameOver: gameOver
-    }
-    setRecentMove(movedPiece)
-    socket.emit('movePiece', lobby.lobbyId, data)
+    socket.emit('updateGame', lobby.lobbyId, {from, to})
     checkGameOverStatus(game)
-    */
   }
 
   // Checks which player won based on current turn

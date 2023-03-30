@@ -12,13 +12,15 @@ type Props = {
 //After creating a lobby the player sees lobby id which can be shared to
 //another player to join the lobby
 const LobbyCodeScreen = ({ route, navigation }: Props) => {
-  const { lobby, playerName} = route.params
+  const {  playerName } = route.params
   const [player2Name, setPlayer2Name] = useState<string>('TBD')
   const [snackIsVisible, setSnackIsVisible] = useState(false);
+  const [lobby, setLobby] = useState(route.params.lobby)
 
   socket.emit('joinroom', lobby.lobbyId)
   socket.on('playerJoined', (result: Lobby) =>{
     setPlayer2Name(result.player2!.name)
+    setLobby(result)
     setSnackIsVisible(true)
     setTimeout(() => {setSnackIsVisible(false)}, 5000)
   })
