@@ -1,13 +1,11 @@
+import { fireEvent, render, screen } from '@testing-library/react-native'
 import React from 'react'
 import CustomButton from '../../util/CustomButton'
-import { fireEvent, render, screen } from '@testing-library/react-native'
 import '@testing-library/jest-dom'
 
 describe('<CustomButton />', () => {
   it('renders correctly', () => {
-    const onPressDummy = () => {
-      return
-    }
+    const onPressDummy = () => { return }
     render(<CustomButton title='Test Button' onPress={onPressDummy} />)
 
     const element = screen.getByText('Test Button')
