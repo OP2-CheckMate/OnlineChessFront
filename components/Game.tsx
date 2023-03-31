@@ -72,8 +72,6 @@ export default function Game({ route, navigation }: Props) {
   const [inCheck, setInCheck] = useState(false);
   const updateCheckStatus = (match: Chess) => {
     setInCheck(match.inCheck());
-    console.log(match.turn())
-    console.log(match.inCheck())
   };
 
   // Change active player, send move to backend and check if game is over
