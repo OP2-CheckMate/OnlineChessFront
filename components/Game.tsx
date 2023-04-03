@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess, Move } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button, Text } from 'react-native'
@@ -21,7 +21,7 @@ type Props = {
   route: GameRouteProp
 }
 
-export default function Game({ route, navigation }: Props) {
+const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
   const [board, setBoard] = useState(game.board())
   const { lobby, playerName } = route.params
@@ -90,10 +90,14 @@ export default function Game({ route, navigation }: Props) {
     setInCheck(match.inCheck())
   }
 
+  const getOpponentId = () => {
+    return getPlayerColor() === 'w' ? lobby.player2?.id : lobby.player1.id
+  }
+
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
     setBoard(game.board())
-    socket.emit('updateGame', lobby.lobbyId, { from, to })
+    socket.emit('updateGame', { from, to }, getOpponentId())
     checkGameOverStatus(game)
     updateCheckStatus(game)
     checkCurrentPlayer(game.turn())
@@ -206,3 +210,5 @@ const styles = StyleSheet.create({
     height: width,
   },
 })
+
+export default Game

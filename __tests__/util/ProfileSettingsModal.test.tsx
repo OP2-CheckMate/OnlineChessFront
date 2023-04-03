@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { act, render, screen } from '@testing-library/react-native'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native'
 import React from 'react'
 import ProfileSettingsModal from '../../util/ProfileSettingsModal'
 
@@ -29,15 +29,27 @@ describe('<ProfileSettingsModal />', () => {
       />
     )
 
-    // Give useEffect some time to get playerName from AsyncStorage and view to load
-    await act(async () => {
-      setTimeout(() => {
-        return
-      }, 1000)
-    })
-
-    const element = screen.getByText('Change name')
+    const element = await waitFor(() => screen.getByText('Change name'))
     expect(element).toBeDefined()
+    await AsyncStorage.clear()
+  })
+
+  it('changes the name in asyncstorage', async () => {
+    const closeModal = () => { return }
+    await AsyncStorage.setItem('playerName', 'Tester')
+
+    render(
+      <ProfileSettingsModal
+        isVisible={true}
+        closeModal={closeModal}
+      />
+    )
+
+    const input = await waitFor(() => screen.getByTestId('input'))
+    fireEvent.changeText(input, 'tester')
+
+    const newName = await AsyncStorage.getItem('playerName')
+    expect(newName).toEqual('tester')
     await AsyncStorage.clear()
   })
 })
