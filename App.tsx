@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect } from 'react'
 import { StackParamList } from './types/types'
+import { InQueueScreen } from './components/InQueueScreen'
 
 const Stack = createNativeStackNavigator<StackParamList>()
 
@@ -52,6 +53,7 @@ const App = () => {
             <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="Game" component={Game} />
             <Stack.Screen name="LobbyCode" component={LobbyCodeScreen} />
+            <Stack.Screen name="InQueue" component={InQueueScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
