@@ -35,6 +35,9 @@ export type StackParamList = {
     lobby: Lobby;
     playerName: string;
   };
+  InQueue: {
+    playerName: string;
+  };
 }
 
 // Props for navigation and route for all screens, not all used tho
@@ -52,3 +55,6 @@ export type GameRouteProp = RouteProp<StackParamList, 'Game'>
 
 export type LobbyCodeNavigationProp = NativeStackNavigationProp<StackParamList, 'LobbyCode'>
 export type LobbyCodeRouteProp = RouteProp<StackParamList, 'LobbyCode'>
+
+export type InQueueNavigationProp = NativeStackNavigationProp<StackParamList, 'InQueue'>
+export type InQueueRouteProp = RouteProp<StackParamList, 'InQueue'>

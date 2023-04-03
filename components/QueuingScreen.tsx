@@ -46,6 +46,15 @@ const QueuingScreen = ({ navigation }: Props) => {
     navigation.navigate('LobbyCode', { lobby: response, playerName: name})
   })
 
+  socket.on('gamefound', (response: Lobby) => {
+    navigation.navigate('LobbyCode', { lobby: response, playerName: name})
+  })
+
+  socket.on('joinedQueue', () => {
+    console.log('joined queue')
+    navigation.navigate('InQueue', {playerName: name})
+  })
+
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
      socket.emit('joinlobby', parseInt(lobbyId),name)
@@ -73,6 +82,10 @@ const QueuingScreen = ({ navigation }: Props) => {
     }
   }
 
+  const findGame = () => {
+    socket.emit('joinqueue', name)
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require('./images/settingsBgImage.png')} resizeMode="cover" style={styles.image}>
@@ -90,8 +103,11 @@ const QueuingScreen = ({ navigation }: Props) => {
             autoFocus={true}
             placeholderTextColor="rgb(110,93,53)"
           />
+          <View style={{flexDirection: 'row'}}>
           {/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
           <CustomButton title="Create Game" onPress={ () => createGame()} disabled={isDisabled} />
+          <CustomButton title="Find game" onPress={ () => findGame()} disabled={isDisabled} />
+          </View>
           <TextInput
             // Enter Lobby-ID
             style={styles.input}
