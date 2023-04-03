@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess, Move } from 'chess.js'
 import { View, StyleSheet, Dimensions, Button, Text } from 'react-native'
@@ -16,7 +16,7 @@ type Props = {
   route: GameRouteProp
 }
 
-export default function Game({ route, navigation }: Props) {
+const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
   const [board, setBoard] = useState(game.board())
   const { lobby, playerName } = route.params
@@ -174,3 +174,5 @@ const styles = StyleSheet.create({
     height: width,
   }
 })
+
+export default Game

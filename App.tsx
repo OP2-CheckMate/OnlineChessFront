@@ -10,8 +10,9 @@ import LobbyCodeScreen from './components/LobbyCodeScreen'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect } from 'react'
+import { StackParamList } from './types/types'
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator<StackParamList>()
 
 const storeTheme = async (value: string) => {
   try {

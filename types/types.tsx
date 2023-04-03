@@ -23,7 +23,7 @@ export interface Move {
 
 
 // If you need to pass props in navigation or route add them here
-type StackParamList = {
+export type StackParamList = {
   Homepage: undefined;
   QueuingScreen: undefined;
   Settings: undefined;

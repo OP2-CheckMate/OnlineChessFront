@@ -7,8 +7,8 @@ describe('GameOverModal', () => {
     it('renders correctly with player name', () => {
       const playerName = 'Tester'
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <CheckmateModal
           modalVisible={true}
@@ -26,17 +26,17 @@ describe('GameOverModal', () => {
 
     it('doesnt show when not visible', () => {
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <CheckmateModal
-          modalVisible={true}
+          modalVisible={false}
           toggleModal={toggle}
           name={'Tester'}
           navigation={navigation}
         />
       )
-      const element = screen.queryByText('Game over!')
+      const element = screen.queryByText('Game Over!')
       expect(element).toBeNull()
     })
   })
@@ -44,8 +44,8 @@ describe('GameOverModal', () => {
   describe('DrawModal', () => {
     it('renders correctly', () => {
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <DrawModal
           modalVisible={true}
@@ -62,16 +62,16 @@ describe('GameOverModal', () => {
 
     it('doesnt show when not visible', () => {
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <DrawModal
-          modalVisible={true}
+          modalVisible={false}
           toggleModal={toggle}
           navigation={navigation}
         />
       )
-      const element = screen.queryByText('Game over!')
+      const element = screen.queryByText('Game Over!')
       expect(element).toBeNull()
     })
   })
@@ -79,8 +79,8 @@ describe('GameOverModal', () => {
   describe('StalemateModal', () => {
     it('renders correctly', () => {
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <StalemateModal
           modalVisible={true}
@@ -97,16 +97,16 @@ describe('GameOverModal', () => {
 
     it('doesnt show when not visible', () => {
       // Dummies for testing the component rendering
-      const toggle = () => { return }
-      const navigation = () => { return }
+      const toggle = () => { }
+      const navigation = () => { }
       render(
         <StalemateModal
-          modalVisible={true}
+          modalVisible={false}
           toggleModal={toggle}
           navigation={navigation}
         />
       )
-      const element = screen.queryByText('Game over!')
+      const element = screen.queryByText('Game Over!')
       expect(element).toBeNull()
     })
   })
