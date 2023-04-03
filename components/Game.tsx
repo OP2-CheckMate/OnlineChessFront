@@ -74,10 +74,14 @@ export default function Game({ route, navigation }: Props) {
     setInCheck(match.inCheck());
   };
 
+  const getOpponentId = () => {
+    return getPlayerColor() === 'w' ? lobby.player2?.id : lobby.player1.id
+  }
+
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string) => {
     setBoard(game.board())
-    socket.emit('updateGame', lobby.lobbyId, { from, to })
+    socket.emit('updateGame', { from, to }, getOpponentId())
     checkGameOverStatus(game)
     updateCheckStatus(game);
     checkCurrentPlayer(game.turn())
