@@ -48,6 +48,7 @@ const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
                 <TextInput
                   value={playerName}
                   style={styles.input}
+                  testID='input'
                   /* when changing the name, the name is stored in asyncStorage and in state */
                   onChangeText={(value) => {
                     setPlayerName(value)

@@ -13,7 +13,7 @@ export interface Lobby {
   player1: Player;
   player2?: Player;
   recentMove?: Move;
-  isGameOver: boolean;
+  isGameOver?: boolean;
 }
 
 export interface Move {
