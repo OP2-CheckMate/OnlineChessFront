@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react-native'
+import { fireEvent, render, screen } from '@testing-library/react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import ThemeSettingsModal from '../../util/ThemeSettingsModal'
 
@@ -15,5 +16,20 @@ describe('<ThemeSettingsModal />', () => {
     expect(element).toBeDefined()
   })
 
-  // More tests to test that pressing a button changes the theme in asyncstorage
+  it('changes the theme stored in asyncstorage', async () => {
+    const handleClose = () => { return }
+    await AsyncStorage.setItem('theme', '0')
+    render(
+      <ThemeSettingsModal
+        isVisible={true}
+        closeModal={handleClose}
+      />
+    )
+    const element = screen.getByText('Swe')
+    fireEvent.press(element)
+
+    const newTheme = await AsyncStorage.getItem('theme')
+    expect(newTheme).toBe('2')
+    await AsyncStorage.clear()
+  })
 })

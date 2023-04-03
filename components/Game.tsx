@@ -5,14 +5,19 @@ import { View, StyleSheet, Dimensions, Button, Text } from 'react-native'
 import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
-import { CheckmateModal, StalemateModal, DrawModal } from '../util/GameOverModal'
+import {
+  CheckmateModal,
+  StalemateModal,
+  DrawModal,
+} from '../util/GameOverModal'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
 import { useEffect } from 'react'
 import { Snackbar } from '@react-native-material/core'
+import ChatBox from '../util/ChatBox'
 
 type Props = {
-  navigation: GameNavigationProp,
+  navigation: GameNavigationProp
   route: GameRouteProp
 }
 
@@ -27,14 +32,24 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
   const [move, setMove] = useState<Move | null>(null) //null only before game starts
+  const [messages, setMessages] = useState<string[]>([])
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        return <Ionicons name="settings" size={30} color="black" onPress={() => { navigation.navigate('Settings') }} />
-      }
+        return (
+          <Ionicons
+            name='settings'
+            size={30}
+            color='black'
+            onPress={() => {
+              navigation.navigate('Settings')
+            }}
+          />
+        )
+      },
     })
   }, [navigation])
 
@@ -61,18 +76,19 @@ const Game: FC<Props> = ({ route, navigation }) => {
 
   // Checks the name of the player whose turn it is
   const checkCurrentPlayer = (turn: PlayerColor) => {
-    const currentPlayerName = turn === 'b' ? lobby.player2!.name : lobby.player1.name;
+    const currentPlayerName =
+      turn === 'b' ? lobby.player2!.name : lobby.player1.name
     if (currentPlayer !== currentPlayerName) {
-      setLastPlayer(currentPlayer);
-      setCurrentPlayer(currentPlayerName);
+      setLastPlayer(currentPlayer)
+      setCurrentPlayer(currentPlayerName)
     }
   }
 
   // Check for check
-  const [inCheck, setInCheck] = useState(false);
+  const [inCheck, setInCheck] = useState(false)
   const updateCheckStatus = (match: Chess) => {
-    setInCheck(match.inCheck());
-  };
+    setInCheck(match.inCheck())
+  }
 
   const getOpponentId = () => {
     return getPlayerColor() === 'w' ? lobby.player2?.id : lobby.player1.id
@@ -83,15 +99,16 @@ const Game: FC<Props> = ({ route, navigation }) => {
     setBoard(game.board())
     socket.emit('updateGame', { from, to }, getOpponentId())
     checkGameOverStatus(game)
-    updateCheckStatus(game);
+    updateCheckStatus(game)
     checkCurrentPlayer(game.turn())
   }
 
   // Checks which player won based on current turn
   const checkWinner = (turn: PlayerColor) => {
-    turn === 'b' ? setWinner(lobby.player1.name) : setWinner(lobby.player2!.name)
+    turn === 'b'
+      ? setWinner(lobby.player1.name)
+      : setWinner(lobby.player2!.name)
   }
-
 
   // Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
   const checkGameOverStatus = (match: Chess) => {
@@ -107,16 +124,28 @@ const Game: FC<Props> = ({ route, navigation }) => {
     }
   }
 
+  const handleSendMessage = (message: string) => {
+    setMessages([...messages, message])
+  }
 
   // Change scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
   return (
     <>
       <View style={styles.container}>
-        <View style={{ transform: [{ scaleX: playerColor === 'b' ? -1 : 1 }, { scaleY: playerColor === 'b' ? -1 : 1 }] }}>
+        <View
+          style={{
+            transform: [
+              { scaleX: playerColor === 'b' ? -1 : 1 },
+              { scaleY: playerColor === 'b' ? -1 : 1 },
+            ],
+          }}
+        >
           <Board playerColor={playerColor} />
           {board.map((row, y) =>
             row.map((piece, x) => {
-              {/* Go through all rows and place pieces to squares */ }
+              {
+                /* Go through all rows and place pieces to squares */
+              }
               if (piece !== null) {
                 return (
                   <Piece
@@ -157,11 +186,18 @@ const Game: FC<Props> = ({ route, navigation }) => {
       </View>
       <View style={styles.container}>
         <Text>{`Now in turn: ${currentPlayer}`}</Text>
-        {inCheck ?
+        {inCheck ? (
           <Snackbar
             message={`${lastPlayer} has checked the game `}
-            style={{ position: "absolute", start: 30, end: 30, bottom: 100, }}
-          /> : <></>}
+            style={{ position: 'absolute', start: 30, end: 30, bottom: 100 }}
+          />
+        ) : (
+          <></>
+        )}
+        <ChatBox
+          onSendMessage={handleSendMessage}
+          messages={messages}
+        ></ChatBox>
       </View>
     </>
   )
@@ -172,7 +208,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height: width,
-  }
+  },
 })
 
 export default Game
