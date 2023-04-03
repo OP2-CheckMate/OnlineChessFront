@@ -47,6 +47,7 @@ const QueuingScreen = ({ navigation }: Props) => {
   })
 
   socket.on('gamefound', (response: Lobby) => {
+    socket.emit('joinroom', response.lobbyId)
     navigation.navigate('LobbyCode', { lobby: response, playerName: name})
   })
 

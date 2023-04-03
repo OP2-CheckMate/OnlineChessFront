@@ -14,6 +14,7 @@ export const InQueueScreen: FC<Props> = ({route, navigation}: Props) => {
     const {playerName} = route.params
 
     socket.on('gamefound', (response: Lobby) => {
+        socket.emit('joinroom', response.lobbyId)
         navigation.navigate('LobbyCode', { lobby: response, playerName: playerName})
     })
 
