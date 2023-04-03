@@ -39,6 +39,8 @@ const ChatBox = ({ onSendMessage, messages }: ChatBoxProps) => {
           </View>
         )}
         keyExtractor={(item, index) => index.toString()}
+        inverted
+        contentContainerStyle={{ flexDirection: 'column-reverse' }}
       />
       <View style={styles.inputContainer}>
         <TextInput
