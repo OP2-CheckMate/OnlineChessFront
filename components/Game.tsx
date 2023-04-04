@@ -1,8 +1,8 @@
 import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess, Move } from 'chess.js'
-import { View, StyleSheet, Dimensions, Button, Text } from 'react-native'
-import { GameNavigationProp, GameRouteProp, Lobby } from '../types/types'
+import { View, StyleSheet, Dimensions, Text } from 'react-native'
+import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
 import {
@@ -32,7 +32,6 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
   const [move, setMove] = useState<Move | null>(null) //null only before game starts
-  const [messages, setMessages] = useState<string[]>([])
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
@@ -123,11 +122,6 @@ const Game: FC<Props> = ({ route, navigation }) => {
       }
     }
   }
-
-  const handleSendMessage = (message: string) => {
-    setMessages([...messages, message])
-  }
-
   // Change scale x, y based on color, BLACK -> -1. This is to flip the board for black player.
   return (
     <>
@@ -194,10 +188,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
         ) : (
           <></>
         )}
-        <ChatBox
-          onSendMessage={handleSendMessage}
-          messages={messages}
-        ></ChatBox>
+        <ChatBox lobbyId={lobby.lobbyId} playerColor={playerColor}></ChatBox>
       </View>
     </>
   )

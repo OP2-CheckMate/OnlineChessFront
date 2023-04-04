@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   TextInput,
@@ -10,34 +10,50 @@ import {
 import socket from '../socket/socket'
 
 interface ChatBoxProps {
-  onSendMessage: (message: string) => void
-  messages: string[]
+  lobbyId: number
+  playerColor: string
 }
 
-const ChatBox = ({ onSendMessage, messages }: ChatBoxProps) => {
+const ChatBox = ({ lobbyId, playerColor }: ChatBoxProps) => {
+  const [messages, setMessages] = useState<string[]>([])
   const [message, setMessage] = useState('')
+  const [playerCol, setPlayerCol] = useState('')
 
-  socket.on('chat-message', (message: string) => {
-    onSendMessage(message)
-  })
+  useEffect(() => {
+    socket.on('chat-message', (msg: string) => {
+      setMessages((prevMessages) => [...prevMessages, msg])
+    })
+  }, [])
 
   const handleSendMessage = () => {
     if (message.trim() !== '') {
-      onSendMessage(message)
-      socket.emit('chat-message', message)
-      setMessage('')
+      socket.emit('chat-message', message, lobbyId, playerColor)
+      setPlayerCol(playerColor)
+      setMessages((prevMessages) => [...prevMessages, message])
+    } else {
+      return
     }
+    setMessage('')
   }
 
   return (
     <View style={styles.container}>
       <FlatList
         data={messages}
-        renderItem={({ item }) => (
-          <View style={styles.messageContainer}>
-            <Text style={styles.message}>{item}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const styling = [
+            styles.messageContainer,
+            {
+              backgroundColor:
+                playerCol === 'w' ? 'rgb(187, 113, 16)' : 'rgb(216, 19, 255)',
+            },
+          ]
+          return (
+            <View style={styling}>
+              <Text style={styles.message}>{item}</Text>
+            </View>
+          )
+        }}
         keyExtractor={(item, index) => index.toString()}
         inverted
         contentContainerStyle={{ flexDirection: 'column-reverse' }}
@@ -63,7 +79,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   messageContainer: {
-    backgroundColor: 'rgb(247, 243, 186)',
     borderRadius: 16,
     marginHorizontal: 10,
     marginBottom: 5,
