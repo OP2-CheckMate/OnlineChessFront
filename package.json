@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "devtools": "react-devtools",
-    "test": "jest",
+    "test": "jest --forceExit",
     "cypress": "npx cypress open"
   },
   "dependencies": {
