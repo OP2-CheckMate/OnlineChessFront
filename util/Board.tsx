@@ -63,7 +63,7 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne;
     const color = (col + offset) % 2 === 0 ? colorOne : colorTwo;
     // Highlighted borders for possible moves
-    const borderColor = isPossibleMove ? 'rgb(255,254,500)' : 'transparent';
+    const borderColor = isPossibleMove ? 'lightyellow' : 'transparent';
     const borderWidth = 2;
 
     return (

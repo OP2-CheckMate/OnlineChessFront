@@ -112,14 +112,11 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   const wrapper69 = (from: Position) => {
     const fromPos = translatePositionToSquare(from) as Square
     const possibleMoves = chess.moves({ square: fromPos })
-    const withoutFirstCharacter = possibleMoves.map(move => {
-      if (move.length > 2) {
-        return move.substring(1)
-      } else {
-        return move
-      }
-    })
-    setShowPossibleMoves(withoutFirstCharacter)
+    // remove extra characters 
+    const withoutExtraCharacter = possibleMoves.map(move => {
+      return move.endsWith('+') ? move.slice(-3, -1) : move.slice(-2);
+    });
+    setShowPossibleMoves(withoutExtraCharacter)
   }
 
   // Move pieces with drag and drop
