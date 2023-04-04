@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Chess } from 'chess.js'
+import { Chess, Square } from 'chess.js'
 import { Image, StyleSheet, Dimensions, } from 'react-native'
 import Animated, {
   runOnJS,
@@ -40,9 +40,10 @@ interface PieceProps {
   chess: Chess;
   color: PlayerColor;
   playerColor?: PlayerColor
+  setShowPossibleMoves: (moves: string[]) => void;
 }
 
-export const Piece = ({ id, position, movable, turn, chess, color, playerColor }: PieceProps) => {
+export const Piece = ({ id, position, movable, turn, chess, color, playerColor, setShowPossibleMoves }: PieceProps) => {
   const offsetX = useSharedValue(0)
   const offsetY = useSharedValue(0)
   const translateX = useSharedValue(position.x)
@@ -105,6 +106,20 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor }
     const fromPos = translatePositionToSquare(from)
     const toPos = translatePositionToSquare(to)
     movePiece(fromPos, toPos)
+    setShowPossibleMoves([])
+  }
+  // RUNJS WRAPPER TO SET POSSIBLE MOVES WHILE DRAGGING A PIECE
+  const wrapper69 = (from: Position) => {
+    const fromPos = translatePositionToSquare(from) as Square
+    const possibleMoves = chess.moves({ square: fromPos })
+    const withoutFirstCharacter = possibleMoves.map(move => {
+      if (move.length > 2) {
+        return move.substring(1)
+      } else {
+        return move
+      }
+    })
+    setShowPossibleMoves(withoutFirstCharacter)
   }
 
   // Move pieces with drag and drop
@@ -112,6 +127,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor }
     onStart: () => {
       offsetX.value = translateX.value
       offsetY.value = translateY.value
+      runOnJS(wrapper69)({ x: offsetX.value, y: offsetY.value })
     },
     onActive: ({ translationX, translationY }) => {
       //ENABLED WHEN BLACK PLAYS

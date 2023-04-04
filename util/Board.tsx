@@ -12,9 +12,10 @@ interface SquareProps extends RowProps {
 }
 interface BoardProps {
   playerColor: 'b' | 'w'
+  possibleMoveSquares: string[]
 }
 
-export default function Board({ playerColor }: BoardProps) {
+export default function Board({ playerColor, possibleMoveSquares }: BoardProps) {
   const [colorOne, setColorOne] = useState('')
   const [colorTwo, setColorTwo] = useState('')
   /* forces a rerender when the user navigates to the screen (stack navigation doesn't rerender by default) */
@@ -54,15 +55,24 @@ export default function Board({ playerColor }: BoardProps) {
     /* we call getTheme() in the useEffect, so that the colors of the 
     board are updated whenever the player changes the theme */
 
+    // Check for possible moves
+    const squareName = `${String.fromCharCode('a'.charCodeAt(0) + col)}${8 - row}`;
+    const isPossibleMove = possibleMoveSquares.includes(squareName);
+
     const offset = row % 2 === 0 ? 1 : 0
-    const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne
-    const color = (col + offset) % 2 === 0 ? colorOne : colorTwo
+    const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne;
+    const color = (col + offset) % 2 === 0 ? colorOne : colorTwo;
+    // Highlighted borders for possible moves
+    const borderColor = isPossibleMove ? 'rgb(255,254,500)' : 'transparent';
+    const borderWidth = 2;
 
     return (
       <View style={{
         flex: 1,
         backgroundColor: backgroundColor,
         padding: 5,
+        borderWidth: borderWidth,
+        borderColor: borderColor,
         transform: [
           { rotateX: playerColor === 'b' ? '180deg' : '0deg' },
           { rotateY: playerColor === 'b' ? '180deg' : '0deg' }
