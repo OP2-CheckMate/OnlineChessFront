@@ -11,25 +11,30 @@ import socket from '../socket/socket'
 
 interface ChatBoxProps {
   lobbyId: number
-  playerColor: string
+  playerId: string
 }
 
-const ChatBox = ({ lobbyId, playerColor }: ChatBoxProps) => {
-  const [messages, setMessages] = useState<string[]>([])
+interface Message{
+  msg: string;
+  author: string
+}
+
+const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
+  const [messages, setMessages] = useState<Message[]>([])
   const [message, setMessage] = useState('')
   const [playerCol, setPlayerCol] = useState('')
 
   useEffect(() => {
-    socket.on('chat-message', (msg: string) => {
-      setMessages((prevMessages) => [...prevMessages, msg])
+    socket.on('chat-message', (msg: string, author: string) => {
+      setMessages((prevMessages) => [...prevMessages, {msg, author}])
     })
   }, [])
 
   const handleSendMessage = () => {
     if (message.trim() !== '') {
-      socket.emit('chat-message', message, lobbyId, playerColor)
-      setPlayerCol(playerColor)
-      setMessages((prevMessages) => [...prevMessages, message])
+      socket.emit('chat-message', message, lobbyId, playerId)
+      //setPlayerCol(playerColor)
+      setMessages((prevMessages) => [...prevMessages, {msg: message, author: playerId}])
     } else {
       return
     }
@@ -45,12 +50,12 @@ const ChatBox = ({ lobbyId, playerColor }: ChatBoxProps) => {
             styles.messageContainer,
             {
               backgroundColor:
-                playerCol === 'w' ? 'rgb(187, 113, 16)' : 'rgb(216, 19, 255)',
+                item.author === playerId ? 'rgb(187, 113, 16)' : 'rgb(216, 19, 255)',
             },
           ]
           return (
             <View style={styling}>
-              <Text style={styles.message}>{item}</Text>
+              <Text style={styles.message}>{item.msg}</Text>
             </View>
           )
         }}

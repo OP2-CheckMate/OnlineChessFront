@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
 export interface Player {
-  id?: number;
+  id: string;
   name: string;
 }
 

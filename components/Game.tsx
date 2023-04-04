@@ -60,6 +60,10 @@ const Game: FC<Props> = ({ route, navigation }) => {
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
+  const getPlayerId = (): string => {
+    return lobby.player1.name === playerName ? lobby.player1.id : lobby.player2!.id
+  }
+
   //State of the game was updated (opponent moved a piece)
   socket.on('gameUpdate', (movedPiece: Move) => {
     setMove(movedPiece)
@@ -192,7 +196,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
           inCheck={inCheck}
           move={move}
         />
-        <ChatBox lobbyId={lobby.lobbyId} playerColor={playerColor}></ChatBox>
+        <ChatBox lobbyId={lobby.lobbyId} playerId={getPlayerId()}></ChatBox>
       </View>
     </>
   )
