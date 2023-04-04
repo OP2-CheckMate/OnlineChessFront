@@ -5,6 +5,7 @@ import { View, StyleSheet, Dimensions, Text } from 'react-native'
 import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
+import { InfoText } from '../util/IngameInfoText'
 import {
   CheckmateModal,
   StalemateModal,
@@ -13,7 +14,6 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
 import { useEffect } from 'react'
-import { Snackbar } from '@react-native-material/core'
 import ChatBox from '../util/ChatBox'
 
 type Props = {
@@ -32,6 +32,8 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
   const [move, setMove] = useState<Move | null>(null) //null only before game starts
+  const [messages, setMessages] = useState<string[]>([])
+  const [possibleMoveSquares, setPossibleMoveSquares] = useState<string[]>([])
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
@@ -134,7 +136,10 @@ const Game: FC<Props> = ({ route, navigation }) => {
             ],
           }}
         >
-          <Board playerColor={playerColor} />
+          <Board
+            playerColor={playerColor}
+            possibleMoveSquares={possibleMoveSquares}
+          />
           {board.map((row, y) =>
             row.map((piece, x) => {
               {
@@ -151,6 +156,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
                     turn={turn}
                     color={piece.color}
                     playerColor={playerColor}
+                    setShowPossibleMoves={setPossibleMoveSquares}
                   />
                 )
               }
@@ -179,15 +185,13 @@ const Game: FC<Props> = ({ route, navigation }) => {
         />
       </View>
       <View style={styles.container}>
-        <Text>{`Now in turn: ${currentPlayer}`}</Text>
-        {inCheck ? (
-          <Snackbar
-            message={`${lastPlayer} has checked the game `}
-            style={{ position: 'absolute', start: 30, end: 30, bottom: 100 }}
-          />
-        ) : (
-          <></>
-        )}
+        <InfoText
+          currentPlayer={currentPlayer}
+          playerName={playerName}
+          lastPlayer={lastPlayer}
+          inCheck={inCheck}
+          move={move}
+        />
         <ChatBox lobbyId={lobby.lobbyId} playerColor={playerColor}></ChatBox>
       </View>
     </>
