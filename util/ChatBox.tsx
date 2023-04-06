@@ -41,28 +41,35 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
     setMessage('')
   }
 
+  
+
   return (
     <View style={styles.container}>
       <FlatList
         data={messages}
         renderItem={({ item }) => {
+          const ownMsg = item.author === playerId ? true : false
           const styling = [
-            styles.messageContainer,
+            ownMsg ? styles.messageContainer : styles.messageContainerOpponent,
             {
               backgroundColor:
-                item.author === playerId ? 'rgb(187, 113, 16)' : 'rgb(216, 19, 255)',
+                ownMsg ? '#8A7C4A' : '#6E5D35',
             },
           ]
-          return (
-            <View style={styling}>
-              <Text style={styles.message}>{item.msg}</Text>
-            </View>
-          )
+            return (
+              <View style={[styling, {backgroundColor: 'rgba(0,0,0,0)', flexDirection: 'row', alignItems: 'center'}]}>
+                {ownMsg ? <Text>You :</Text> : <Text></Text>}
+                <View style={styling}>
+                  <Text style={styles.message}>{item.msg}</Text>
+                </View>
+                {ownMsg ? <Text></Text> : <Text> : Opponent</Text>}
+              </View>
+            )
         }}
         keyExtractor={(item, index) => index.toString()}
         inverted
         contentContainerStyle={{ flexDirection: 'column-reverse' }}
-      />
+        />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -80,8 +87,7 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(60, 92, 34)',
-    marginTop: 10,
+    backgroundColor: '#54533C',
   },
   messageContainer: {
     borderRadius: 16,
@@ -90,6 +96,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 10,
     alignSelf: 'flex-start',
+    maxWidth: '80%',
+  },
+  messageContainerOpponent: {
+    borderRadius: 16,
+    marginHorizontal: 10,
+    marginBottom: 5,
+    marginTop: 5,
+    padding: 10,
+    alignSelf: 'flex-end',
     maxWidth: '80%',
   },
   message: {

@@ -42,9 +42,13 @@ export const InfoText = ({
 
 const styles = StyleSheet.create({
     infoText: {
+        flex: 0.06,
         flexDirection: 'row',
-        marginRight: 5,
-        marginLeft: 5,
-        justifyContent: 'space-between'
+        paddingRight: 5,
+        paddingLeft: 5,
+        justifyContent: 'space-between',
+        borderStyle: 'solid',
+        borderColor: '#2F351F',
+        borderWidth: 1
     }
 })
