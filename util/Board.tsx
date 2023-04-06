@@ -25,42 +25,33 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
 
   useEffect(
     () => {
-      getTheme(),
-      gameplaySettings()
+      getStoredOptions()
     },
     [AsyncStorage.getItem('theme'), AsyncStorage.getItem('showPossibleMoves')]
   )
   
-  const getTheme = async () => {
+  const getStoredOptions = async () => {
     try {
-      const value = await AsyncStorage.getItem('theme')
-      if (value !== null) {
-        setColorOne(Themes[parseInt(value)].col1)
-        setColorTwo(Themes[parseInt(value)].col2)
-        setBorderColor(Themes[parseInt(value)].borderCol)
+      // Retrieve theme
+      const themeValue = await AsyncStorage.getItem('theme');
+      if (themeValue !== null) {
+        setColorOne(Themes[parseInt(themeValue)].col1);
+        setColorTwo(Themes[parseInt(themeValue)].col2);
+        setBorderColor(Themes[parseInt(themeValue)].borderCol);
       } else {
-        setColorOne(Themes[0].col1)
-        setColorTwo(Themes[0].col2)
-        setBorderColor(Themes[0].borderCol)
+        setColorOne(Themes[0].col1);
+        setColorTwo(Themes[0].col2);
+        setBorderColor(Themes[0].borderCol);
+      }
+      // Retrieve gameplay settings
+      const showPossibleMovesValue = await AsyncStorage.getItem('showPossibleMoves');
+      if (showPossibleMovesValue !== null) {
+        setShowPossibleMoves(JSON.parse(showPossibleMovesValue));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error, 'Error while fetching stored options');
     }
-  }
-
-  const gameplaySettings = async () => {
-    try {
-      // Check for possible moves option
-      const value = await AsyncStorage.getItem('showPossibleMoves')
-      if (value === null) {
-        return;
-      }else{
-        setShowPossibleMoves(JSON.parse(value))
-      }
-    } catch (error: any) {
-      console.log(error.message, 'Error while fetching gameplay settings')
-    }
-  }
+  };
 
 
   const Row = ({ row }: RowProps) => {
