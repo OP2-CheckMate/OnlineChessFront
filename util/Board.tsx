@@ -19,16 +19,18 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
   const [colorOne, setColorOne] = useState('')
   const [colorTwo, setColorTwo] = useState('')
   const [borderColor, setBorderColor] = useState('')
+  const [showPossibleMoves, setShowPossibleMoves] = useState(true)
   /* forces a rerender when the user navigates to the screen (stack navigation doesn't rerender by default) */
   const isFocused = useIsFocused()
 
   useEffect(
     () => {
-      getTheme()
+      getTheme(),
+      gameplaySettings()
     },
-    [AsyncStorage.getItem('theme')]
+    [AsyncStorage.getItem('theme'), AsyncStorage.getItem('showPossibleMoves')]
   )
-
+  
   const getTheme = async () => {
     try {
       const value = await AsyncStorage.getItem('theme')
@@ -45,6 +47,21 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
       console.log(error)
     }
   }
+
+  const gameplaySettings = async () => {
+    try {
+      // Check for possible moves option
+      const value = await AsyncStorage.getItem('showPossibleMoves')
+      if (value === null) {
+        return;
+      }else{
+        setShowPossibleMoves(JSON.parse(value))
+      }
+    } catch (error: any) {
+      console.log(error.message, 'Error while fetching gameplay settings')
+    }
+  }
+
 
   const Row = ({ row }: RowProps) => {
     return (
@@ -66,7 +83,7 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne
     const color = (col + offset) % 2 === 0 ? colorOne : colorTwo
     // Highlighted borders for possible moves
-    const highLightedBorderColor = isPossibleMove ? borderColor : 'transparent'
+    const highLightedBorderColor = isPossibleMove && showPossibleMoves ? borderColor : 'transparent'
     
 
     return (

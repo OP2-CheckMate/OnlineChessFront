@@ -3,10 +3,12 @@ import { View, ImageBackground, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ThemeSettingsModal from '../util/ThemeSettingsModal'
 import ProfileSettingsModal from '../util/ProfileSettingsModal'
+import GameplaySettingsModal from '../util/GameplaySettingsModal'
 
 const Settings = () => {
   const [themeModalVisible, setThemeModalVisible] = useState(false)
   const [profileModalVisible, setProfileModalVisible] = useState(false)
+  const [gameplayModalVisible, setGameplayModalVisible] = useState(false)
 
   return (
     <View style={styles.container}>
@@ -20,7 +22,9 @@ const Settings = () => {
               color="white"
               size={25}
               //GAMEPLAY SETTINGS VALINNAT MODAALI AUKEE
-              onPress={() => { }}
+              onPress={() => { 
+                setGameplayModalVisible(true)
+              }}
             //TEST
             >
               Gameplay
@@ -62,6 +66,8 @@ const Settings = () => {
             isVisible={profileModalVisible}
             closeModal={() => setProfileModalVisible(false)}
           />
+          <GameplaySettingsModal isVisible={gameplayModalVisible}
+            closeModal={() => setGameplayModalVisible(false)}/>
         </View>
       </ImageBackground>
     </View>
