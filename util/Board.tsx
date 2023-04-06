@@ -18,6 +18,7 @@ interface BoardProps {
 export default function Board({ playerColor, possibleMoveSquares }: BoardProps) {
   const [colorOne, setColorOne] = useState('')
   const [colorTwo, setColorTwo] = useState('')
+  const [borderColor, setBorderColor] = useState('')
   /* forces a rerender when the user navigates to the screen (stack navigation doesn't rerender by default) */
   const isFocused = useIsFocused()
 
@@ -34,9 +35,11 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
       if (value !== null) {
         setColorOne(Themes[parseInt(value)].col1)
         setColorTwo(Themes[parseInt(value)].col2)
+        setBorderColor(Themes[parseInt(value)].borderCol)
       } else {
         setColorOne(Themes[0].col1)
         setColorTwo(Themes[0].col2)
+        setBorderColor(Themes[0].borderCol)
       }
     } catch (error) {
       console.log(error)
@@ -55,7 +58,7 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     /* we call getTheme() in the useEffect, so that the colors of the 
     board are updated whenever the player changes the theme */
 
-    // Check for possible moves
+    // Check for possible moves inside possible squares
     const squareName = `${String.fromCharCode('a'.charCodeAt(0) + col)}${8 - row}`
     const isPossibleMove = possibleMoveSquares.includes(squareName)
 
@@ -63,16 +66,16 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne
     const color = (col + offset) % 2 === 0 ? colorOne : colorTwo
     // Highlighted borders for possible moves
-    const borderColor = isPossibleMove ? 'lightyellow' : 'transparent'
-    const borderWidth = 2
+    const highLightedBorderColor = isPossibleMove ? borderColor : 'transparent'
+    
 
     return (
       <View style={{
         flex: 1,
         backgroundColor: backgroundColor,
         padding: 5,
-        borderWidth: borderWidth,
-        borderColor: borderColor,
+        borderWidth: 3,
+        borderColor: highLightedBorderColor,
         transform: [
           { rotateX: playerColor === 'b' ? '180deg' : '0deg' },
           { rotateY: playerColor === 'b' ? '180deg' : '0deg' }
