@@ -22,7 +22,6 @@ interface Message{
 const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [message, setMessage] = useState('')
-  const [playerCol, setPlayerCol] = useState('')
 
   useEffect(() => {
     socket.on('chat-message', (msg: string, author: string) => {
@@ -56,20 +55,20 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
                 ownMsg ? '#8A7C4A' : '#6E5D35',
             },
           ]
-            return (
-              <View style={[styling, {backgroundColor: 'rgba(0,0,0,0)', flexDirection: 'row', alignItems: 'center'}]}>
-                {ownMsg ? <Text>You :</Text> : <Text></Text>}
-                <View style={styling}>
-                  <Text style={styles.message}>{item.msg}</Text>
-                </View>
-                {ownMsg ? <Text></Text> : <Text> : Opponent</Text>}
+          return (
+            <View style={[styling, {backgroundColor: 'rgba(0,0,0,0)', flexDirection: 'row', alignItems: 'center'}]}>
+              {ownMsg ? <Text>You :</Text> : <Text></Text>}
+              <View style={styling}>
+                <Text style={styles.message}>{item.msg}</Text>
               </View>
-            )
+              {ownMsg ? <Text></Text> : <Text> : Opponent</Text>}
+            </View>
+          )
         }}
         keyExtractor={(item, index) => index.toString()}
         inverted
         contentContainerStyle={{ flexDirection: 'column-reverse' }}
-        />
+      />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}

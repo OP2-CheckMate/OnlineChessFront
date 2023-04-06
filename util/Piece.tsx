@@ -48,8 +48,6 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   const offsetY = useSharedValue(0)
   const translateX = useSharedValue(position.x)
   const translateY = useSharedValue(position.y)
-  const rotateX = 0
-  const rotateY = 0
 
   /* 
     Translates the position of piece to Standard Algebraic Notation (SAN) for chess.js
@@ -92,7 +90,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
     }
   }, [chess, offsetX, offsetY, translateX, translateY, turn])
 
-
+  /*
   const getTranslateValue = (translation: number, offset: number) => {
     if (color === 'b') {
       return offset - translation
@@ -100,7 +98,8 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
       return translation + offset
     }
   }
-
+  */
+  
   //RUNJS
   const wrapper = (from: Position, to: Position) => {
     const fromPos = translatePositionToSquare(from)
@@ -114,8 +113,8 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
     const possibleMoves = chess.moves({ square: fromPos })
     // remove extra characters 
     const withoutExtraCharacter = possibleMoves.map(move => {
-      return move.endsWith('+') ? move.slice(-3, -1) : move.slice(-2);
-    });
+      return move.endsWith('+') ? move.slice(-3, -1) : move.slice(-2)
+    })
     setShowPossibleMoves(withoutExtraCharacter)
   }
 

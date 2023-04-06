@@ -56,15 +56,15 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     board are updated whenever the player changes the theme */
 
     // Check for possible moves
-    const squareName = `${String.fromCharCode('a'.charCodeAt(0) + col)}${8 - row}`;
-    const isPossibleMove = possibleMoveSquares.includes(squareName);
+    const squareName = `${String.fromCharCode('a'.charCodeAt(0) + col)}${8 - row}`
+    const isPossibleMove = possibleMoveSquares.includes(squareName)
 
     const offset = row % 2 === 0 ? 1 : 0
-    const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne;
-    const color = (col + offset) % 2 === 0 ? colorOne : colorTwo;
+    const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne
+    const color = (col + offset) % 2 === 0 ? colorOne : colorTwo
     // Highlighted borders for possible moves
-    const borderColor = isPossibleMove ? 'lightyellow' : 'transparent';
-    const borderWidth = 2;
+    const borderColor = isPossibleMove ? 'lightyellow' : 'transparent'
+    const borderWidth = 2
 
     return (
       <View style={{

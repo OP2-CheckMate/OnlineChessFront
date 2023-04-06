@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, ImageBackground, TextInput } from 'react-native'
-import { HOST_NAME } from '@env'
 import CustomButton from '../util/CustomButton'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BadLobbyCodeModal from '../util/BadLobbyCodeModal'
@@ -16,8 +15,6 @@ const QueuingScreen = ({ navigation }: Props) => {
   const [name, setName] = useState('')
   const [lobbyId, setlobbyId] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
-  const [isJoinDisabled, setIsJoinDisabled] = useState(true)
-  const [id, setId] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
 
   useSocketSetup()
@@ -37,8 +34,8 @@ const QueuingScreen = ({ navigation }: Props) => {
 
   //Creates a new game on backend, requires playername
   const createGame = () => {
-     //console.log('creating lobby for ' + name)
-     socket.emit('createLobby', name)
+    //console.log('creating lobby for ' + name)
+    socket.emit('createLobby', name)
   }
 
   socket.on('createdLobby', (response: Lobby) =>{
@@ -58,7 +55,7 @@ const QueuingScreen = ({ navigation }: Props) => {
 
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
-     socket.emit('joinlobby', parseInt(lobbyId),name)
+    socket.emit('joinlobby', parseInt(lobbyId),name)
   }
 
   /* stores the player name in asyncStorage, so player does not need to set name everytime app starts */
@@ -105,9 +102,9 @@ const QueuingScreen = ({ navigation }: Props) => {
             placeholderTextColor="rgb(110,93,53)"
           />
           <View style={{flexDirection: 'row'}}>
-          {/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
-          <CustomButton title="Create Game" onPress={ () => createGame()} disabled={isDisabled} />
-          <CustomButton title="Find game" onPress={ () => findGame()} disabled={isDisabled} />
+            {/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
+            <CustomButton title="Create Game" onPress={ () => createGame()} disabled={isDisabled} />
+            <CustomButton title="Find game" onPress={ () => findGame()} disabled={isDisabled} />
           </View>
           <TextInput
             // Enter Lobby-ID

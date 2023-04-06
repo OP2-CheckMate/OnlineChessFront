@@ -1,7 +1,7 @@
 import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess, Move } from 'chess.js'
-import { View, StyleSheet, Dimensions, Text } from 'react-native'
+import { View, StyleSheet, Dimensions} from 'react-native'
 import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
@@ -32,7 +32,6 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [sModalVisible, setSModalVisible] = useState(false)
   const [dModalVisible, setDModalVisible] = useState(false)
   const [move, setMove] = useState<Move | null>(null) //null only before game starts
-  const [messages, setMessages] = useState<string[]>([])
   const [possibleMoveSquares, setPossibleMoveSquares] = useState<string[]>([])
 
   /* Hook to change header options in Game screen, used to navigate to settings page. 
