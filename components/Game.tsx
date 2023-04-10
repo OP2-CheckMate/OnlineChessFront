@@ -99,9 +99,9 @@ const Game: FC<Props> = ({ route, navigation }) => {
   }
 
   // Change active player, send move to backend and check if game is over
-  const turn = (color: PlayerColor, from: string, to: string) => {
+  const turn = (color: PlayerColor, from: string, to: string, promotion?: string) => {
     setBoard(game.board())
-    socket.emit('updateGame', { from, to }, getOpponentId())
+    socket.emit('updateGame', { from, to, promotion }, getOpponentId())
     checkGameOverStatus(game)
     updateCheckStatus(game)
     checkCurrentPlayer(game.turn())

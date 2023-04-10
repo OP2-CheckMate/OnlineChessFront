@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Chess, Square } from 'chess.js'
-import { Image, StyleSheet, Dimensions, } from 'react-native'
+import { Image, StyleSheet, Dimensions } from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler, useAnimatedStyle,
@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import { PlayerColor } from '../types/types'
+import PromotionModalComponent from './PromotionModal'
 
 type Type = 'q' | 'r' | 'n' | 'b' | 'k' | 'p';
 type Piece = `${PlayerColor}${Type}`;
@@ -36,7 +37,7 @@ interface PieceProps {
   id: Piece;
   position: Position;
   movable: boolean;
-  turn(color: PlayerColor, from: string, to: string): void;
+  turn(color: PlayerColor, from: string, to: string, promotion?: string): void;
   chess: Chess;
   color: PlayerColor;
   playerColor?: PlayerColor
@@ -48,6 +49,37 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   const offsetY = useSharedValue(0)
   const translateX = useSharedValue(position.x)
   const translateY = useSharedValue(position.y)
+
+  const [promoSelectionVisible, setPromoSelectionVisible] = React.useState(false);
+  const [selectedPromoPiece, setSelectedPromoPiece] = React.useState('');
+  const [selectedPromotion, setSelectedPromotion] = React.useState({
+    from: '', to: '',
+  });
+
+  const handleModalClose = (piece: string) => {
+    setPromoSelectionVisible(false);
+    handlePromotionSelection(selectedPromotion.from, selectedPromotion.to, piece);
+  };
+
+  //Async function to get chosen promotion from Modal
+  const getValueFromModal = async() => {
+    setPromoSelectionVisible(true);
+    return new Promise<string>((resolve) => {
+      setSelectedPromoPiece('');
+      const intervalId = setInterval(() => {
+        if (selectedPromoPiece) {
+          clearInterval(intervalId);
+          resolve(selectedPromoPiece);
+        }
+      }, 100);
+    });
+  };
+
+  const handleGetValue = async (from: string, to: string) => {
+    const value = await getValueFromModal()
+    handleModalClose(value)
+  };
+
 
   /* 
     Translates the position of piece to Standard Algebraic Notation (SAN) for chess.js
@@ -78,17 +110,30 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   */
   const movePiece = useCallback((from: string, to: string) => {
     const move = chess.moves({ verbose: true }).find((m) => m.from === from && m.to === to)
-    if (move) {
-      chess.move({ from: from, to: to })
+    const promotions = chess.moves({ verbose: true }).filter(m => m.promotion)
+    if (move && move.promotion === undefined) {
+      chess.move({ from: from, to: to, promotion: undefined })
       turn(color, from, to)
       const position = translateSquareToPosition(to)
       offsetX.value = position.x
       offsetY.value = position.y
+    } else if (promotions.some(p => p.to === to)) {
+      setSelectedPromotion({from: from, to: to})
+      handleGetValue(from, to)
     } else {
       translateX.value = withSpring(offsetX.value)
       translateY.value = withSpring(offsetY.value)
     }
   }, [chess, offsetX, offsetY, translateX, translateY, turn])
+
+  //Is called when player has chosen what piece he wants to promote to. Same as MovePiece except promotion-value.
+  const handlePromotionSelection = useCallback((from: string, to: string, promotion: string) => {
+    chess.move({ from: from, to: to, promotion: promotion });
+    turn(color, from, to, promotion);
+    const position = translateSquareToPosition(to);
+    offsetX.value = position.x;
+    offsetY.value = position.y;
+  }, [chess, color, offsetX, offsetY, selectedPromotion, turn]);
 
   /*
   const getTranslateValue = (translation: number, offset: number) => {
@@ -135,7 +180,6 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
         translateY.value = translationY + offsetY.value
       }
 
-
     },
     onEnd: () => {
       runOnJS(wrapper)({ x: offsetX.value, y: offsetY.value }, { x: translateX.value, y: translateY.value })
@@ -161,6 +205,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   return (
     <PanGestureHandler onGestureEvent={onGestureEvent} enabled={movable}>
       <Animated.View style={piece}>
+        <PromotionModalComponent isVisible={promoSelectionVisible} onClose={handleModalClose} />
         <Image source={PIECES[id]} style={styles.piece} />
       </Animated.View>
     </PanGestureHandler>
