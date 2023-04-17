@@ -1,10 +1,18 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import CustomButton from './CustomButton'
 
 interface ModalProps {
-  isVisible: boolean;
-  closeModal: () => void;
+  isVisible: boolean
+  closeModal: () => void
 }
 
 const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
@@ -36,14 +44,21 @@ const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 
   return (
     <View style={styles.centeredView}>
-      <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={closeModal}>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={closeModal}
+      >
         {/* we wrap everything in a touchable opacity, so that the modal 
 				closes when the user clicks outside the modal */}
         <TouchableOpacity style={{ flex: 1 }} onPress={closeModal}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               {/* if player has a name, show change name, else show set name */}
-              <Text style={styles.modalText}>{playerName !== '' ? 'Change name' : 'Set name'}</Text>
+              <Text style={styles.modalText}>
+                {playerName !== '' ? 'Change name' : 'Set name'}
+              </Text>
               <View style={styles.themeWrapper}>
                 <TextInput
                   value={playerName}
@@ -57,6 +72,15 @@ const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
                   autoFocus={true}
                 />
               </View>
+              <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                <View></View>
+                <View style={styles.customBtn}>
+                  <CustomButton
+                    onPress={closeModal}
+                    title='Save'
+                  ></CustomButton>
+                </View>
+              </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -65,21 +89,12 @@ const ProfileSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
   )
 }
 
-{
-  /* close-button for modal if needed */
-}
-{
-  /* <Pressable style={[ styles.button, styles.buttonClose ]} onPress={closeModal}>
-<Text style={styles.textStyle}>Close</Text>
-</Pressable> */
-}
-
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     height: '50%',
@@ -92,22 +107,22 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     marginVertical: 15,
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
   },
   themeWrapper: {
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   input: {
     height: 40,
@@ -118,8 +133,11 @@ const styles = StyleSheet.create({
     color: 'darkgreen',
     backgroundColor: 'white',
     fontWeight: 'bold',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
+  customBtn: {
+    alignItems: 'flex-end',
+  },
 })
 
 export default ProfileSettingsModal

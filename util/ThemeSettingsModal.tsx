@@ -1,16 +1,28 @@
-import { View, Text, Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button'
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from 'react-native-simple-radio-button'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Themes } from './BoardThemes'
+import CustomButton from './CustomButton'
 
 interface ModalProps {
-  isVisible: boolean;
-  closeModal: () => void;
+  isVisible: boolean
+  closeModal: () => void
 }
 interface SquareProps {
-  color1: string;
-  color2: string;
+  color1: string
+  color2: string
 }
 
 /* the colorbox shown on themes */
@@ -60,7 +72,12 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
 
   return (
     <View style={styles.centeredView}>
-      <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={closeModal}>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={closeModal}
+      >
         {/* we wrap everything in a touchable opacity, so that the modal 
 				closes when the user clicks outside the modal */}
         <TouchableOpacity style={{ flex: 1 }} onPress={closeModal}>
@@ -87,11 +104,9 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
                             }}
                             buttonInnerColor={'rgb(19, 58, 28)'}
                             buttonOuterColor={
-                              parseInt(selectedTheme) === theme.value ? (
-                                'rgb(19, 58, 28)'
-                              ) : (
-                                '#000'
-                              )
+                              parseInt(selectedTheme) === theme.value
+                                ? 'rgb(19, 58, 28)'
+                                : '#000'
                             }
                             buttonSize={30}
                             buttonOuterSize={40}
@@ -112,6 +127,15 @@ const ThemeSettingsModal = ({ isVisible, closeModal }: ModalProps) => {
                     </RadioButton>
                   ))}
                 </RadioForm>
+              </View>
+              <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                <View></View>
+                <View style={styles.customBtn}>
+                  <CustomButton
+                    onPress={closeModal}
+                    title='Save'
+                  ></CustomButton>
+                </View>
               </View>
             </View>
           </View>
@@ -135,10 +159,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
-    height: '50%',
+    height: '60%',
     width: '70%',
     margin: 20,
     padding: 20,
@@ -148,30 +172,30 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonClose: {
-    backgroundColor: '#20653b'
+    backgroundColor: '#20653b',
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   modalText: {
     marginVertical: 15,
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
   },
   colorBox: {
     height: 41,
@@ -179,18 +203,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderWidth: 0.5,
-    borderColor: 'rgb(134, 142, 136)'
+    borderColor: 'rgb(134, 142, 136)',
   },
   themeWrapper: {
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   themeOption: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 2
-  }
+    paddingVertical: 2,
+  },
+  customBtn: {
+    alignItems: 'flex-end',
+  },
 })
 
 export default ThemeSettingsModal
