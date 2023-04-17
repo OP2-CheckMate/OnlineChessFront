@@ -14,8 +14,8 @@ interface ChatBoxProps {
   playerId: string
 }
 
-interface Message{
-  msg: string;
+interface Message {
+  msg: string
   author: string
 }
 
@@ -25,7 +25,7 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
 
   useEffect(() => {
     socket.on('chat-message', (msg: string, author: string) => {
-      setMessages((prevMessages) => [...prevMessages, {msg, author}])
+      setMessages((prevMessages) => [...prevMessages, { msg, author }])
     })
   }, [])
 
@@ -33,14 +33,15 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
     if (message.trim() !== '') {
       socket.emit('chat-message', message, lobbyId, playerId)
       //setPlayerCol(playerColor)
-      setMessages((prevMessages) => [...prevMessages, {msg: message, author: playerId}])
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { msg: message, author: playerId },
+      ])
     } else {
       return
     }
     setMessage('')
   }
-
-  
 
   return (
     <View style={styles.container}>
@@ -51,12 +52,20 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
           const styling = [
             ownMsg ? styles.messageContainer : styles.messageContainerOpponent,
             {
-              backgroundColor:
-                ownMsg ? '#8A7C4A' : '#6E5D35',
+              backgroundColor: ownMsg ? '#8A7C4A' : '#6E5D35',
             },
           ]
           return (
-            <View style={[styling, {backgroundColor: 'rgba(0,0,0,0)', flexDirection: 'row', alignItems: 'center'}]}>
+            <View
+              style={[
+                styling,
+                {
+                  backgroundColor: 'rgba(0,0,0,0)',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                },
+              ]}
+            >
               {ownMsg ? <Text>You :</Text> : <Text></Text>}
               <View style={styling}>
                 <Text style={styles.message}>{item.msg}</Text>
@@ -119,7 +128,7 @@ const styles = StyleSheet.create({
     width: '70%',
     marginHorizontal: 10,
     marginTop: 5,
-    marginBottom: 100,
+    marginBottom: 80,
   },
   input: {
     flex: 1,
