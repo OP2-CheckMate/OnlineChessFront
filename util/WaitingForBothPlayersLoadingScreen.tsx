@@ -6,9 +6,9 @@ export const WaitingForBothPlayersLoadingView = ( {opponentDisconnected}: props 
     return (
         <View style={styles.loadingOverlay} >
             <Text style={{ marginBottom: 20, fontSize: 20 }}>
-                {opponentDisconnected ? 
-                'Opponent disconnected' 
-                : 
+                {opponentDisconnected ? // if at some point its possible 
+                'Opponent disconnected' // to get back to game after disconnecting,
+                :                      // then this might be useful 
                 ' Waiting for opponent to enter the game'}
                 
             </Text>

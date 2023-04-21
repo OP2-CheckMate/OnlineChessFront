@@ -74,10 +74,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
           name="arrow-back"
           size={30}
           color="black"
-          onPress={() => {
-              console.log("Back button pressed"); // Add this line
-              onBackPress();
-          }}
+          onPress={() => onBackPress()}
           style={{ marginLeft: 10 }}
         />
       ),
@@ -95,10 +92,8 @@ const Game: FC<Props> = ({ route, navigation }) => {
       // Return true to prevent the default behavior (closing the app)
       return true;
     };
-  
     // Add the listener to the BackHandler
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-  
     // Clean up the listener when the component is unmounted
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
@@ -111,22 +106,18 @@ const Game: FC<Props> = ({ route, navigation }) => {
       const onBothBoardsOpen = () => {
         setBothPlayersOnBoard(true);
       };
-    
       // Handle the opponent's disconnection
       const onOpponentDisconnected = () => {
         setOpponentDisconnected(true);
       };
-    
       // Handle the opponent leaving by closing the game
       const onOpponentExited = () => {
         setOpponentLeftGame(true);
       };
-    
       // Add the listeners
       socket.on('bothBoardsOpen', onBothBoardsOpen);
       socket.on('opponentDisconnected', onOpponentDisconnected);
       socket.on('opponentExited', onOpponentExited);
-    
       // Clean up the listeners when the component is unmounted
       return () => {
         socket.off('bothBoardsOpen', onBothBoardsOpen);
