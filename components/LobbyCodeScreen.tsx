@@ -31,6 +31,11 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
     }, 5000)
   })
 
+  const openBoard = () => {
+    socket.emit('boardOpened', lobby.lobbyId);
+    navigation.navigate('Game', { lobby, playerName })
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
@@ -55,8 +60,8 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
         >
           <CustomButton
             title='Open Board'
-            onPress={() => navigation.navigate('Game', { lobby, playerName })}
-          ></CustomButton>
+            onPress={openBoard} 
+         />      
         </View>
       </ImageBackground>
       {snackIsVisible ? (

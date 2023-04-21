@@ -11,11 +11,12 @@ interface SquareProps extends RowProps {
   col: number;
 }
 interface BoardProps {
-  playerColor: 'b' | 'w'
-  possibleMoveSquares: string[]
+  playerColor: 'b' | 'w';
+  possibleMoveSquares: string[];
+  bothPlayersOnBoard: boolean;
 }
 
-export default function Board({ playerColor, possibleMoveSquares }: BoardProps) {
+export default function Board({ playerColor, possibleMoveSquares, bothPlayersOnBoard }: BoardProps) {
   const [colorOne, setColorOne] = useState('')
   const [colorTwo, setColorTwo] = useState('')
   const [borderColor, setBorderColor] = useState('')
@@ -74,7 +75,7 @@ export default function Board({ playerColor, possibleMoveSquares }: BoardProps) 
     const backgroundColor = (col + offset) % 2 === 0 ? colorTwo : colorOne
     const color = (col + offset) % 2 === 0 ? colorOne : colorTwo
     // Highlighted borders for possible moves
-    const highLightedBorderColor = isPossibleMove && showPossibleMoves ? borderColor : 'transparent'
+    const highLightedBorderColor = bothPlayersOnBoard && isPossibleMove && showPossibleMoves ? borderColor : 'transparent'
     
 
     return (

@@ -1,7 +1,7 @@
 import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
 import { Chess, Move } from 'chess.js'
-import { View, StyleSheet, Dimensions} from 'react-native'
+import { View, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native'
 import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
 import { Piece } from '../util/Piece'
@@ -15,11 +15,16 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import socket from '../socket/socket'
 import { useEffect } from 'react'
 import ChatBox from '../util/ChatBox'
+import { WaitingForBothPlayersLoadingView } from '../util/WaitingForBothPlayersLoadingScreen'
+import { OpponentLeftModal } from '../util/OpponentLeftModal'
+import { LeaveGameAlert } from '../util/LeaveGameAlert'
+
 
 type Props = {
   navigation: GameNavigationProp
   route: GameRouteProp
 }
+
 
 const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
@@ -33,7 +38,21 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [dModalVisible, setDModalVisible] = useState(false)
   const [move, setMove] = useState<Move | null>(null) //null only before game starts
   const [possibleMoveSquares, setPossibleMoveSquares] = useState<string[]>([])
+  const [bothPlayersOnBoard, setBothPlayersOnBoard] = useState(false)
+  const [opponentDisconnected, setOpponentDisconnected] = useState(false)
+  const [opponentLeftGame, setOpponentLeftGame] = useState(false)
 
+   // Used when the user presses the back button on the device or the back button in the header
+   const onBackPress = () => {
+    const { showAlert } = LeaveGameAlert({
+      onConfirm: () => {
+        socket.emit('playerExited', getPlayerId());
+        setOpponentLeftGame(true);
+        navigation.navigate('Homepage');
+      },
+    });
+    showAlert();
+  };
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
@@ -50,8 +69,72 @@ const Game: FC<Props> = ({ route, navigation }) => {
           />
         )
       },
+      headerLeft: () => (
+        <Ionicons
+          name="arrow-back"
+          size={30}
+          color="black"
+          onPress={() => {
+              console.log("Back button pressed"); // Add this line
+              onBackPress();
+          }}
+          style={{ marginLeft: 10 }}
+        />
+      ),
     })
   }, [navigation])
+
+   // Handle the (hardware) back button press
+   useEffect(() => {
+    const handleBackPress = () => {
+      LeaveGameAlert({
+        onConfirm: () => {
+         onBackPress();
+        },
+      });
+      // Return true to prevent the default behavior (closing the app)
+      return true;
+    };
+  
+    // Add the listener to the BackHandler
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+  
+    // Clean up the listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+
+  // Handle the socket events
+    useEffect(() => {
+      // Listen for the 'boardsOpen' event from the server
+      const onBothBoardsOpen = () => {
+        setBothPlayersOnBoard(true);
+      };
+    
+      // Handle the opponent's disconnection
+      const onOpponentDisconnected = () => {
+        setOpponentDisconnected(true);
+      };
+    
+      // Handle the opponent leaving by closing the game
+      const onOpponentExited = () => {
+        setOpponentLeftGame(true);
+      };
+    
+      // Add the listeners
+      socket.on('bothBoardsOpen', onBothBoardsOpen);
+      socket.on('opponentDisconnected', onOpponentDisconnected);
+      socket.on('opponentExited', onOpponentExited);
+    
+      // Clean up the listeners when the component is unmounted
+      return () => {
+        socket.off('bothBoardsOpen', onBothBoardsOpen);
+        socket.off('opponentDisconnected', onOpponentDisconnected);
+        socket.off('opponentExited', onOpponentExited);
+      };
+    }, [socket]);
+    
 
   // Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = (): PlayerColor => {
@@ -100,6 +183,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
 
   // Change active player, send move to backend and check if game is over
   const turn = (color: PlayerColor, from: string, to: string, promotion?: string) => {
+
     setBoard(game.board())
     socket.emit('updateGame', { from, to, promotion }, getOpponentId())
     checkGameOverStatus(game)
@@ -142,13 +226,14 @@ const Game: FC<Props> = ({ route, navigation }) => {
           <Board
             playerColor={playerColor}
             possibleMoveSquares={possibleMoveSquares}
+            bothPlayersOnBoard={bothPlayersOnBoard}
           />
           {board.map((row, y) =>
             row.map((piece, x) => {
               {
                 /* Go through all rows and place pieces to squares */
               }
-              if (piece !== null) {
+              if (bothPlayersOnBoard && piece !== null) {
                 return (
                   <Piece
                     key={`${y}-${x}`}
@@ -159,6 +244,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
                     turn={turn}
                     color={piece.color}
                     playerColor={playerColor}
+                    bothPlayersOnBoard={bothPlayersOnBoard}
                     setShowPossibleMoves={setPossibleMoveSquares}
                   />
                 )
@@ -167,7 +253,9 @@ const Game: FC<Props> = ({ route, navigation }) => {
             })
           )}
         </View>
-        {/* <Button title="Refresh" onPress={fetchMoves} /> */}
+        {!bothPlayersOnBoard && (
+         <WaitingForBothPlayersLoadingView opponentDisconnected={opponentDisconnected} />
+         )}
 
         {/* one of the following modals will be displayed based on how the game ended */}
         <CheckmateModal
@@ -186,6 +274,13 @@ const Game: FC<Props> = ({ route, navigation }) => {
           toggleModal={() => setDModalVisible(!dModalVisible)}
           navigation={() => navigation.navigate('Homepage')}
         />
+        <OpponentLeftModal
+          opponentDisconnected={opponentDisconnected}
+          opponentLeft={opponentLeftGame}
+          modalVisible={opponentDisconnected || opponentLeftGame}
+          toggleModal={() => setDModalVisible(!dModalVisible)}
+          navigation={() => navigation.navigate('Homepage')}
+        />
       </View>
       <View style={styles.container}>
         <InfoText
@@ -195,6 +290,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
           inCheck={inCheck}
           move={move}
         />
+        {/*<Text>ready={bothPlayersOnBoard ? "yes" : "no"}</Text>*/}
         <ChatBox lobbyId={lobby.lobbyId} playerId={getPlayerId()}></ChatBox>
       </View>
     </>
@@ -207,6 +303,8 @@ const styles = StyleSheet.create({
     width,
     height: width,
   },
+
 })
+
 
 export default Game

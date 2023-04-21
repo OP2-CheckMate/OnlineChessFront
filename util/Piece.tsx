@@ -40,11 +40,12 @@ interface PieceProps {
   turn(color: PlayerColor, from: string, to: string, promotion?: string): void;
   chess: Chess;
   color: PlayerColor;
-  playerColor?: PlayerColor
+  playerColor?: PlayerColor,
+  bothPlayersOnBoard: boolean;
   setShowPossibleMoves: (moves: string[]) => void;
 }
 
-export const Piece = ({ id, position, movable, turn, chess, color, playerColor, setShowPossibleMoves }: PieceProps) => {
+export const Piece = ({ id, position, movable, turn, chess, color, playerColor, bothPlayersOnBoard, setShowPossibleMoves }: PieceProps) => {
   const offsetX = useSharedValue(0)
   const offsetY = useSharedValue(0)
   const translateX = useSharedValue(position.x)
@@ -111,7 +112,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   const movePiece = useCallback((from: string, to: string) => {
     const move = chess.moves({ verbose: true }).find((m) => m.from === from && m.to === to)
     const promotions = chess.moves({ verbose: true }).filter(m => m.promotion)
-    if (move && move.promotion === undefined) {
+    if (bothPlayersOnBoard && move && move.promotion === undefined) {
       chess.move({ from: from, to: to, promotion: undefined })
       turn(color, from, to)
       const position = translateSquareToPosition(to)
@@ -124,7 +125,7 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
       translateX.value = withSpring(offsetX.value)
       translateY.value = withSpring(offsetY.value)
     }
-  }, [chess, offsetX, offsetY, translateX, translateY, turn])
+  }, [chess, offsetX, offsetY, translateX, translateY, turn, bothPlayersOnBoard])
 
   //Is called when player has chosen what piece he wants to promote to. Same as MovePiece except promotion-value.
   const handlePromotionSelection = useCallback((from: string, to: string, promotion: string) => {
