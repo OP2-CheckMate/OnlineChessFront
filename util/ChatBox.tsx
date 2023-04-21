@@ -52,7 +52,7 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
           const styling = [
             ownMsg ? styles.messageContainer : styles.messageContainerOpponent,
             {
-              backgroundColor: ownMsg ? '#8A7C4A' : '#6E5D35',
+              backgroundColor: ownMsg ? '#dac477' : '#429785',
             },
           ]
           return (
@@ -86,7 +86,7 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
           placeholder='Type your message here'
           multiline
         />
-        <Button title='Send' onPress={handleSendMessage} />
+        <Button title='Send' onPress={handleSendMessage} color='darkgreen' />
       </View>
     </View>
   )
@@ -95,7 +95,7 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#54533C',
+    backgroundColor: '#a1a1a1',
   },
   messageContainer: {
     borderRadius: 16,

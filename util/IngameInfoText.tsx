@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Move } from 'chess.js'
 
 interface InfoTextProps {
@@ -14,35 +10,43 @@ interface InfoTextProps {
   move: Move | null
 }
 
-export const InfoText = ({ currentPlayer, playerName, lastPlayer, inCheck, move }: InfoTextProps) => {
+export const InfoText = ({
+  currentPlayer,
+  playerName,
+  lastPlayer,
+  inCheck,
+  move,
+}: InfoTextProps) => {
   return (
-    <View style={styles.infoText}>
-      <Text >
-        {currentPlayer === playerName
-          ? 'Your turn!'
-          : `${currentPlayer}s turn`
-        }
+    <View style={styles.infoTextContainer}>
+      <Text style={styles.InfoText}>
+        {currentPlayer === playerName ? 'Your turn!' : `${currentPlayer}s turn`}
       </Text>
-      <Text >
+      <Text style={styles.InfoText}>
         {inCheck
-          ? `${lastPlayer} has checked the game!`
+          ? `${lastPlayer} has CHECKED the game!`
           : move
-            ? `Last move: ${move.from} to ${move.to}`
-            : 'No move made yet'}
+          ? `Last move: ${move.from} to ${move.to}`
+          : 'No move made yet'}
       </Text>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  infoText: {
-    flex: 0.06,
+  infoTextContainer: {
+    flex: 0.08,
     flexDirection: 'row',
     paddingRight: 5,
     paddingLeft: 5,
     justifyContent: 'space-between',
+    alignItems: 'center',
     borderStyle: 'solid',
     borderColor: '#2F351F',
-    borderWidth: 1
-  }
+    borderWidth: 1,
+  },
+  InfoText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
 })
