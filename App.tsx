@@ -34,8 +34,8 @@ const App = () => {
 
   /* Helper function to check what is stored in AsyncStorage, will be deleted later */
   AsyncStorage.getAllKeys((err, keys) => {
-    AsyncStorage.multiGet(keys, (error, stores) => {
-      stores.map((result, i, store) => {
+    AsyncStorage.multiGet(keys!, (error, stores) => {
+      stores!.map((result, i, store) => {
         console.log({ [store[i][0]]: store[i][1] })
         return true
       })

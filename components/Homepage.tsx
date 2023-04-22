@@ -24,7 +24,7 @@ const Homepage = ({ navigation }: Props) => {
             <Text style={styles.appButtonText}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Game', { lobby: { lobbyId: 0, player1: { name: 'p1' } }, playerName: 'p1' })}
+            onPress={() => navigation.navigate('Game', { lobby: { lobbyId: 0, player1: { name: 'p1', id: '0' } }, playerName: 'p1' })}
             style={styles.appButton}
           >
             <Text style={styles.appButtonText}>Board</Text>

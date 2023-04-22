@@ -184,9 +184,12 @@ const Game: FC<Props> = ({ route, navigation }) => {
 
   // Checks which player won based on current turn
   const checkWinner = (turn: PlayerColor) => {
-    turn === 'b'
-      ? setWinner(lobby.player1.name)
-      : setWinner(lobby.player2!.name)
+    if (turn === 'b') {
+      setWinner(lobby.player1.name)
+    } else {
+      setWinner(lobby.player2!.name)
+    }
+    if (currentPlayer === playerName) socket.emit('gameOver', lobby.lobbyId)
   }
 
   // Checks if game is over and return modal based on which way it ended (currently checkmate, stalemate and draw)
