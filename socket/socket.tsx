@@ -1,8 +1,7 @@
 import {io} from 'socket.io-client'
-import { HOST_NAME} from '@env';
+import { HOST_NAME } from '@env'
 //Reset cache for HOST_NAME -> npx expo start --clear
 
-const localSocket = `http://${HOST_NAME}:8080`;
-const socket = io(localSocket);
+const socket = io('http://' + HOST_NAME + ':8080')
 
 export default socket;
