@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { View, Text, ImageBackground, StyleSheet } from 'react-native'
 import {
   Lobby,
@@ -21,7 +21,10 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   const [snackIsVisible, setSnackIsVisible] = useState(false)
   const [lobby, setLobby] = useState(route.params.lobby)
 
-  socket.emit('joinroom', lobby.lobbyId)
+  useEffect(() => {
+    socket.emit('joinroom', lobby.lobbyId)
+  }, [])
+
   socket.on('playerJoined', (result: Lobby) => {
     setPlayer2Name(result.player2!.name)
     setLobby(result)
@@ -32,7 +35,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   })
 
   const openBoard = () => {
-    socket.emit('boardOpened', lobby.lobbyId);
+    socket.emit('boardOpened', lobby.lobbyId)
     navigation.navigate('Game', { lobby, playerName })
   }
 
@@ -60,8 +63,8 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
         >
           <CustomButton
             title='Open Board'
-            onPress={openBoard} 
-         />      
+            onPress={openBoard}
+          />
         </View>
       </ImageBackground>
       {snackIsVisible ? (
