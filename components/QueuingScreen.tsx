@@ -16,12 +16,13 @@ const QueuingScreen = ({ navigation }: Props) => {
   const [lobbyId, setlobbyId] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
+  const [playerID, setPlayerID] = useState<string>('')
 
   useSocketSetup()
 
   /* gets player name from asyncStorage, and sets it in "name" state */
   useEffect(() => {
-    getPlayerName()
+    getPlayerNameAndId()
   }, [])
   /* whenever name is changed´, check if it is empty or not, and set isDisabled accordingly */
   useEffect(() => {
@@ -35,7 +36,7 @@ const QueuingScreen = ({ navigation }: Props) => {
   //Creates a new game on backend, requires playername
   const createGame = () => {
     //console.log('creating lobby for ' + name)
-    socket.emit('createLobby', name)
+    socket.emit('createLobby', name, playerID)
   }
 
   socket.on('createdLobby', (response: Lobby) =>{
@@ -50,12 +51,13 @@ const QueuingScreen = ({ navigation }: Props) => {
 
   socket.on('joinedQueue', () => {
     console.log('joined queue')
-    navigation.navigate('InQueue', {playerName: name})
+    //console.log('id', playerID)
+    navigation.navigate('InQueue', {playerName: name, playerId: playerID})
   })
 
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
-    socket.emit('joinlobby', parseInt(lobbyId),name)
+    socket.emit('joinlobby', parseInt(lobbyId), name, playerID)
   }
 
   /* stores the player name in asyncStorage, so player does not need to set name everytime app starts */
@@ -67,21 +69,24 @@ const QueuingScreen = ({ navigation }: Props) => {
     }
   }
   /* gets the current selected playerName from asyncStorage, and sets it in state */
-  const getPlayerName = async () => {
+  const getPlayerNameAndId = async () => {
     try {
       const value = await AsyncStorage.getItem('playerName')
+      const id = await AsyncStorage.getItem('playerID')
       if (value !== null) {
         setName(value)
       } else {
         setName('')
       }
+      if (await id !== null) setPlayerID(id!)
+
     } catch (error) {
       console.log(error)
     }
   }
 
   const findGame = () => {
-    socket.emit('joinqueue', name)
+    socket.emit('joinqueue', name, playerID)
   }
 
   return (

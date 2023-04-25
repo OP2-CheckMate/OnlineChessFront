@@ -3,6 +3,7 @@ import { RouteProp } from '@react-navigation/native'
 
 export interface Player {
   id: string;
+  socketId: string;
   name: string;
 }
 
@@ -37,6 +38,7 @@ export type StackParamList = {
   };
   InQueue: {
     playerName: string;
+    playerId: string;
   };
 }
 

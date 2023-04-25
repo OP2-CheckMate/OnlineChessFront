@@ -169,7 +169,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
   }
 
   const getOpponentId = () => {
-    return getPlayerColor() === 'w' ? lobby.player2?.id : lobby.player1.id
+    return getPlayerColor() === 'w' ? lobby.player2?.socketId : lobby.player1.socketId
   }
 
   // Change active player, send move to backend and check if game is over

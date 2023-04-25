@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const InQueueScreen: FC<Props> = ({ route, navigation }: Props) => {
-  const { playerName } = route.params
+  const { playerName, playerId } = route.params
 
   socket.on('gamefound', (response: Lobby) => {
     socket.emit('joinroom', response.lobbyId)
@@ -27,7 +27,7 @@ export const InQueueScreen: FC<Props> = ({ route, navigation }: Props) => {
   })
 
   const leaveQueue = () => {
-    socket.emit('leaveQueue')
+    socket.emit('leaveQueue', playerId)
     navigation.goBack()
   }
 
