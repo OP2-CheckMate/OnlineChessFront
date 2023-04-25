@@ -33,7 +33,7 @@ const QueuingScreen = ({ navigation }: Props) => {
     }
   }, [name])
 
-  //Creates a new game on backend, requires playername
+  //Creates a new game on backend, requires playername and id
   const createGame = () => {
     //console.log('creating lobby for ' + name)
     socket.emit('createLobby', name, playerID)
@@ -54,7 +54,7 @@ const QueuingScreen = ({ navigation }: Props) => {
     //console.log('id', playerID)
     navigation.navigate('InQueue', {playerName: name, playerId: playerID})
   })
-
+  
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
     socket.emit('joinlobby', parseInt(lobbyId), name, playerID)

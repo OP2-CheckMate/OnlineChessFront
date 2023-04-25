@@ -4,4 +4,4 @@ import { HOST_NAME } from '@env'
 
 const socket = io(HOST_NAME)
 
-export default socket
+export default socket;

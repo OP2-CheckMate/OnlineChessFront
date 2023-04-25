@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { View, Text, ImageBackground, StyleSheet } from 'react-native'
 import {
   Lobby,
@@ -20,11 +20,16 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   const [player2Name, setPlayer2Name] = useState<string>('TBD')
   const [snackIsVisible, setSnackIsVisible] = useState(false)
   const [lobby, setLobby] = useState(route.params.lobby)
+  const [openBoardEnabled, setOpenBoardEnabled] = useState(!!lobby.player2);
 
-  socket.emit('joinroom', lobby.lobbyId)
+  useEffect(() => {
+    socket.emit('joinroom', lobby.lobbyId)
+  }, [])
+
   socket.on('playerJoined', (result: Lobby) => {
     setPlayer2Name(result.player2!.name)
     setLobby(result)
+    setOpenBoardEnabled(true);
     setSnackIsVisible(true)
     setTimeout(() => {
       setSnackIsVisible(false)
@@ -32,7 +37,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   })
 
   const openBoard = () => {
-    socket.emit('boardOpened', lobby.lobbyId);
+    socket.emit('boardOpened', lobby.lobbyId)
     navigation.navigate('Game', { lobby, playerName })
   }
 
@@ -60,8 +65,9 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
         >
           <CustomButton
             title='Open Board'
-            onPress={openBoard} 
-         />      
+            onPress={openBoard}
+            disabled={!openBoardEnabled}
+          />
         </View>
       </ImageBackground>
       {snackIsVisible ? (
