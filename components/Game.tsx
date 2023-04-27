@@ -281,6 +281,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
           modalVisible={opponentDisconnected || opponentLeftGame}
           toggleModal={() => setDModalVisible(!dModalVisible)}
           navigation={() => navigation.navigate('Homepage')}
+          lobbyId={lobby.lobbyId}
         />
       </View>
       <View style={styles.container}>
