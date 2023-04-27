@@ -42,14 +42,14 @@ const App = () => {
     console.log('RECONNECT AIVAILABLE')
   })
 
-  const setupPlayerId = async (id: string) =>{
+  const setupPlayerId = async (id: string) => {
     const storage = await AsyncStorage.getItem('playerID')
-    if(await !storage){
+    if (await !storage) {
       console.log('new id')
       AsyncStorage.setItem('playerID', id)
       setPlayerID(id)
       //checkReconnect(id)
-    }else{
+    } else {
       console.log('old id')
       setPlayerID(storage!)
       checkReconnect(storage!)
@@ -61,28 +61,18 @@ const App = () => {
     setupPlayerId(id)
   })
 
-  /* Helper function to check what is stored in AsyncStorage, will be deleted later */
-  AsyncStorage.getAllKeys((err, keys) => {
-    AsyncStorage.multiGet(keys!, (error, stores) => {
-      stores!.map((result, i, store) => {
-        console.log({ [store[i][0]]: store[i][1] })
-        return true
-      })
-    })
-  })
-
   return (
     <>
       <StatusBar style='dark'></StatusBar>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Homepage" component={Homepage} />
-            <Stack.Screen name="QueuingScreen" component={QueuingScreen} />
-            <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen name="Game" component={Game} />
-            <Stack.Screen name="LobbyCode" component={LobbyCodeScreen} />
-            <Stack.Screen name="InQueue" component={InQueueScreen} />
+            <Stack.Screen name='Homepage' component={Homepage} />
+            <Stack.Screen name='QueuingScreen' component={QueuingScreen} />
+            <Stack.Screen name='Settings' component={Settings} />
+            <Stack.Screen name='Game' component={Game} />
+            <Stack.Screen name='LobbyCode' component={LobbyCodeScreen} />
+            <Stack.Screen name='InQueue' component={InQueueScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
