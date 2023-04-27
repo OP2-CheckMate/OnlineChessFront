@@ -1,6 +1,6 @@
 # OnlineChessFront - TypeScript - React Native
 
-# Published in expo.io
+### Published in expo.io
 https://expo.dev/@samz9n/OnlineChessFront?serviceType=classic&distribution=expo-go 
 (This only works for android with Expo Go app!)
 
