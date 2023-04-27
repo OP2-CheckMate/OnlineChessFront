@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 import { HomepageNavigationProp } from '../types/types'
@@ -9,6 +10,7 @@ type Props = {
 const Homepage = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
+      <StatusBar style='light' />
       <ImageBackground source={require('./images/ChessGameFrontpagePic2.jpg')} resizeMode="cover" style={styles.image}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity

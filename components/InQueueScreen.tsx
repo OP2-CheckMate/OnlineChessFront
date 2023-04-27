@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import socket from '../socket/socket'
 import CustomButton from '../util/CustomButton'
+import { StatusBar } from 'expo-status-bar'
 
 interface Props {
   navigation: InQueueNavigationProp
@@ -33,6 +34,7 @@ export const InQueueScreen: FC<Props> = ({ route, navigation }: Props) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar style='dark' />
       <ImageBackground
         source={require('./images/settingsBgImage.png')}
         resizeMode='cover'

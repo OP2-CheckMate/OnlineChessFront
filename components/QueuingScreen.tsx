@@ -6,6 +6,7 @@ import BadLobbyCodeModal from '../util/BadLobbyCodeModal'
 import { Lobby, QueuingScreenNavigationProp } from '../types/types'
 import { useSocketSetup } from '../socket/useSocketSetup'
 import socket from '../socket/socket'
+import { StatusBar } from 'expo-status-bar'
 
 type Props = {
   navigation: QueuingScreenNavigationProp;
@@ -39,22 +40,22 @@ const QueuingScreen = ({ navigation }: Props) => {
     socket.emit('createLobby', name, playerID)
   }
 
-  socket.on('createdLobby', (response: Lobby) =>{
+  socket.on('createdLobby', (response: Lobby) => {
     //console.log(response)
-    navigation.navigate('LobbyCode', { lobby: response, playerName: name})
+    navigation.navigate('LobbyCode', { lobby: response, playerName: name })
   })
 
   socket.on('gamefound', (response: Lobby) => {
     socket.emit('joinroom', response.lobbyId)
-    navigation.navigate('LobbyCode', { lobby: response, playerName: name})
+    navigation.navigate('LobbyCode', { lobby: response, playerName: name })
   })
 
   socket.on('joinedQueue', () => {
     console.log('joined queue')
     //console.log('id', playerID)
-    navigation.navigate('InQueue', {playerName: name, playerId: playerID})
+    navigation.navigate('InQueue', { playerName: name, playerId: playerID })
   })
-  
+
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
     socket.emit('joinlobby', parseInt(lobbyId), name, playerID)
@@ -91,6 +92,7 @@ const QueuingScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style='dark' />
       <ImageBackground source={require('./images/settingsBgImage.png')} resizeMode="cover" style={styles.image}>
         <View style={styles.innerView}>
           <TextInput
@@ -106,10 +108,10 @@ const QueuingScreen = ({ navigation }: Props) => {
             autoFocus={true}
             placeholderTextColor="rgb(110,93,53)"
           />
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             {/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
-            <CustomButton title="Create Game" onPress={ () => createGame()} disabled={isDisabled} />
-            <CustomButton title="Find game" onPress={ () => findGame()} disabled={isDisabled} />
+            <CustomButton title="Create Game" onPress={() => createGame()} disabled={isDisabled} />
+            <CustomButton title="Find game" onPress={() => findGame()} disabled={isDisabled} />
           </View>
           <TextInput
             // Enter Lobby-ID
@@ -120,7 +122,7 @@ const QueuingScreen = ({ navigation }: Props) => {
             autoComplete="off"
             placeholderTextColor="rgb(110,93,53)"
           />
-          <CustomButton title="Join Game" onPress={() => joinGame()} disabled={lobbyId.length>0 ? false : true} />
+          <CustomButton title="Join Game" onPress={() => joinGame()} disabled={lobbyId.length > 0 ? false : true} />
         </View>
       </ImageBackground>
       <BadLobbyCodeModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)}></BadLobbyCodeModal>

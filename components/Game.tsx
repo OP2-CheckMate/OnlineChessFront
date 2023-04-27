@@ -18,6 +18,7 @@ import ChatBox from '../util/ChatBox'
 import { WaitingForBothPlayersLoadingView } from '../util/WaitingForBothPlayersLoadingScreen'
 import { OpponentLeftModal } from '../util/OpponentLeftModal'
 import { LeaveGameAlert } from '../util/LeaveGameAlert'
+import { StatusBar } from 'expo-status-bar'
 
 type Props = {
   navigation: GameNavigationProp
@@ -214,6 +215,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
   return (
     <>
       <View style={styles.container}>
+        <StatusBar style='dark' />
         <View
           style={{
             transform: [
