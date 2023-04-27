@@ -63,19 +63,18 @@ const App = () => {
 
   return (
     <>
-      <StatusBar style='dark'></StatusBar>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name='Homepage' component={Homepage} />
+            <Stack.Screen name='Homepage' component={Homepage} options={{ headerShown: false }} />
             <Stack.Screen name='QueuingScreen' component={QueuingScreen} />
             <Stack.Screen name='Settings' component={Settings} />
             <Stack.Screen name='Game' component={Game} />
             <Stack.Screen name='LobbyCode' component={LobbyCodeScreen} />
             <Stack.Screen name='InQueue' component={InQueueScreen} />
           </Stack.Navigator>
-        </NavigationContainer>
-      </GestureHandlerRootView>
+        </NavigationContainer >
+      </GestureHandlerRootView >
     </>
   )
 }

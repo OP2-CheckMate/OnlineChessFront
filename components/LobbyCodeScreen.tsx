@@ -8,6 +8,7 @@ import {
 import CustomButton from '../util/CustomButton'
 import socket from '../socket/socket'
 import { Snackbar } from '@react-native-material/core'
+import { StatusBar } from 'expo-status-bar'
 
 interface Props {
   navigation: LobbyCodeNavigationProp
@@ -43,6 +44,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar style='dark' />
       <ImageBackground
         source={require('./images/settingsBgImage.png')}
         resizeMode='cover'

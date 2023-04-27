@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import ThemeSettingsModal from '../util/ThemeSettingsModal'
 import ProfileSettingsModal from '../util/ProfileSettingsModal'
 import GameplaySettingsModal from '../util/GameplaySettingsModal'
+import { StatusBar } from 'expo-status-bar'
 
 const Settings = () => {
   const [themeModalVisible, setThemeModalVisible] = useState(false)
@@ -12,6 +13,7 @@ const Settings = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style='dark' />
       <ImageBackground source={require('./images/settingsBgImage.png')} resizeMode="cover" style={styles.image}>
         <View>
           <View style={styles.btnView}>
@@ -22,7 +24,7 @@ const Settings = () => {
               color="white"
               size={25}
               //GAMEPLAY SETTINGS VALINNAT MODAALI AUKEE
-              onPress={() => { 
+              onPress={() => {
                 setGameplayModalVisible(true)
               }}
             //TEST
@@ -67,7 +69,7 @@ const Settings = () => {
             closeModal={() => setProfileModalVisible(false)}
           />
           <GameplaySettingsModal isVisible={gameplayModalVisible}
-            closeModal={() => setGameplayModalVisible(false)}/>
+            closeModal={() => setGameplayModalVisible(false)} />
         </View>
       </ImageBackground>
     </View>
