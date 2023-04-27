@@ -19,12 +19,10 @@ import { WaitingForBothPlayersLoadingView } from '../util/WaitingForBothPlayersL
 import { OpponentLeftModal } from '../util/OpponentLeftModal'
 import { LeaveGameAlert } from '../util/LeaveGameAlert'
 
-
 type Props = {
   navigation: GameNavigationProp
   route: GameRouteProp
 }
-
 
 const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
@@ -42,17 +40,17 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [opponentDisconnected, setOpponentDisconnected] = useState(false)
   const [opponentLeftGame, setOpponentLeftGame] = useState(false)
 
-   // Used when the user presses the back button on the device or the back button in the header
-   const onBackPress = () => {
+  // Used when the user presses the back button on the device or the back button in the header
+  const onBackPress = () => {
     const { showAlert } = LeaveGameAlert({
       onConfirm: () => {
-        socket.emit('playerExited', getPlayerId());
-        setOpponentLeftGame(true);
-        navigation.navigate('Homepage');
+        socket.emit('playerExited', getPlayerId())
+        setOpponentLeftGame(true)
+        navigation.navigate('Homepage')
       },
-    });
-    showAlert();
-  };
+    })
+    showAlert()
+  }
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
@@ -71,9 +69,9 @@ const Game: FC<Props> = ({ route, navigation }) => {
       },
       headerLeft: () => (
         <Ionicons
-          name="arrow-back"
+          name='arrow-back'
           size={30}
-          color="black"
+          color='black'
           onPress={() => onBackPress()}
           style={{ marginLeft: 10 }}
         />
@@ -81,51 +79,50 @@ const Game: FC<Props> = ({ route, navigation }) => {
     })
   }, [navigation])
 
-   // Handle the (hardware) back button press
-   useEffect(() => {
+  // Handle the (hardware) back button press
+  useEffect(() => {
     const handleBackPress = () => {
       LeaveGameAlert({
         onConfirm: () => {
-         onBackPress();
+          onBackPress()
         },
-      });
+      })
       // Return true to prevent the default behavior (closing the app)
-      return true;
-    };
+      return true
+    }
     // Add the listener to the BackHandler
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress)
     // Clean up the listener when the component is unmounted
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-    };
-  }, []);
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    }
+  }, [])
 
   // Handle the socket events
-    useEffect(() => {
-      // Listen for the 'boardsOpen' event from the server
-      const onBothBoardsOpen = () => {
-        setBothPlayersOnBoard(true);
-      };
-      // Handle the opponent's disconnection
-      const onOpponentDisconnected = () => {
-        setOpponentDisconnected(true);
-      };
-      // Handle the opponent leaving by closing the game
-      const onOpponentExited = () => {
-        setOpponentLeftGame(true);
-      };
-      // Add the listeners
-      socket.on('bothBoardsOpen', onBothBoardsOpen);
-      socket.on('opponentDisconnected', onOpponentDisconnected);
-      socket.on('opponentExited', onOpponentExited);
-      // Clean up the listeners when the component is unmounted
-      return () => {
-        socket.off('bothBoardsOpen', onBothBoardsOpen);
-        socket.off('opponentDisconnected', onOpponentDisconnected);
-        socket.off('opponentExited', onOpponentExited);
-      };
-    }, [socket]);
-    
+  useEffect(() => {
+    // Listen for the 'boardsOpen' event from the server
+    const onBothBoardsOpen = () => {
+      setBothPlayersOnBoard(true)
+    }
+    // Handle the opponent's disconnection
+    const onOpponentDisconnected = () => {
+      setOpponentDisconnected(true)
+    }
+    // Handle the opponent leaving by closing the game
+    const onOpponentExited = () => {
+      setOpponentLeftGame(true)
+    }
+    // Add the listeners
+    socket.on('bothBoardsOpen', onBothBoardsOpen)
+    socket.on('opponentDisconnected', onOpponentDisconnected)
+    socket.on('opponentExited', onOpponentExited)
+    // Clean up the listeners when the component is unmounted
+    return () => {
+      socket.off('bothBoardsOpen', onBothBoardsOpen)
+      socket.off('opponentDisconnected', onOpponentDisconnected)
+      socket.off('opponentExited', onOpponentExited)
+    }
+  }, [socket])
 
   // Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = (): PlayerColor => {
@@ -134,7 +131,9 @@ const Game: FC<Props> = ({ route, navigation }) => {
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
   const getPlayerId = (): string => {
-    return lobby.player1.name === playerName ? lobby.player1.id : lobby.player2!.id
+    return lobby.player1.name === playerName
+      ? lobby.player1.id
+      : lobby.player2!.id
   }
 
   //State of the game was updated (opponent moved a piece)
@@ -169,12 +168,18 @@ const Game: FC<Props> = ({ route, navigation }) => {
   }
 
   const getOpponentId = () => {
-    return getPlayerColor() === 'w' ? lobby.player2?.socketId : lobby.player1.socketId
+    return getPlayerColor() === 'w'
+      ? lobby.player2?.socketId
+      : lobby.player1.socketId
   }
 
   // Change active player, send move to backend and check if game is over
-  const turn = (color: PlayerColor, from: string, to: string, promotion?: string) => {
-
+  const turn = (
+    color: PlayerColor,
+    from: string,
+    to: string,
+    promotion?: string
+  ) => {
     setBoard(game.board())
     socket.emit('updateGame', { from, to, promotion }, getOpponentId())
     checkGameOverStatus(game)
@@ -248,8 +253,10 @@ const Game: FC<Props> = ({ route, navigation }) => {
           )}
         </View>
         {!bothPlayersOnBoard && (
-         <WaitingForBothPlayersLoadingView opponentDisconnected={opponentDisconnected} />
-         )}
+          <WaitingForBothPlayersLoadingView
+            opponentDisconnected={opponentDisconnected}
+          />
+        )}
 
         {/* one of the following modals will be displayed based on how the game ended */}
         <CheckmateModal
@@ -297,8 +304,6 @@ const styles = StyleSheet.create({
     width,
     height: width,
   },
-
 })
-
 
 export default Game
