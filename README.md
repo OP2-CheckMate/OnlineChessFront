@@ -4,6 +4,9 @@
 https://expo.dev/@samz9n/OnlineChessFront?serviceType=classic&distribution=expo-go 
 (This only works for android with Expo Go app!)
 
+## About
+This is a schoolproject made by five students. The application is built with React Native, using TypeScript. As a "backend" we used socket.io and node (express), to get realtime game and chat updates.  The goal was to create a multiplayer online chess game. 
+
 ## Components (in stack order): 
 
 ### Homepage.tsx 
