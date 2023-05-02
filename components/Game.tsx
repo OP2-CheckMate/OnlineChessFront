@@ -1,6 +1,6 @@
 import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
-import { Chess, Move } from 'chess.js'
+import { Chess, Color, Move, PieceSymbol } from 'chess.js'
 import { View, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native'
 import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
@@ -25,10 +25,15 @@ type Props = {
   route: GameRouteProp
 }
 
+interface PieceProps{
+  color: Color;
+  type: PieceSymbol;
+}
+
 const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
-  const [board, setBoard] = useState(game.board())
-  const { lobby, playerName } = route.params
+  const { lobby, playerName, reconnect } = route.params
+  const [board, setBoard] = useState(reconnect? route.params.data :game.board())
   const [winner, setWinner] = useState('')
   const [currentPlayer, setCurrentPlayer] = useState(lobby.player1.name)
   const [lastPlayer, setLastPlayer] = useState('')
@@ -113,15 +118,22 @@ const Game: FC<Props> = ({ route, navigation }) => {
     const onOpponentExited = () => {
       setOpponentLeftGame(true)
     }
+    //Send current board data back to opponent
+    const sendBoardData = (opponentId: string) => {
+      socket.emit('boardData', board, opponentId)
+    }
+
     // Add the listeners
     socket.on('bothBoardsOpen', onBothBoardsOpen)
     socket.on('opponentDisconnected', onOpponentDisconnected)
     socket.on('opponentExited', onOpponentExited)
+    socket.on('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
     // Clean up the listeners when the component is unmounted
     return () => {
       socket.off('bothBoardsOpen', onBothBoardsOpen)
       socket.off('opponentDisconnected', onOpponentDisconnected)
       socket.off('opponentExited', onOpponentExited)
+      socket.off('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
     }
   }, [socket])
 
@@ -229,11 +241,10 @@ const Game: FC<Props> = ({ route, navigation }) => {
             possibleMoveSquares={possibleMoveSquares}
             bothPlayersOnBoard={bothPlayersOnBoard}
           />
-          {board.map((row, y) =>
-            row.map((piece, x) => {
+          {board.map((row: any, y: any) =>
+            row.map((piece: PieceProps, x: any) => {
               {
                 /* Go through all rows and place pieces to squares */
-                console.log(board)
               }
               if (bothPlayersOnBoard && piece !== null) {
                 return (

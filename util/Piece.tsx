@@ -51,35 +51,35 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
   const translateX = useSharedValue(position.x)
   const translateY = useSharedValue(position.y)
 
-  const [promoSelectionVisible, setPromoSelectionVisible] = React.useState(false);
-  const [selectedPromoPiece, setSelectedPromoPiece] = React.useState('');
+  const [promoSelectionVisible, setPromoSelectionVisible] = React.useState(false)
+  const [selectedPromoPiece, setSelectedPromoPiece] = React.useState('')
   const [selectedPromotion, setSelectedPromotion] = React.useState({
     from: '', to: '',
-  });
+  })
 
   const handleModalClose = (piece: string) => {
-    setPromoSelectionVisible(false);
-    handlePromotionSelection(selectedPromotion.from, selectedPromotion.to, piece);
-  };
+    setPromoSelectionVisible(false)
+    handlePromotionSelection(selectedPromotion.from, selectedPromotion.to, piece)
+  }
 
   //Async function to get chosen promotion from Modal
   const getValueFromModal = async() => {
-    setPromoSelectionVisible(true);
+    setPromoSelectionVisible(true)
     return new Promise<string>((resolve) => {
-      setSelectedPromoPiece('');
+      setSelectedPromoPiece('')
       const intervalId = setInterval(() => {
         if (selectedPromoPiece) {
-          clearInterval(intervalId);
-          resolve(selectedPromoPiece);
+          clearInterval(intervalId)
+          resolve(selectedPromoPiece)
         }
-      }, 100);
-    });
-  };
+      }, 100)
+    })
+  }
 
   const handleGetValue = async (from: string, to: string) => {
     const value = await getValueFromModal()
     handleModalClose(value)
-  };
+  }
 
 
   /* 
@@ -129,12 +129,12 @@ export const Piece = ({ id, position, movable, turn, chess, color, playerColor, 
 
   //Is called when player has chosen what piece he wants to promote to. Same as MovePiece except promotion-value.
   const handlePromotionSelection = useCallback((from: string, to: string, promotion: string) => {
-    chess.move({ from: from, to: to, promotion: promotion });
-    turn(color, from, to, promotion);
-    const position = translateSquareToPosition(to);
-    offsetX.value = position.x;
-    offsetY.value = position.y;
-  }, [chess, color, offsetX, offsetY, selectedPromotion, turn]);
+    chess.move({ from: from, to: to, promotion: promotion })
+    turn(color, from, to, promotion)
+    const position = translateSquareToPosition(to)
+    offsetX.value = position.x
+    offsetY.value = position.y
+  }, [chess, color, offsetX, offsetY, selectedPromotion, turn])
 
   /*
   const getTranslateValue = (translation: number, offset: number) => {

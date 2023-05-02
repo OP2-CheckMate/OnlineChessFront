@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert } from 'react-native'
 
 type LeaveGameAlertProps = {
   onConfirm: () => void;
@@ -21,8 +21,8 @@ export const LeaveGameAlert = ({ onConfirm }: LeaveGameAlertProps) => {
         },
       ],
       { cancelable: false }
-    );
-  };
+    )
+  }
 
-  return { showAlert };
-};
+  return { showAlert }
+}

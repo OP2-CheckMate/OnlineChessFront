@@ -21,7 +21,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   const [player2Name, setPlayer2Name] = useState<string>('TBD')
   const [snackIsVisible, setSnackIsVisible] = useState(false)
   const [lobby, setLobby] = useState(route.params.lobby)
-  const [openBoardEnabled, setOpenBoardEnabled] = useState(!!lobby.player2);
+  const [openBoardEnabled, setOpenBoardEnabled] = useState(!!lobby.player2)
 
   useEffect(() => {
     socket.emit('joinroom', lobby.lobbyId)
@@ -30,7 +30,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
   socket.on('playerJoined', (result: Lobby) => {
     setPlayer2Name(result.player2!.name)
     setLobby(result)
-    setOpenBoardEnabled(true);
+    setOpenBoardEnabled(true)
     setSnackIsVisible(true)
     setTimeout(() => {
       setSnackIsVisible(false)
@@ -39,7 +39,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
 
   const openBoard = () => {
     socket.emit('boardOpened', lobby.lobbyId)
-    navigation.navigate('Game', { lobby, playerName })
+    navigation.navigate('Game', { lobby, playerName, reconnect: false })
   }
 
   return (

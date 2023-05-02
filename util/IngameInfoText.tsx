@@ -26,8 +26,8 @@ export const InfoText = ({
         {inCheck
           ? `${lastPlayer} has CHECKED the game!`
           : move
-          ? `Last move: ${move.from} to ${move.to}`
-          : 'No move made yet'}
+            ? `Last move: ${move.from} to ${move.to}`
+            : 'No move made yet'}
       </Text>
     </View>
   )
