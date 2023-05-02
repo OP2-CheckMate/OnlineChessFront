@@ -122,18 +122,25 @@ const Game: FC<Props> = ({ route, navigation }) => {
     const sendBoardData = (opponentId: string) => {
       socket.emit('boardData', board, opponentId)
     }
-
+    //State of the game was updated (opponent moved a piece)
+    const handleGameUpdate = (movedPiece: Move) => {
+      setMove(movedPiece);
+    };
+  
     // Add the listeners
     socket.on('bothBoardsOpen', onBothBoardsOpen)
     socket.on('opponentDisconnected', onOpponentDisconnected)
     socket.on('opponentExited', onOpponentExited)
     socket.on('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
+    socket.on('gameUpdate', handleGameUpdate);
+
     // Clean up the listeners when the component is unmounted
     return () => {
       socket.off('bothBoardsOpen', onBothBoardsOpen)
       socket.off('opponentDisconnected', onOpponentDisconnected)
       socket.off('opponentExited', onOpponentExited)
       socket.off('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
+      socket.off('gameUpdate', handleGameUpdate);
     }
   }, [socket])
 
@@ -149,10 +156,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
       : lobby.player2!.id
   }
 
-  //State of the game was updated (opponent moved a piece)
-  socket.on('gameUpdate', (movedPiece: Move) => {
-    setMove(movedPiece)
-  })
+
   useEffect(() => {
     if (move !== null) {
       console.log('opponent moved: ', move)
