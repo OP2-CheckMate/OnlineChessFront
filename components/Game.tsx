@@ -1,6 +1,6 @@
 import React, { FC, useLayoutEffect, useState } from 'react'
 import Board from '../util/Board'
-import { Chess, Move } from 'chess.js'
+import { Chess, Color, Move, PieceSymbol } from 'chess.js'
 import { View, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native'
 import { GameNavigationProp, GameRouteProp } from '../types/types'
 import { PlayerColor } from '../types/types'
@@ -23,6 +23,11 @@ import { StatusBar } from 'expo-status-bar'
 type Props = {
   navigation: GameNavigationProp
   route: GameRouteProp
+}
+
+interface PieceProps{
+  color: Color;
+  type: PieceSymbol;
 }
 
 const Game: FC<Props> = ({ route, navigation }) => {
@@ -128,6 +133,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
       socket.off('bothBoardsOpen', onBothBoardsOpen)
       socket.off('opponentDisconnected', onOpponentDisconnected)
       socket.off('opponentExited', onOpponentExited)
+      socket.off('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
     }
   }, [socket])
 
@@ -236,7 +242,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
             bothPlayersOnBoard={bothPlayersOnBoard}
           />
           {board.map((row: any, y: any) =>
-            row.map((piece: any, x: any) => {
+            row.map((piece: PieceProps, x: any) => {
               {
                 /* Go through all rows and place pieces to squares */
               }
