@@ -10,6 +10,11 @@ This is a schoolproject made by five students. The application is built with Rea
 
 ![image](https://user-images.githubusercontent.com/64839531/235620179-86533719-ba50-4b68-b08a-fdfb0bb75390.png) ![image](https://user-images.githubusercontent.com/64839531/235622991-5a6b8ee3-dc2b-4440-9093-bd47f016d6e2.png) ![image](https://user-images.githubusercontent.com/64839531/235623139-37b6e2b0-184d-4dc3-849a-9c28304c9491.png)
 
+<p float="left">
+  <img src="/[img1.png](https://user-images.githubusercontent.com/64839531/235620179-86533719-ba50-4b68-b08a-fdfb0bb75390.png)" width="100" />
+  <img src="/img2.png" width="100" /> 
+  <img src="/img3.png" width="100" />
+</p>
 
 ## Components (main screens): 
 
