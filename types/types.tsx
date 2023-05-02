@@ -31,6 +31,8 @@ export type StackParamList = {
   Game: {
     playerName: string;
     lobby: Lobby;
+    reconnect: boolean;
+    data?: any;
   };
   LobbyCode: {
     lobby: Lobby;
