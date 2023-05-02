@@ -76,7 +76,7 @@ npm start
 ctrl + c
 
 ## Authors
-@Lauri-Iivarinen
+[@Lauri-Iivarinen] (https://www.github.com/Lauri-Iivarinen)
 @Samz9n
 @AaltonenSan
 @jounijoh
