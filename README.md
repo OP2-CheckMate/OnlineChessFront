@@ -9,9 +9,9 @@ Install Expo Go app on Google Play store to get started! Then scan the QR-code f
 This is a schoolproject made by five students. The application is built with React Native, using TypeScript. As a "backend" we used socket.io and node (express), to get realtime game and chat updates.  The goal was to create a multiplayer online chess game, where players can play against friends and random opponents. We also wanted to include a chat for enchanced player experience.
 
 <p float="left">
-  <img src="https://user-images.githubusercontent.com/64839531/235620179-86533719-ba50-4b68-b08a-fdfb0bb75390.png" width="300" height="600" />
-  <img src="https://user-images.githubusercontent.com/64839531/235622991-5a6b8ee3-dc2b-4440-9093-bd47f016d6e2.png" width="300" height="600" /> 
-  <img src="https://user-images.githubusercontent.com/64839531/235623139-37b6e2b0-184d-4dc3-849a-9c28304c9491.png" width="300" height="600" />
+  <img src="https://user-images.githubusercontent.com/64839531/235627551-8f09f4bd-048a-43e7-90ed-b78a5634a6e9.png" width="300" height="600" />
+  <img src="https://user-images.githubusercontent.com/64839531/235627217-e75fe620-2b93-4723-a73f-0299a877f7d1.png" width="300" height="600" /> 
+  <img src="https://user-images.githubusercontent.com/64839531/235627920-dda08256-62ff-4017-a9ca-fac13ae49adf.png" width="300" height="600" />
 </p>
 
 ## Components (main screens): 
