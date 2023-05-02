@@ -39,7 +39,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
 
   const openBoard = () => {
     socket.emit('boardOpened', lobby.lobbyId)
-    navigation.navigate('Game', { lobby, playerName })
+    navigation.navigate('Game', { lobby, playerName, reconnect: false })
   }
 
   return (
