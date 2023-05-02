@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native'
 
 export interface Player {
   id: string;
-  socketId: string;
+  socketId?: string;
   name: string;
 }
 

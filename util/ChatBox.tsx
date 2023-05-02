@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   FlatList,
   Text,
+  Keyboard,
+  Platform,
+  TouchableOpacity,
 } from 'react-native'
 import socket from '../socket/socket'
+
+
 
 interface ChatBoxProps {
   lobbyId: number
@@ -22,12 +26,30 @@ interface Message {
 const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [message, setMessage] = useState('')
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
     socket.on('chat-message', (msg: string, author: string) => {
       setMessages((prevMessages) => [...prevMessages, { msg, author }])
     })
   }, [])
+
+  // Listens to keyboard height and sets the state accordingly to move the input field up
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => setKeyboardHeight(e.endCoordinates.height),
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setKeyboardHeight(0),
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleSendMessage = () => {
     if (message.trim() !== '') {
@@ -41,7 +63,12 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
       return
     }
     setMessage('')
+    Keyboard.dismiss();
   }
+  const handleCloseButton = () => {
+    setMessage('');
+    Keyboard.dismiss();
+  };
 
   return (
     <View style={styles.container}>
@@ -78,15 +105,33 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
         inverted
         contentContainerStyle={{ flexDirection: 'column-reverse' }}
       />
-      <View style={styles.inputContainer}>
+      <View
+        style={[
+          styles.inputContainer,
+          { transform: [{ translateY: -keyboardHeight }] },
+        ]}>
         <TextInput
           style={styles.input}
           value={message}
           onChangeText={setMessage}
-          placeholder='Type your message here'
+          placeholder="Type your message here"
           multiline
         />
-        <Button title='Send' onPress={handleSendMessage} color='darkgreen' />
+        <TouchableOpacity
+          style={styles.sendButtonStyle}
+          onPress={handleSendMessage}
+        >
+          <Text style={{ color: 'white' }}>Send</Text>
+        </TouchableOpacity>
+        {// If keyboard is open or message is empty, show close button
+        (keyboardHeight > 0 || message.length > 0 ) && (
+        <TouchableOpacity
+          style={styles.closeButtonStyle}
+          onPress={handleCloseButton}
+        >
+          <Text style={{ color: 'white' }}>X</Text>
+        </TouchableOpacity>
+         )}
       </View>
     </View>
   )
@@ -125,7 +170,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 16,
     height: 60,
-    width: '70%',
+    width: '95%',
     marginHorizontal: 10,
     marginTop: 5,
     marginBottom: 80,
@@ -138,6 +183,23 @@ const styles = StyleSheet.create({
     marginRight: 10,
     maxHeight: 100,
   },
+  sendButtonStyle: {
+    borderRadius: 10,
+    marginRight: 10,
+    backgroundColor: 'darkgreen',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+  }, 
+  closeButtonStyle:{
+    borderRadius: 10,
+    backgroundColor: '#72063c',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  }
 })
 
 export default ChatBox

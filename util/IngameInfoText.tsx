@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   InfoText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 })

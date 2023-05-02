@@ -34,27 +34,39 @@ const QueuingScreen = ({ navigation }: Props) => {
     }
   }, [name])
 
+  useEffect(() => {
+    const handleCreatedLobby = (response: Lobby) => {
+      navigation.navigate('LobbyCode', { lobby: response, playerName: name });
+    };
+
+    const handleGameFound = (response: Lobby) => {
+      socket.emit('joinroom', response.lobbyId);
+      navigation.navigate('LobbyCode', { lobby: response, playerName: name });
+    };
+
+    const handleJoinedQueue = () => {
+      console.log('joined queue');
+      navigation.navigate('InQueue', { playerName: name, playerId: playerID });
+    };
+
+    socket.on('createdLobby', handleCreatedLobby);
+    socket.on('gamefound', handleGameFound);
+    socket.on('joinedQueue', handleJoinedQueue);
+
+    return () => {
+      socket.off('createdLobby', handleCreatedLobby);
+      socket.off('gamefound', handleGameFound);
+      socket.off('joinedQueue', handleJoinedQueue);
+    };
+  }, [name, playerID, navigation]);
+
+
   //Creates a new game on backend, requires playername and id
   const createGame = () => {
     //console.log('creating lobby for ' + name)
     socket.emit('createLobby', name, playerID)
   }
 
-  socket.on('createdLobby', (response: Lobby) => {
-    //console.log(response)
-    navigation.navigate('LobbyCode', { lobby: response, playerName: name })
-  })
-
-  socket.on('gamefound', (response: Lobby) => {
-    socket.emit('joinroom', response.lobbyId)
-    navigation.navigate('LobbyCode', { lobby: response, playerName: name })
-  })
-
-  socket.on('joinedQueue', () => {
-    console.log('joined queue')
-    //console.log('id', playerID)
-    navigation.navigate('InQueue', { playerName: name, playerId: playerID })
-  })
 
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
