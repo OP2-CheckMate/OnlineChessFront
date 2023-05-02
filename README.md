@@ -76,11 +76,11 @@ npm start
 ctrl + c
 
 ## Authors
-[@Lauri-Iivarinen] (https://www.github.com/Lauri-Iivarinen)
-@Samz9n
-@AaltonenSan
-@jounijoh
-@Juho9
+- https://www.github.com/Lauri-Iivarinen
+- https://www.github.com/Samz9n
+- https://www.github.com/AaltonenSan
+- https://www.github.com/jounijoh
+- https://www.github.com/Juho9
 
 ## Acknowledgements
 - William Candilon [Chess - “Can it be done in React Native?”](https://youtu.be/JulJJxbP_T0)
