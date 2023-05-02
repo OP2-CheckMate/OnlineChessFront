@@ -233,6 +233,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
             row.map((piece, x) => {
               {
                 /* Go through all rows and place pieces to squares */
+                console.log(board)
               }
               if (bothPlayersOnBoard && piece !== null) {
                 return (

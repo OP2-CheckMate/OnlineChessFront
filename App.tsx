@@ -10,7 +10,7 @@ import LobbyCodeScreen from './components/LobbyCodeScreen'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect } from 'react'
-import { StackParamList } from './types/types'
+import { Lobby, StackParamList } from './types/types'
 import { InQueueScreen } from './components/InQueueScreen'
 import socket from './socket/socket'
 
@@ -38,7 +38,13 @@ const App = () => {
     socket.emit('checkReconnect', id)
   }
 
-  socket.on('reconnectToGame', () => {
+  socket.on('lobbyData', (data: any) => {
+    //Navigate to board with data
+  })
+
+  socket.on('reconnectToGame', (lobby: Lobby, opponentId: string) => {
+    // Save lobby to const
+    // if player wants to reconnect -> socket fetch to reconnectRequest, with variable opponentId
     console.log('RECONNECT AIVAILABLE')
   })
 
