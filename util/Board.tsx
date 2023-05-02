@@ -34,25 +34,25 @@ export default function Board({ playerColor, possibleMoveSquares, bothPlayersOnB
   const getStoredOptions = async () => {
     try {
       // Retrieve theme
-      const themeValue = await AsyncStorage.getItem('theme');
+      const themeValue = await AsyncStorage.getItem('theme')
       if (themeValue !== null) {
-        setColorOne(Themes[parseInt(themeValue)].col1);
-        setColorTwo(Themes[parseInt(themeValue)].col2);
-        setBorderColor(Themes[parseInt(themeValue)].borderCol);
+        setColorOne(Themes[parseInt(themeValue)].col1)
+        setColorTwo(Themes[parseInt(themeValue)].col2)
+        setBorderColor(Themes[parseInt(themeValue)].borderCol)
       } else {
-        setColorOne(Themes[0].col1);
-        setColorTwo(Themes[0].col2);
-        setBorderColor(Themes[0].borderCol);
+        setColorOne(Themes[0].col1)
+        setColorTwo(Themes[0].col2)
+        setBorderColor(Themes[0].borderCol)
       }
       // Retrieve gameplay settings
-      const showPossibleMovesValue = await AsyncStorage.getItem('showPossibleMoves');
+      const showPossibleMovesValue = await AsyncStorage.getItem('showPossibleMoves')
       if (showPossibleMovesValue !== null) {
-        setShowPossibleMoves(JSON.parse(showPossibleMovesValue));
+        setShowPossibleMoves(JSON.parse(showPossibleMovesValue))
       }
     } catch (error) {
-      console.log(error, 'Error while fetching stored options');
+      console.log(error, 'Error while fetching stored options')
     }
-  };
+  }
 
 
   const Row = ({ row }: RowProps) => {

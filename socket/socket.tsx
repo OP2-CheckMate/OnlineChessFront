@@ -6,4 +6,4 @@ import { HOST_NAME } from '@env'
 
 const socket = io('http://192.168.1.72:8080')
 
-export default socket;
+export default socket

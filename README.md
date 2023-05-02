@@ -65,15 +65,36 @@ npm install chess.js
     chess.move({from:'a2', to:'a4'}) //Move PAWN 
     console.log(chess.ascii()) 
 
-## Run app:
-### Install packages:
-npm install
+## Run app locally:
+To play the game you also need the backend running locally!
 
+Get it here -> [OnlineChessBack](https://github.com/OP2-CheckMate/OnlineChessBack)
+
+### Clone the repo:
+```sh
+git clone https://github.com/OP2-CheckMate/OnlineChessFront.git
+```
+### Install npm packages:
+```sh
+npm install
+```
+### Set environment variables
+```sh
+Create env file:
+touch .env
+
+Inside .env add HOST_NAME=http://<your_ip_adddress>:8080
+```
 ### Run program:
+```sh
 npm start
+```
 
 ### Stop program:
+```sh
 ctrl + c
+```
+
 
 ## Authors
 - https://www.github.com/Lauri-Iivarinen
