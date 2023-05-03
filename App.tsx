@@ -25,6 +25,12 @@ const storeTheme = async (value: string) => {
 }
 
 const App = () => {
+
+  const [modalVisible, setModalVisible] = React.useState(false)
+  const [newLobby, setNewLobby] = React.useState<Lobby>()
+  const [data, setData] = React.useState<any>()
+  const [opponentId, setOpponentId] = React.useState("")
+
   const [playerID, setPlayerID] = useState<string>('')
   /* Get saved theme for board when app starts */
   useEffect(() => {
@@ -38,15 +44,23 @@ const App = () => {
     socket.emit('checkReconnect', id)
   }
 
-  socket.on('lobbyData', (data: any) => {
-    //Navigate to board with data
-  })
-
   socket.on('reconnectToGame', (lobby: Lobby, opponentId: string) => {
     // Save lobby to const
     // if player wants to reconnect -> socket fetch to reconnectRequest, with variable opponentId
-    console.log('RECONNECT AIVAILABLE')
+
+    console.log('RECONNECT AVAILABLE')
+    setNewLobby(lobby)
+    setOpponentId(opponentId)
+    setModalVisible(true)
+    socket.emit('reconnectRequest', opponentId)
   })
+
+  socket.on('lobbyData', (data: any) => {
+    //Navigate to board with data
+    setData(data)
+  })
+  
+  
 
   const setupPlayerId = async (id: string) => {
     const storage = await AsyncStorage.getItem('playerID')
@@ -80,6 +94,7 @@ const App = () => {
             <Stack.Screen name='InQueue' component={InQueueScreen} />
           </Stack.Navigator>
         </NavigationContainer >
+        <ReconnectModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} navigate={() => navigation.navigate('Game', {playerName: opponentId, lobby: newLobby!, reconnect: true, data: data})} />
       </GestureHandlerRootView >
     </>
   )
