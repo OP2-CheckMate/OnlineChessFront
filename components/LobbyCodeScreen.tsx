@@ -25,7 +25,7 @@ const LobbyCodeScreen: FC<Props> = ({ route, navigation }) => {
 
   useEffect(() => {
     socket.emit('joinroom', lobby.lobbyId)
-  }, [])
+  }, []) 
 
   socket.on('playerJoined', (result: Lobby) => {
     setPlayer2Name(result.player2!.name)

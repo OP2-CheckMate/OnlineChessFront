@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Modal, View, Text, StyleSheet } from 'react-native'
 import CustomButton from './CustomButton'
 import socket from '../socket/socket'
+import { Lobby } from '../types/types';
 
 interface ModalProps {
     opponentDisconnected: boolean;
@@ -10,13 +11,20 @@ interface ModalProps {
     toggleModal: () => void;
     navigation: () => void;
     lobbyId: number;
+    printData: (a: any) => void;
+    board: any
+    currentPlayer: string;
+    lobby: Lobby;
 }
 
 
-export const OpponentLeftModal: React.FC<ModalProps> = ({ opponentDisconnected, opponentLeft, modalVisible, toggleModal, navigation, lobbyId }) => {
+export const OpponentLeftModal: React.FC<ModalProps> = ({ opponentDisconnected, opponentLeft, modalVisible, toggleModal, navigation, lobbyId, printData, board, currentPlayer, lobby }) => {
 
   const reason = opponentDisconnected ? 'disconnected' : 'left'
   const [timer, setTimer] = useState(60)
+  const [request, setRequest] = useState(true)
+  const [boardData, setBoardData] = useState(board)
+  const [opponentId, setOpponentId] = useState<String>() 
 
   useEffect(()=>{
     if(opponentDisconnected){
@@ -30,6 +38,23 @@ export const OpponentLeftModal: React.FC<ModalProps> = ({ opponentDisconnected, 
     socket.emit('gameOver', lobbyId)
     navigation()
   }
+  useEffect(() => {
+    sendBoardData()
+  }, [opponentId])
+
+  socket.on('reconnectRequest', (opponentId: string) => {
+    setOpponentId(opponentId)
+  })
+
+  //Send current board data back to opponent
+  const sendBoardData = () => {
+    //printData(boardThing)
+    console.log('emitting')
+    socket.emit('boardData', boardData, opponentId, currentPlayer, lobby)
+    socket.off('reconnectRequest')
+  }
+
+  
 
   return (
     <Modal
@@ -48,10 +73,12 @@ export const OpponentLeftModal: React.FC<ModalProps> = ({ opponentDisconnected, 
                     You won!
                   </Text>
                   <CustomButton style={styles.customButton} title="Go home" onPress={navigation} />
+                  <CustomButton style={styles.customButton} title="print" onPress={() => printData(board)}></CustomButton>
                 </View>
         }
         {timer > 0
           ?<View>
+            <CustomButton style={styles.customButton} title="print" onPress={() => printData(board)}></CustomButton>
             <Text style={styles.resultText} numberOfLines={1} adjustsFontSizeToFit>
                     Opponent forfeiting in {timer}s
             </Text>

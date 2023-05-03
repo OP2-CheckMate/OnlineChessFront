@@ -7,7 +7,7 @@ interface ModalProps {
   modalVisible: boolean;
   toggleModal: () => void;
   navigate: () => void;
-  reconnectReq: () => void;
+  //reconnectReq: () => void;
 }
 
 export default function ReconnectModal({ modalVisible, toggleModal, navigate }: ModalProps) {

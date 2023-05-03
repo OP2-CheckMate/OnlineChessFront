@@ -10,9 +10,12 @@ import LobbyCodeScreen from './components/LobbyCodeScreen'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect } from 'react'
-import { Lobby, StackParamList } from './types/types'
+import { AppNavigationProp, Lobby, StackParamList } from './types/types'
 import { InQueueScreen } from './components/InQueueScreen'
 import socket from './socket/socket'
+import ReconnectModal from './util/ReconnectModal'
+import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator<StackParamList>()
 
@@ -24,14 +27,18 @@ const storeTheme = async (value: string) => {
   }
 }
 
+
+
 const App = () => {
 
-  const [modalVisible, setModalVisible] = React.useState(false)
-  const [newLobby, setNewLobby] = React.useState<Lobby>()
-  const [data, setData] = React.useState<any>()
-  const [opponentId, setOpponentId] = React.useState("")
+  
+/*
+  useEffect(() => {
+    console.log(data)
+    if (data.length > 0) navigation.navigate('Game')
+  }, [data])
+*/
 
-  const [playerID, setPlayerID] = useState<string>('')
   /* Get saved theme for board when app starts */
   useEffect(() => {
     const theme = AsyncStorage.getItem('theme')
@@ -39,47 +46,6 @@ const App = () => {
       storeTheme('0')
     }
   }, [])
-
-  const checkReconnect = (id: string) => {
-    socket.emit('checkReconnect', id)
-  }
-
-  socket.on('reconnectToGame', (lobby: Lobby, opponentId: string) => {
-    // Save lobby to const
-    // if player wants to reconnect -> socket fetch to reconnectRequest, with variable opponentId
-
-    console.log('RECONNECT AVAILABLE')
-    setNewLobby(lobby)
-    setOpponentId(opponentId)
-    setModalVisible(true)
-    socket.emit('reconnectRequest', opponentId)
-  })
-
-  socket.on('lobbyData', (data: any) => {
-    //Navigate to board with data
-    setData(data)
-  })
-  
-  
-
-  const setupPlayerId = async (id: string) => {
-    const storage = await AsyncStorage.getItem('playerID')
-    if (await !storage) {
-      console.log('new id')
-      AsyncStorage.setItem('playerID', id)
-      setPlayerID(id)
-      //checkReconnect(id)
-    } else {
-      console.log('old id')
-      setPlayerID(storage!)
-      checkReconnect(storage!)
-    }
-  }
-
-  socket.on('connectionSuccessfull', (id: string) => {
-    console.log('connection ok')
-    setupPlayerId(id)
-  })
 
   return (
     <>
@@ -94,7 +60,7 @@ const App = () => {
             <Stack.Screen name='InQueue' component={InQueueScreen} />
           </Stack.Navigator>
         </NavigationContainer >
-        <ReconnectModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)} navigate={() => navigation.navigate('Game', {playerName: opponentId, lobby: newLobby!, reconnect: true, data: data})} />
+        
       </GestureHandlerRootView >
     </>
   )

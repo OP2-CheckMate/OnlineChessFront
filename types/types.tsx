@@ -13,7 +13,7 @@ export interface Lobby {
   lobbyId: number;
   player1: Player;
   player2?: Player;
-  recentMove?: Move;
+  recentMove?: Move | null;
   isGameOver?: boolean;
 }
 
@@ -25,14 +25,16 @@ export interface Move {
 
 // If you need to pass props in navigation or route add them here
 export type StackParamList = {
-  Homepage: undefined;
+  App: undefined;
+  Homepage: undefined
   QueuingScreen: undefined;
   Settings: undefined;
   Game: {
     playerName: string;
     lobby: Lobby;
     reconnect: boolean;
-    data?: any;
+    data?: any[];
+    turn?: string;
   };
   LobbyCode: {
     lobby: Lobby;
@@ -62,3 +64,5 @@ export type LobbyCodeRouteProp = RouteProp<StackParamList, 'LobbyCode'>
 
 export type InQueueNavigationProp = NativeStackNavigationProp<StackParamList, 'InQueue'>
 export type InQueueRouteProp = RouteProp<StackParamList, 'InQueue'>
+
+export type AppNavigationProp = NativeStackNavigationProp<StackParamList, 'App'>

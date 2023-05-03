@@ -32,10 +32,10 @@ interface PieceProps{
 
 const Game: FC<Props> = ({ route, navigation }) => {
   const [game, setGame] = useState(new Chess())
-  const { lobby, playerName, reconnect } = route.params
-  const [board, setBoard] = useState(reconnect? route.params.data :game.board())
+  const { lobby, playerName, reconnect, data } = route.params
+  const [board, setBoard] = useState<any>(game.board())
   const [winner, setWinner] = useState('')
-  const [currentPlayer, setCurrentPlayer] = useState(lobby.player1.name)
+  const [currentPlayer, setCurrentPlayer] = useState<string>(lobby.player1.name)
   const [lastPlayer, setLastPlayer] = useState('')
   const [cModalVisible, setCModalVisible] = useState(false)
   const [sModalVisible, setSModalVisible] = useState(false)
@@ -57,6 +57,29 @@ const Game: FC<Props> = ({ route, navigation }) => {
     })
     showAlert()
   }
+
+  useEffect(() => {
+    if (reconnect) {
+      const turnstr = route.params.turn
+      printData(data)
+      setBoard(data)
+      setCurrentPlayer(turnstr!)
+      setBothPlayersOnBoard(true)
+      if (lobby.recentMove) game.move(lobby.recentMove)
+    }
+  }, [])
+
+  const printData = (a: any) => {
+    for (let row of a){
+      let str = ''
+      for (let piece of row){
+        str += piece? `[${piece.type}] ` : '[ ] '
+      }
+      console.log(str)
+    }
+  }
+
+
   /* Hook to change header options in Game screen, used to navigate to settings page. 
   Settings-Icon in top right corner of the page. */
   useLayoutEffect(() => {
@@ -118,10 +141,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
     const onOpponentExited = () => {
       setOpponentLeftGame(true)
     }
-    //Send current board data back to opponent
-    const sendBoardData = (opponentId: string) => {
-      socket.emit('boardData', board, opponentId)
-    }
+
     //State of the game was updated (opponent moved a piece)
     const handleGameUpdate = (movedPiece: Move) => {
       setMove(movedPiece);
@@ -131,7 +151,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
     socket.on('bothBoardsOpen', onBothBoardsOpen)
     socket.on('opponentDisconnected', onOpponentDisconnected)
     socket.on('opponentExited', onOpponentExited)
-    socket.on('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
+    
     socket.on('gameUpdate', handleGameUpdate);
 
     // Clean up the listeners when the component is unmounted
@@ -139,14 +159,20 @@ const Game: FC<Props> = ({ route, navigation }) => {
       socket.off('bothBoardsOpen', onBothBoardsOpen)
       socket.off('opponentDisconnected', onOpponentDisconnected)
       socket.off('opponentExited', onOpponentExited)
-      socket.off('reconnectRequest', (opponentId: string) => sendBoardData(opponentId))
+      //socket.off('reconnectRequest', (opponentId: string) => sendBoardData(opponentId, board))
       socket.off('gameUpdate', handleGameUpdate);
     }
   }, [socket])
 
   // Gets player color based on assignment player1 or player2. w=White, b=Black.
   const getPlayerColor = (): PlayerColor => {
-    return lobby.player1.name === playerName ? 'w' : 'b'
+    try {
+      return lobby.player1.name === playerName ? 'w' : 'b'
+    } catch (error) {
+      console.log(error)
+      return 'w'
+    }
+    
   }
   const [playerColor, setPlayerColor] = useState<PlayerColor>(getPlayerColor())
 
@@ -155,7 +181,6 @@ const Game: FC<Props> = ({ route, navigation }) => {
       ? lobby.player1.id
       : lobby.player2!.id
   }
-
 
   useEffect(() => {
     if (move !== null) {
@@ -300,6 +325,10 @@ const Game: FC<Props> = ({ route, navigation }) => {
           toggleModal={() => setDModalVisible(!dModalVisible)}
           navigation={() => navigation.navigate('Homepage')}
           lobbyId={lobby.lobbyId}
+          printData={printData}
+          board={board}
+          currentPlayer={currentPlayer}
+          lobby={lobby}
         />
       </View>
       <View style={styles.container}>
@@ -316,6 +345,7 @@ const Game: FC<Props> = ({ route, navigation }) => {
     </>
   )
 }
+
 
 const { width } = Dimensions.get('window')
 const styles = StyleSheet.create({
