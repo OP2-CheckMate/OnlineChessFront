@@ -6,7 +6,7 @@ https://expo.dev/@samz9n/OnlineChessFront?serviceType=classic&distribution=expo-
 Install Expo Go app on Google Play store to get started! Then scan the QR-code from our published link, or follow the provided link to open our application.
 
 ## About
-This is a schoolproject made by five students. The application is built with React Native, using TypeScript. As a ["backend"](https://github.com/OP2-CheckMate/OnlineChessBack) we used socket.io and node (express), to get realtime game and chat updates.  The goal was to create a multiplayer online chess game, where players can play against friends and random opponents. We also wanted to include a chat for enchanced player experience.
+This is a schoolproject made by five students. The application is built with React Native, using TypeScript. As a ["backend"](https://github.com/OP2-CheckMate/OnlineChessBack) we used socket.io and node (express), to get realtime game and chat updates.  The goal was to create a multiplayer online chess game, where players can play against friends and random opponents. We also wanted to include a chat for an enchanced player experience.
 
 <p float="left">
   <img src="https://user-images.githubusercontent.com/64839531/235627551-8f09f4bd-048a-43e7-90ed-b78a5634a6e9.png" width="300" height="600" />
