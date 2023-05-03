@@ -9,7 +9,7 @@ import socket from '../socket/socket'
 import { StatusBar } from 'expo-status-bar'
 
 type Props = {
-  navigation: QueuingScreenNavigationProp;
+  navigation: QueuingScreenNavigationProp
 }
 
 const QueuingScreen = ({ navigation }: Props) => {
@@ -36,37 +36,35 @@ const QueuingScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     const handleCreatedLobby = (response: Lobby) => {
-      navigation.navigate('LobbyCode', { lobby: response, playerName: name });
-    };
+      navigation.navigate('LobbyCode', { lobby: response, playerName: name })
+    }
 
     const handleGameFound = (response: Lobby) => {
-      socket.emit('joinroom', response.lobbyId);
-      navigation.navigate('LobbyCode', { lobby: response, playerName: name });
-    };
+      socket.emit('joinroom', response.lobbyId)
+      navigation.navigate('LobbyCode', { lobby: response, playerName: name })
+    }
 
     const handleJoinedQueue = () => {
-      console.log('joined queue');
-      navigation.navigate('InQueue', { playerName: name, playerId: playerID });
-    };
+      console.log('joined queue')
+      navigation.navigate('InQueue', { playerName: name, playerId: playerID })
+    }
 
-    socket.on('createdLobby', handleCreatedLobby);
-    socket.on('gamefound', handleGameFound);
-    socket.on('joinedQueue', handleJoinedQueue);
+    socket.on('createdLobby', handleCreatedLobby)
+    socket.on('gamefound', handleGameFound)
+    socket.on('joinedQueue', handleJoinedQueue)
 
     return () => {
-      socket.off('createdLobby', handleCreatedLobby);
-      socket.off('gamefound', handleGameFound);
-      socket.off('joinedQueue', handleJoinedQueue);
-    };
-  }, [name, playerID, navigation]);
-
+      socket.off('createdLobby', handleCreatedLobby)
+      socket.off('gamefound', handleGameFound)
+      socket.off('joinedQueue', handleJoinedQueue)
+    }
+  }, [name, playerID, navigation])
 
   //Creates a new game on backend, requires playername and id
   const createGame = () => {
     //console.log('creating lobby for ' + name)
     socket.emit('createLobby', name, playerID)
   }
-
 
   //Joins existing lobby/game using lobbycode
   const joinGame = () => {
@@ -91,8 +89,7 @@ const QueuingScreen = ({ navigation }: Props) => {
       } else {
         setName('')
       }
-      if (await id !== null) setPlayerID(id!)
-
+      if ((await id) !== null) setPlayerID(id!)
     } catch (error) {
       console.log(error)
     }
@@ -105,7 +102,11 @@ const QueuingScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <StatusBar style='dark' />
-      <ImageBackground source={require('./images/settingsBgImage.png')} resizeMode="cover" style={styles.image}>
+      <ImageBackground
+        source={require('./images/settingsBgImage.png')}
+        resizeMode='cover'
+        style={styles.image}
+      >
         <View style={styles.innerView}>
           <TextInput
             style={styles.input}
@@ -114,40 +115,55 @@ const QueuingScreen = ({ navigation }: Props) => {
               storePlayerName(text)
             }}
             value={name}
-            placeholder="Enter your name"
-            autoCapitalize="words"
-            autoComplete="off"
+            placeholder='Enter your name'
+            autoCapitalize='words'
+            autoComplete='off'
             autoFocus={true}
-            placeholderTextColor="rgb(110,93,53)"
+            placeholderTextColor='rgb(110,93,53)'
           />
           <View style={{ flexDirection: 'row' }}>
             {/* custom made button with pressable component, so the button looks exactly the same in android and iOS */}
-            <CustomButton title="Create Game" onPress={() => createGame()} disabled={isDisabled} />
-            <CustomButton title="Find game" onPress={() => findGame()} disabled={isDisabled} />
+            <CustomButton
+              title='Create Game'
+              onPress={() => createGame()}
+              disabled={isDisabled}
+            />
+            <CustomButton
+              title='Find game'
+              onPress={() => findGame()}
+              disabled={isDisabled}
+            />
           </View>
           <TextInput
             // Enter Lobby-ID
             style={styles.input}
             onChangeText={(e) => setlobbyId(e)}
             value={lobbyId}
-            placeholder="Enter Lobby-Id"
-            autoComplete="off"
-            placeholderTextColor="rgb(110,93,53)"
+            placeholder='Enter Lobby-Id'
+            autoComplete='off'
+            placeholderTextColor='rgb(110,93,53)'
           />
-          <CustomButton title="Join Game" onPress={() => joinGame()} disabled={lobbyId.length > 0 ? false : true} />
+          <CustomButton
+            title='Join Game'
+            onPress={() => joinGame()}
+            disabled={lobbyId.length > 0 ? false : true}
+          />
         </View>
       </ImageBackground>
-      <BadLobbyCodeModal modalVisible={modalVisible} toggleModal={() => setModalVisible(!modalVisible)}></BadLobbyCodeModal>
+      <BadLobbyCodeModal
+        modalVisible={modalVisible}
+        toggleModal={() => setModalVisible(!modalVisible)}
+      ></BadLobbyCodeModal>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   image: {
-    flex: 1
+    flex: 1,
   },
   input: {
     height: 40,
@@ -160,12 +176,12 @@ const styles = StyleSheet.create({
 
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
   },
   innerView: {
     alignItems: 'center',
-    marginTop: 170
-  }
+    marginTop: 170,
+  },
 })
 
 export default QueuingScreen

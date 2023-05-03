@@ -11,8 +11,6 @@ import {
 } from 'react-native'
 import socket from '../socket/socket'
 
-
-
 interface ChatBoxProps {
   lobbyId: number
   playerId: string
@@ -26,7 +24,7 @@ interface Message {
 const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [message, setMessage] = useState('')
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   useEffect(() => {
     socket.on('chat-message', (msg: string, author: string) => {
@@ -38,18 +36,18 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => setKeyboardHeight(e.endCoordinates.height),
-    );
+      (e) => setKeyboardHeight(e.endCoordinates.height)
+    )
     const keyboardDidHideListener = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      () => setKeyboardHeight(0),
-    );
+      () => setKeyboardHeight(0)
+    )
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
 
   const handleSendMessage = () => {
     if (message.trim() !== '') {
@@ -63,12 +61,12 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
       return
     }
     setMessage('')
-    Keyboard.dismiss();
+    Keyboard.dismiss()
   }
   const handleCloseButton = () => {
-    setMessage('');
-    Keyboard.dismiss();
-  };
+    setMessage('')
+    Keyboard.dismiss()
+  }
 
   return (
     <View style={styles.container}>
@@ -109,12 +107,13 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
         style={[
           styles.inputContainer,
           { transform: [{ translateY: -keyboardHeight }] },
-        ]}>
+        ]}
+      >
         <TextInput
           style={styles.input}
           value={message}
           onChangeText={setMessage}
-          placeholder="Type your message here"
+          placeholder='Type your message here'
           multiline
         />
         <TouchableOpacity
@@ -123,15 +122,17 @@ const ChatBox = ({ lobbyId, playerId }: ChatBoxProps) => {
         >
           <Text style={{ color: 'white' }}>Send</Text>
         </TouchableOpacity>
-        {// If keyboard is open or message is empty, show close button
-        (keyboardHeight > 0 || message.length > 0 ) && (
-        <TouchableOpacity
-          style={styles.closeButtonStyle}
-          onPress={handleCloseButton}
-        >
-          <Text style={{ color: 'white' }}>X</Text>
-        </TouchableOpacity>
-         )}
+        {
+          // If keyboard is open or message is empty, show close button
+          (keyboardHeight > 0 || message.length > 0) && (
+            <TouchableOpacity
+              style={styles.closeButtonStyle}
+              onPress={handleCloseButton}
+            >
+              <Text style={{ color: 'white' }}>X</Text>
+            </TouchableOpacity>
+          )
+        }
       </View>
     </View>
   )
@@ -191,15 +192,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 15,
     paddingVertical: 8,
-  }, 
-  closeButtonStyle:{
+  },
+  closeButtonStyle: {
     borderRadius: 10,
     backgroundColor: '#72063c',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
     paddingVertical: 5,
-  }
+  },
 })
 
 export default ChatBox
